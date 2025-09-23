@@ -1,0 +1,19 @@
+﻿@using System.ComponentModel.DataAnnotations
+
+@if (ShowError) 
+{
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div style="width:100%; margin:auto;padding:5px;">
+                <span style="width:100%; background-color:red; color: white;font-size:medium">@ErrorText</span>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public string? ErrorText { get; set; }
+    [Parameter]
+    public bool ShowError { get; set; }
+}

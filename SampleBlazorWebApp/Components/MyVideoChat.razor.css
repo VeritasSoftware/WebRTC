@@ -1,0 +1,26 @@
+﻿#video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 10px;
+    margin: 5px;
+}
+
+video {
+    width: 100%;
+    height: auto;
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.floating-window {
+    /*display: none;*/
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    background-color: lightgray;
+    padding: 10px;
+}
+
+.floating-window.active {
+    display: block;
+}

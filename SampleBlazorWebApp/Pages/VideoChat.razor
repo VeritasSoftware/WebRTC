@@ -1,0 +1,23 @@
+﻿@page "/video-chat"
+
+<h3>Video Chat</h3>
+
+<select @bind="SelectedOption" @bind:event="onchange">
+    <option value="-1">Please select</option>
+    <option value="0">Local</option>
+    <option value="1">Remote</option>
+</select>
+
+
+@if (SelectedOption == "0")
+{
+    <MyVideoChat MyUserType="MyVideoChat.UserType.Local" />
+}
+else if (SelectedOption == "1")
+{
+    <MyVideoChat MyUserType="MyVideoChat.UserType.Remote" />
+}
+
+@code {
+    private string SelectedOption { get; set; } = "-1";
+}

@@ -1,0 +1,201 @@
+﻿@using Microsoft.Extensions.Configuration;
+
+@using WebRTC.Blazor.Client
+
+@inject IConfiguration Configuration
+
+@inject IWebRTCService VideoChatService
+
+<ErrorViewer ErrorText="@_errorText" ShowError="@_showError" />
+
+<div>
+    <div id="video-grid">
+        <video @ref="localVideo" autoplay muted>
+        </video>
+        <video @ref="remoteVideo" autoplay>
+        </video>
+    </div>
+    <br />
+    @if (_inviteAccepted) {
+        <div class="row">
+            <div class="col-12" style="margin-left: 5px;">
+                <span style="background-color: green; color: white;">Invite accepted.</span>
+            </div>
+        </div>
+    }
+    <div class="row">
+        @if (this.MyUserType == UserType.Local)
+        {
+            <div class="col-3" style="margin-left: 5px;">
+                <button disabled="@_inviteSent"  @onclick="InviteAsync">Invite</button>
+            </div>
+            <div class="col-3" style="margin-left: 5px;">
+                <button disabled="@(!_inviteAccepted || _callStarted)" @onclick="StartCallAsync">Start Call</button>
+            </div>
+            <div class="col-3">
+                <button disabled="@(!_callStarted)" @onclick="EndCallAsync">End Call</button>
+            </div>
+        }
+        else
+        {
+            <div class="col-3" style="margin-left: 5px;">
+                <button @onclick="EndCallAsync">End Call</button>
+            </div>
+        }        
+    </div>
+</div>
+
+@code {
+    public enum UserType
+    {
+        Local,
+        Remote
+    }
+
+    [Parameter]
+    public string RemoteUniqueUserId { get; set; } = string.Empty;
+
+    [Parameter]
+    public string LocalUniqueUserId { get; set; } = string.Empty;
+
+    // [Parameter]
+    // public string RoomId { get; set; } = string.Empty;
+
+    [Parameter]
+    public UserType MyUserType { get; set; } = UserType.Local;
+
+    private ElementReference localVideo;
+    private ElementReference remoteVideo;
+
+    private bool _showError = false;
+    private string _errorText = string.Empty;
+
+    private string windowClass = "";
+
+    private string _roomId = string.Empty;
+    private bool _inviteSent = false;
+    private bool _inviteAccepted = false;
+    private bool _callStarted = false;
+
+    private void ToggleFloating()
+    {
+        windowClass = windowClass == "" ? "active" : "";
+    }
+
+    private async Task InviteAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            _inviteSent = false;
+
+            await VideoChatService.InviteAllAsync();
+
+            _inviteSent = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _inviteSent = false;
+        }
+    }
+
+    private async Task StartCallAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            _callStarted = false;
+
+            await VideoChatService.StartCallAsync();
+
+            _callStarted = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _callStarted = false;
+        }
+    }
+
+    private async Task EndCallAsync()
+    {
+        try
+        {
+            await VideoChatService.EndCallAsync();
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            this.VideoChatService.OnInvite += InviteAsync;
+
+            await Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            if (firstRender)
+            {
+                windowClass = "active";
+
+                //await VideoChatService.SetSettingsAsync(this.RemoteUniqueUserId, this.LocalUniqueUserId);
+                await VideoChatService.SetVideosAsync(localVideo, remoteVideo);
+                await VideoChatService.SetDotNetRefAsync();
+                await VideoChatService.SetHubUrlAsync(Configuration["HubUrl"]!);
+                await VideoChatService.StartHubConnectionAsync();
+
+
+                if (this.MyUserType == UserType.Remote)
+                {
+                    await VideoChatService.RemoteStartCallAsync();
+                }
+
+                VideoChatService.OnInviteAccepted += InviteAcceptedAsync;
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+        }
+    }
+
+    private async Task InviteAsync(string roomId)
+    {
+        _roomId = roomId;
+
+        await VideoChatService.AcceptInviteAsync(roomId);
+
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    private async Task InviteAcceptedAsync()
+    {
+        _inviteAccepted = true;
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+}
