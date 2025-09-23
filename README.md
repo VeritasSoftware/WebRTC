@@ -64,7 +64,7 @@ Then, the Remote browser, automatically accepts the Invite in the demo but you c
 
 In the Local browser, "Invite accepted." is shown.
 
-Then, in the Local browser, click "Start Call" to start the WebRTC communication."
+Then, in the Local browser, click "Start Call" to start the WebRTC communication.
 
 When done, click "End Call" in either browser to end the call.
 
