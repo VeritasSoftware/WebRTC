@@ -46,6 +46,28 @@ app.MapHub<VideoChatHub>("/chathub");
 
 You can go through my SampleBlazorWebApp to see how to use the Client.
 
+Run the SampleApi first, then run the SampleBlazorWebApp.
+
+Open multiple browsers, each with their own camera & microphone, to see the WebRTC communication in action. 
+
+Click the Video Chat link in the navigation menu to access the video chat page.
+
+Select "Local" in the dropdown in one browser first.
+
+Then, "Remote" in the other browser to see the communication.
+
+Make sure to allow camera & microphone access when prompted by the browser.
+
+In the Local browser, click "Invite" to invite the Remote browser.
+
+Then, the Remote browser, automatically accepts the Invite in the demo but you can defer it too.
+
+In the Local browser, "Invite accepted." is shown.
+
+Then, in the Local browser, click "Start Call" to start the WebRTC communication."
+
+When done, click "End Call" in either browser to end the call.
+
 ## WebRTC communication supported by the system
 
 ![WebRTC Communication](Docs/VideoChatSequenceDiagram.png)
