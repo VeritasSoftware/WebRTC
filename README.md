@@ -47,5 +47,3 @@ app.MapHub<VideoChatHub>("/chathub");
 You can go through my SampleBlazorWebApp to see how to use the Client.
 
 ## WebRTC communication supported by the system
-
-![WebRTC Communication](Docs/VideoChatSequenceDiagram.png)
