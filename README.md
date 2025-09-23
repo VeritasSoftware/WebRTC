@@ -31,7 +31,7 @@ builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(origin => true)
-                                                    .WithOrigins("https://localhost:7126/", "https://b3a7a636da8d.ngrok-free.app", "https://2ddcfb6b2f8d.ngrok-free.app/"));
+                                                    .WithOrigins("https://localhost:7086/"));
 });
 ```
 
