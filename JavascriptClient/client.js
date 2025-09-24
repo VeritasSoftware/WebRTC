@@ -194,10 +194,12 @@ export function startHubConnection() {
 
             console.log("Starting listener on: " + localUniqueUserId);
 
-            connection.on(localUniqueUserId, function (roomId) {
-                console.log("Invite received from server:", roomId);
-                dotNetRef.invokeMethodAsync('Invite', roomId);
-            });
+            if (localUniqueUserId) {
+                connection.on(localUniqueUserId, function (roomId) {
+                    console.log("Invite received from server:", roomId);
+                    dotNetRef.invokeMethodAsync('Invite', roomId);
+                });
+            } 
 
             connection.on("invite-all", function (roomId) {
                 console.log("Invite received from server:", roomId);
