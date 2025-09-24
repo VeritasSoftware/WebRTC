@@ -1,4 +1,5 @@
 ﻿@page "/video-chat"
+@using static SampleBlazorWebApp.Components.MyVideoChat
 
 <h3>Video Chat</h3>
 
@@ -11,11 +12,11 @@
 
 @if (SelectedOption == "0")
 {
-    <MyVideoChat MyUserType="MyVideoChat.UserType.Local" />
+    <MyVideoChat MyUserType="UserType.Local" />
 }
 else if (SelectedOption == "1")
 {
-    <MyVideoChat MyUserType="MyVideoChat.UserType.Remote" />
+    <MyVideoChat MyUserType="UserType.Remote" />
 }
 
 @code {
