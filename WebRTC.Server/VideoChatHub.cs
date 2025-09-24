@@ -49,6 +49,8 @@ namespace WebRTC.Server
         [HubMethodName("end-call")]
         public async Task EndCall(string roomId)
         {
+            await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomId);
+
             await Clients.GroupExcept(roomId, Context.ConnectionId).SendAsync("end-call");
         }
     }
