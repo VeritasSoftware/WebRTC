@@ -131,8 +131,15 @@
         {
             _showError = false;
 
-            VideoChatService.OnInvite += InviteAsync;
-            VideoChatService.OnInviteAccepted += InviteAcceptedAsync;
+            if (this.MyUserType == UserType.Remote)
+            {
+                VideoChatService.OnInvite += InviteAsync;
+            }            
+
+            if (this.MyUserType == UserType.Local)
+            {
+                VideoChatService.OnInviteAccepted += InviteAcceptedAsync;
+            }            
 
             await Task.CompletedTask;
         }
