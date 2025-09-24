@@ -58,9 +58,6 @@
     [Parameter]
     public string LocalUniqueUserId { get; set; } = string.Empty;
 
-    // [Parameter]
-    // public string RoomId { get; set; } = string.Empty;
-
     [Parameter]
     public UserType MyUserType { get; set; } = UserType.Local;
 
@@ -70,17 +67,10 @@
     private bool _showError = false;
     private string _errorText = string.Empty;
 
-    private string windowClass = "";
-
     private string _roomId = string.Empty;
     private bool _inviteSent = false;
     private bool _inviteAccepted = false;
     private bool _callStarted = false;
-
-    private void ToggleFloating()
-    {
-        windowClass = windowClass == "" ? "active" : "";
-    }
 
     private async Task InviteAsync()
     {
@@ -141,7 +131,8 @@
         {
             _showError = false;
 
-            this.VideoChatService.OnInvite += InviteAsync;
+            VideoChatService.OnInvite += InviteAsync;
+            VideoChatService.OnInviteAccepted += InviteAcceptedAsync;
 
             await Task.CompletedTask;
         }
@@ -158,21 +149,16 @@
         {
             if (firstRender)
             {
-                windowClass = "active";
-
                 //await VideoChatService.SetSettingsAsync(this.RemoteUniqueUserId, this.LocalUniqueUserId);
                 await VideoChatService.SetVideosAsync(localVideo, remoteVideo);
                 await VideoChatService.SetDotNetRefAsync();
                 await VideoChatService.SetHubUrlAsync(Configuration["HubUrl"]!);
                 await VideoChatService.StartHubConnectionAsync();
 
-
                 if (this.MyUserType == UserType.Remote)
                 {
                     await VideoChatService.RemoteStartCallAsync();
-                }
-
-                VideoChatService.OnInviteAccepted += InviteAcceptedAsync;
+                }                
             }
         }
         catch (Exception ex)
