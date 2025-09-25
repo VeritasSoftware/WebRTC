@@ -1,0 +1,45 @@
+<p>video-chat works!</p>
+
+<div>
+    @if(_showError){
+        <div class="row">
+            <div class="col-12" style="margin-left: 5px;">
+                <span style="background-color: red; color: white;">Error: {{_errorMessage}}</span>
+            </div>
+        </div>
+    }
+    <div id="video-grid">
+        <video #localVideo autoplay muted>
+        </video>
+        <video #remoteVideo autoplay>
+        </video>
+    </div>
+    <br />
+    @if (_inviteAccepted) {
+        <div class="row">
+            <div class="col-12" style="margin-left: 5px;">
+                <span style="background-color: green; color: white;">Invite accepted.</span>
+            </div>
+        </div>
+    }
+    <div class="row">
+        @if (this.myUserType == userType.Local)
+        {
+            <div class="col-3" style="margin-left: 5px;">
+                <button [disabled]="_inviteSent"  (click)="inviteAll()">Invite</button>
+            </div>
+            <div class="col-3" style="margin-left: 5px;">
+                <button [disabled]="_disableStartCall" (click)="startCall()">Start Call</button>
+            </div>
+            <div class="col-3">
+                <button [disabled]="!_callStarted" (click)="endCall()">End Call</button>
+            </div>
+        }
+        @else
+        {
+            <div class="col-3" style="margin-left: 5px;">
+                <button (click)="endCall()">End Call</button>
+            </div>
+        }        
+    </div>
+</div>

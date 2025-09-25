@@ -1,0 +1,18 @@
+<p>my-video-chat works!</p>
+
+<h3>Video Chat</h3>
+
+<select [(ngModel)]="selectedOption">
+    <option value="-1">Please select</option>
+    <option value="0">Local</option>
+    <option value="1">Remote</option>
+</select>
+
+@if (selectedOption == "0")
+{
+    <app-video-chat [myUserType]="userType.Local" />
+}
+@else if (selectedOption == "1")
+{
+    <app-video-chat [myUserType]="userType.Remote" />
+}

@@ -1,0 +1,9 @@
+export declare function setHubUrl(hubUrl: string): void;
+export declare function setVideos(local: HTMLVideoElement, remote: HTMLVideoElement): void;
+export declare function setSettings(localUniqueUserId: string, remoteUniqueUserId: string): void;
+export declare function startCall(sendOffer:boolean = true): Promise<void>;
+export declare function invite(): Promise<void>;
+export declare function inviteAll(): Promise<void>;
+export declare function acceptInvite(roomId: string): Promise<void>;
+export declare function endCall(): Promise<void>;
+export declare function startHubConnection(): Promise<void>;

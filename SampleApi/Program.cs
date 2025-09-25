@@ -9,7 +9,7 @@ builder.Services.AddSignalR();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("MyPolicy", builder => builder.AllowAnyHeader().AllowAnyMethod().AllowCredentials().SetIsOriginAllowed(origin => true)
-                                                    .WithOrigins("https://localhost:7086/"));
+                                                    .WithOrigins("https://localhost:7086/", "http://localhost:4200/"));
 });
 
 builder.Services.AddControllers();
