@@ -20,7 +20,7 @@ export class VideoChatComponent {
   public _errorMessage: string = "";
   public _showError: boolean = false;
 
-  public _disableStartCall: boolean = true; //(!this._inviteAccepted || this._callStarted)
+  public _disableStartCall: boolean = false; //(!this._inviteAccepted || this._callStarted)
 
   constructor(private videoChatService:WebRTCService) { }
   
@@ -45,8 +45,10 @@ export class VideoChatComponent {
       this.videoChatService.onInviteAccepted.subscribe( async () => {
         console.log("Invite accepted event received in component.");
         //await this.videoChatService.startCallAsync();
-        this._inviteAccepted = true;
-        this._disableStartCall = false;
+        setTimeout( () => {
+          this._inviteAccepted = true;
+          this._disableStartCall = false;
+        }, 50);        
       });
     }
   }
@@ -56,9 +58,10 @@ export class VideoChatComponent {
 
     this.videoChatService.setHubUrl("https://localhost:7298/chathub");
     //this.videoChatService.setSettings("user1", "user2");
-    // const localVideo = document.getElementById("localVideo") as HTMLVideoElement;
-    // const remoteVideo = document.getElementById("remoteVideo") as HTMLVideoElement;
-    this.videoChatService.setVideos(this.localVideo, this.remoteVideo);
+    const localVideo = document.getElementById("localVideo") as HTMLVideoElement;
+    const remoteVideo = document.getElementById("remoteVideo") as HTMLVideoElement;
+    this.videoChatService.setVideos(localVideo, remoteVideo);
+    //this.videoChatService.setVideos(this.localVideo, this.remoteVideo);
 
     (async () => {
       console.log("Component: Starting hub connection.");
