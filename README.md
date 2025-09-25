@@ -7,7 +7,7 @@ A .NET library for WebRTC, enabling real-time communication in your web applicat
 - Peer-to-peer audio and video communication
 - Data channels for real-time data transfer
 - High-level API for simplified WebRTC operations
-- Client available for Blazor
+- Client available for Blazor, Angular
 - Easy integration with ASP.NET Core web applications
 - Cross-platform support (Windows, macOS, Linux) for Server
 
@@ -46,7 +46,13 @@ app.MapHub<VideoChatHub>("/chathub");
 
 You can go through my SampleBlazorWebApp to see how to use the Client.
 
-Run the SampleApi first, then run the SampleBlazorWebApp.
+## Angular Client
+
+You can go through sample-angular-web-app to see how to use the Client.
+
+## Steps to run the demo
+
+Run the SampleApi first, then run the SampleBlazorWebApp or sample-angular-web-app.
 
 Open multiple browsers, each with their own camera & microphone, to see the WebRTC communication in action. 
 
