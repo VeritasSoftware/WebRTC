@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { WebRTCService } from '../../projects/ts-webrtc-angular-client/src/public-api';
 
 @Component({
@@ -20,14 +20,11 @@ export class VideoChatComponent {
   public _errorMessage: string = "";
   public _showError: boolean = false;
 
-  public _disableStartCall: boolean = false; //(!this._inviteAccepted || this._callStarted)
+  public _disableStartCall: boolean = true;
 
-  constructor(private videoChatService:WebRTCService) { }
+  constructor(private videoChatService:WebRTCService, private cdr: ChangeDetectorRef) { }
   
   @Input() myUserType: UserType = UserType.Local;
-
-  @ViewChild('localVideo') localVideo!: HTMLVideoElement;
-  @ViewChild('remoteVideo') remoteVideo!: HTMLVideoElement;
 
   public get userType(): typeof UserType {
     return UserType; 
@@ -44,24 +41,21 @@ export class VideoChatComponent {
     if (this.myUserType == UserType.Local) {
       this.videoChatService.onInviteAccepted.subscribe( async () => {
         console.log("Invite accepted event received in component.");
-        //await this.videoChatService.startCallAsync();
-        setTimeout( () => {
-          this._inviteAccepted = true;
-          this._disableStartCall = false;
-        }, 50);        
+        
+        this._inviteAccepted = true;
+        this._disableStartCall = false;
+
+        this.cdr.detectChanges();
       });
     }
   }
 
   ngAfterViewInit(): void {
-    //this.videoChatService.setSettings("user1", "user2");
-
+    //this.videoChatService.setSettings("localUniqueUserId", "remoteUniqueUserId");
     this.videoChatService.setHubUrl("https://localhost:7298/chathub");
-    //this.videoChatService.setSettings("user1", "user2");
     const localVideo = document.getElementById("localVideo") as HTMLVideoElement;
     const remoteVideo = document.getElementById("remoteVideo") as HTMLVideoElement;
     this.videoChatService.setVideos(localVideo, remoteVideo);
-    //this.videoChatService.setVideos(this.localVideo, this.remoteVideo);
 
     (async () => {
       console.log("Component: Starting hub connection.");
@@ -77,12 +71,15 @@ export class VideoChatComponent {
     try {
       this._showError = false;
       this._errorMessage = "";
+      this._inviteSent = false;
       await this.videoChatService.inviteAsync();
+      this._inviteSent = true;
     }
     catch (err:any) {
       console.error("Error in invite:", err);
       this._errorMessage = err?.message ?? "Error in invite.";
       this._showError = true;
+      this._inviteSent = false;
     }
   }
 
