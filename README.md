@@ -46,13 +46,13 @@ app.MapHub<VideoChatHub>("/chathub");
 
 You can go through my SampleBlazorWebApp to see how to use the Client.
 
-[**Browse**](https://github.com/VeritasSoftware/WebRTC/tree/master/WebRTC.Blazor.Client)
+[**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/WebRTC.Blazor.Client)
 
 ## Angular Client
 
 You can go through sample-angular-web-app to see how to use the Client.
 
-[**Browse**](https://github.com/VeritasSoftware/WebRTC/tree/master/sample-angular-web-app/projects/ts-webrtc-angular-client/src/lib)
+[**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/sample-angular-web-app/projects/ts-webrtc-angular-client/src/lib)
 
 ## Steps to run the demo
 
