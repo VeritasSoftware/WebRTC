@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { WebRTCService } from '../../projects/ts-webrtc-angular-client/src/public-api';
+import { WebRTCService } from '../../../../projects/ts-webrtc-angular-client/src/public-api';
 
 @Component({
   selector: 'app-video-chat',

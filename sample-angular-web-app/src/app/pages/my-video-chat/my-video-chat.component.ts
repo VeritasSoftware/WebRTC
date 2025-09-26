@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { UserType, VideoChatComponent } from '../../video-chat/video-chat.component';
+import { UserType, VideoChatComponent } from '../../components/video-chat/video-chat.component';
 import { FormsModule } from '@angular/forms';
 
 @Component({
