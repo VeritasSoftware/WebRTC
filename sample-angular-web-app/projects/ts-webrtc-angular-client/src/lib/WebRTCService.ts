@@ -45,27 +45,27 @@ export class WebRTCService implements IWebRTCService {
 
     Invite(roomId:string): void {
         console.log('OnInvite fired. room id:', roomId);
-        this.onInvite.emit(roomId);
+        this.onInvite?.emit(roomId);
     }
     
     InviteAccepted(): void {
         console.log('OnAcceptInvite fired.');
-        this.onInviteAccepted.emit();
+        this.onInviteAccepted?.emit();
     }
     
     async startCallAsync(): Promise<void> {
         await startCall();
-        this.onCallStarted.emit();
+        this.onCallStarted?.emit();
     }
 
     async remoteStartCallAsync(): Promise<void> {
         await startCall(false);
-        this.onCallStarted.emit();
+        this.onCallStarted?.emit();
     }
 
     async endCallAsync(): Promise<void> {
         await endCall();
-        this.onCallEnded.emit();
+        this.onCallEnded?.emit();
     }
 
     async startHubConnectionAsync(): Promise<void> {
