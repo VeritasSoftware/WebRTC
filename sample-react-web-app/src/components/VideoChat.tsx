@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { WebRTCService } from 'ts-webrtc-react-client';
 import { VideoChatProps, UserType } from './VideoChat.Models';
 
 const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => {
@@ -43,13 +42,10 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
 
                 if (userType === UserType.Remote) {
                     await videoChatService.remoteStartCallAsync();
-
-                    //videoChatService.onInvite = handleInvite; 
                     
                     window.addEventListener("onInvite", handleInvite);
                 }
                 else {
-                    //videoChatService.onInviteAccepted = handleInviteAccepted;
                     window.addEventListener("onInviteAccepted", handleInviteAccepted);
                 }
             }
@@ -111,24 +107,31 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
     async function inviteAll() {
         if (videoChatService) {
             try {
+                setShowError(false);
                 await videoChatService.inviteAllAsync();
+                setInviteSent(true);
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);
-            }
-            setInviteSent(true);
+                setInviteSent(false);
+            }            
         }
     }
 
     async function startCall() {
         if (videoChatService) {
             try {
+                setShowError(false);
+                setCallStarted(false);               
                 await videoChatService.startCallAsync();
+                setCallStarted(true);
+                setDisableStartCall(true);
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);
+                setDisableStartCall(false);
+                setCallStarted(false);
             }
-            setCallStarted(true);
         }
     }
 
