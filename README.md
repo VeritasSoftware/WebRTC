@@ -7,7 +7,7 @@ A .NET library for WebRTC, enabling real-time communication in your web applicat
 - Peer-to-peer audio and video communication
 - Data channels for real-time data transfer
 - High-level API for simplified WebRTC operations
-- Client available for Blazor, Angular
+- Client available for Blazor, Angular, React
 - Easy integration with ASP.NET Core web applications
 - Cross-platform support (Windows, macOS, Linux) for Server
 
@@ -53,6 +53,12 @@ You can go through my SampleBlazorWebApp to see how to use the Client.
 You can go through sample-angular-web-app to see how to use the Client.
 
 [**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/sample-angular-web-app/projects/ts-webrtc-angular-client/src/lib)
+
+## React Client
+
+You can go through sample-react-web-app to see how to use the Client.
+
+[**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/ts-webrtc-react-client/src)
 
 ## Steps to run the demo
 
