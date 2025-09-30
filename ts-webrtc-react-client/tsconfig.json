@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+      "target": "ES6", // or higher
+      "module": "ESNext", // or "CommonJS" depending on your setup
+      "jsx": "react", // or "react-jsx" for React 17+
+      "declaration": true, // Generate type declarations for libraries
+      "emitDeclarationOnly": true, // Only emit declarations, not JS files
+      "outDir": "./dist", // Output directory for transpiled files
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "strict": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "dist"]
+  }
