@@ -68,7 +68,7 @@ Open multiple browsers (eg. Edge & Chrome), each with their own camera & microph
 
 On the video chat page, select "Local" in the dropdown in one browser first.
 
-Then, "Remote" in the other browser to see the communication.
+Then, "Remote" in the other browser.
 
 Make sure to allow camera & microphone access when prompted by the browser.
 
