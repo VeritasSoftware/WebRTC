@@ -87,7 +87,3 @@ When done, click "End Call" in either browser to end the call.
 ## WebRTC communication supported by the system
 
 ![WebRTC Communication](Docs/VideoChatSequenceDiagram.png)
-
-## Sample Angular app
-
-![Sample Angular app](Docs/SampleAngularApp.png)
