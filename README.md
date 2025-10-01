@@ -62,13 +62,11 @@ You can go through sample-react-web-app to see how to use the Client.
 
 ## Steps to run the demo
 
-Run the SampleApi first, then run the SampleBlazorWebApp or sample-angular-web-app.
+Run the SampleApi first, then run the SampleBlazorWebApp or sample-angular-web-app or sample-react-web-app.
 
-Open multiple browsers, each with their own camera & microphone, to see the WebRTC communication in action. 
+Open multiple browsers (eg. Edge & Chrome), each with their own camera & microphone, to see the WebRTC communication in action. 
 
-Click the Video Chat link in the navigation menu to access the video chat page.
-
-Select "Local" in the dropdown in one browser first.
+On the video chat page, select "Local" in the dropdown in one browser first.
 
 Then, "Remote" in the other browser to see the communication.
 
