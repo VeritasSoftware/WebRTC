@@ -80,13 +80,13 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (!show) return null;
         return (
             <div className="row">
-                <div className="col-3" style={{marginLeft: 5}}>
+                <div className="col-lg-3 col-md-3 col-sm-12" style={{marginLeft: 5}}>
                     <button disabled={_inviteSent} onClick={() => inviteAll()}>Invite</button>
                 </div>
-                <div className="col-3">
+                <div className="col-lg-3 col-md-3 col-sm-12">
                     <button disabled={_disableStartCall} onClick={() => startCall()}>Start Call</button>
                 </div>
-                <div className="col-3">
+                <div className="col-lg-3 col-md-3 col-sm-12">
                     <button disabled={!_callStarted} onClick={() => endCall()}>End Call</button>
                 </div>
             </div>
@@ -97,7 +97,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (!show) return null;
         return (
             <div className="row">
-                <div className="col-3">
+                <div className="col-4" style={{marginLeft: 5}}>                    
                     <button onClick={() => endCall()}>End Call</button>
                 </div>
             </div>
