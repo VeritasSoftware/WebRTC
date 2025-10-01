@@ -9,12 +9,14 @@
 <ErrorViewer ErrorText="@_errorText" ShowError="@_showError" />
 
 <div>
-    <div id="video-grid">
-        <video @ref="localVideo" autoplay muted>
-        </video>
-        <video @ref="remoteVideo" autoplay>
-        </video>
-    </div>
+    <div class="container">
+        <div id="video-grid">
+            <video class="overlay" @ref="localVideo" autoplay muted>
+            </video>
+            <video class="background" @ref="remoteVideo" autoplay>
+            </video>
+        </div>
+    </div>    
     <br />
     @if (_inviteAccepted) {
         <div class="row">

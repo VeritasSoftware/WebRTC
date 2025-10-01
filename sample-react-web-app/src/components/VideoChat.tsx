@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { VideoChatProps, UserType } from './VideoChat.Models';
+import './VideoChat.css';
 
 const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => {
     
@@ -148,7 +149,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
     }
 
     return (
-        <div>
+        <div className="container">
             <div>        
                 Video Chat Component ({userType === UserType.Local ? "Local" : "Remote"})
             </div>
@@ -156,9 +157,9 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             <MyErrorMessage show={_showError} />
                             
             <div id="video-grid">
-                <video id="localVideo" autoPlay muted>
+                <video className="overlay" id="localVideo" autoPlay muted>
                 </video>
-                <video id="remoteVideo" autoPlay>
+                <video className="background" id="remoteVideo" autoPlay>
                 </video>
             </div>
 

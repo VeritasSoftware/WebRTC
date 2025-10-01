@@ -1,4 +1,4 @@
-<div>
+<div class="container">
     @if(_showError){
         <div class="row">
             <div class="col-12" style="margin-left: 5px;">
@@ -7,9 +7,9 @@
         </div>
     }
     <div id="video-grid">
-        <video id="localVideo" autoplay muted>
+        <video class="overlay" id="localVideo" autoplay muted>
         </video>
-        <video id="remoteVideo" autoplay>
+        <video class="background" id="remoteVideo" autoplay>
         </video>
     </div>
     <br />
