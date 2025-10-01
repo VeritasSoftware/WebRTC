@@ -190,26 +190,41 @@ export function startHubConnection() {
 
     connection.start()
         .then(() => {
-            console.log("Connection started");
-
-            console.log("Starting listener on: " + localUniqueUserId);
+            console.log("Connection started");            
 
             if (localUniqueUserId) {
+                console.log("Starting listener on: " + localUniqueUserId);
+
                 connection.on(localUniqueUserId, function (roomId) {
-                    console.log("Invite received from server:", roomId);
-                    dotNetRef.invokeMethodAsync('Invite', roomId);
+                    try {
+                        console.log("Invite received from server:", roomId);
+                        dotNetRef.invokeMethodAsync('Invite', roomId);
+                    }
+                    catch (ex) {
+                        console.log("Invite Error: " + ex.message);
+                    }                    
                 });
             }            
 
             connection.on("invite-all", function (roomId) {
-                console.log("Invite received from server:", roomId);
-                dotNetRef.invokeMethodAsync('Invite', roomId);
+                try {
+                    console.log("Invite received from server:", roomId);
+                    dotNetRef.invokeMethodAsync('Invite', roomId);
+                }
+                catch (ex) {
+                    console.log("Invite All Error: " + ex.message);
+                }                
             });
 
             connection.on("invite-accepted", async rmId => {
-                console.log("invite-accepted event received for Room id: " + rmId);
-                roomId = rmId;                
-                dotNetRef.invokeMethodAsync('InviteAccepted');
+                try {
+                    console.log("invite-accepted event received for Room id: " + rmId);
+                    roomId = rmId;
+                    dotNetRef.invokeMethodAsync('InviteAccepted');
+                }
+                catch (ex) {
+                    console.log("Invite Accepted Error: " + ex.message);
+                }                
             });
 
             // Signaling server event listeners
