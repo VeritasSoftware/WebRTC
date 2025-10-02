@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { WebRTCService } from 'ts-webrtc-react-client';
 import VideoChat from './components/VideoChat';
 
-const App: React.FC<{videoChatService: WebRTCService}> = ({videoChatService: videoChatService}) => {
+const App: React.FC<{videoChatService: WebRTCService}> = ({videoChatService}) => {
   const [selectedOption, setSelectedOption] = useState('-1'); // Initial state
   
   const handleChange = (e: any) => {
