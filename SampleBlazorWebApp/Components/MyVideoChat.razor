@@ -34,12 +34,18 @@
             <div class="col-3" style="margin-left: 5px;">
                 <button disabled="@(!_inviteAccepted || _callStarted)" @onclick="StartCallAsync">Start Call</button>
             </div>
+            <div class="col-3" style="margin-left: 5px;">
+                <button disabled="@(!_callStarted)" @onclick="ToggleMuteAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+            </div>
             <div class="col-3">
                 <button disabled="@(!_callStarted)" @onclick="EndCallAsync">End Call</button>
             </div>
         }
         else
         {
+            <div class="col-3" style="margin-left: 5px;">
+                <button disabled="@(!_callStarted)" @onclick="ToggleMuteAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+            </div>
             <div class="col-3" style="margin-left: 5px;">
                 <button @onclick="EndCallAsync">End Call</button>
             </div>
@@ -73,6 +79,7 @@
     private bool _inviteSent = false;
     private bool _inviteAccepted = false;
     private bool _callStarted = false;
+    private bool _isMute = false;
 
     private async Task InviteAsync()
     {
@@ -114,6 +121,22 @@
         }
     }
 
+    private async Task ToggleMuteAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            await VideoChatService.ToggleMuteAsync();
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _inviteSent = false;
+        }
+    }
+
     private async Task EndCallAsync()
     {
         try
@@ -141,7 +164,9 @@
             if (this.MyUserType == UserType.Local)
             {
                 VideoChatService.OnInviteAccepted += InviteAcceptedAsync;
-            }            
+            }
+
+            VideoChatService.OnToggleMute += ToggleMuteAsync;
 
             await Task.CompletedTask;
         }
@@ -167,6 +192,8 @@
                 if (this.MyUserType == UserType.Remote)
                 {
                     await VideoChatService.RemoteStartCallAsync();
+                    _callStarted = true;
+                    StateHasChanged();
                 }                
             }
         }
@@ -175,6 +202,14 @@
             _errorText = ex.Message;
             _showError = true;
         }
+    }
+
+    private async Task ToggleMuteAsync(bool isMute)
+    {
+        _isMute = isMute;
+
+        StateHasChanged();
+        await Task.CompletedTask;
     }
 
     private async Task InviteAsync(string roomId)

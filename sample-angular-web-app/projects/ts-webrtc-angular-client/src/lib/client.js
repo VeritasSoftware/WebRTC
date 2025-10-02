@@ -1,4 +1,5 @@
 let localStream;
+let isMuted = false;
 let peerConnection;
 let connection;
 let hubUrl;
@@ -8,6 +9,9 @@ let remoteUniqueUserId;
 let localUniqueUserId;
 var localVideo;
 var remoteVideo;
+let iceCandidates = [];
+let isRemoteSet = false;
+let isTrickleIceSent = false;
 
 export function setHubUrl(hUrl) {
     console.log("Setting Hub url: ", hUrl);
@@ -46,9 +50,29 @@ export async function acceptInvite(rmId) {
     await connection.invoke("accept-invite", rmId);
 }
 
-let iceCandidates = [];
-let isRemoteSet = false;
-let isTrickleIceSent = false;
+// Toggle mute/unmute
+export function toggleMute() {
+    if (!localStream) {
+        console.error('No media stream available.');
+        return;
+    }
+
+    // Get the audio tracks from the local stream
+    const audioTracks = localStream.getAudioTracks();
+
+    if (audioTracks.length === 0) {
+        console.error('No audio tracks found in the media stream.');
+        return;
+    }
+
+    // Toggle the enabled property of the audio track
+    isMuted = !isMuted;
+    audioTracks[0].enabled = !isMuted;
+
+    window.ToggleMute(isMuted);
+
+    console.log(`Microphone is now ${isMuted ? 'muted' : 'unmuted'}.`);
+}
 
 export async function startCall(sendOffer = true) {
     try { 

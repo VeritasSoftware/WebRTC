@@ -5,6 +5,7 @@ export interface IWebRTCService {
     inviteAsync(): Promise<void>;
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
+    toggleMuteAsync(): Promise<void>;
     startCallAsync(): Promise<void>;
     remoteStartCallAsync(): Promise<void>;
     endCallAsync(): Promise<void>;

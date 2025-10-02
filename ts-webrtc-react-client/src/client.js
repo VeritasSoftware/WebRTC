@@ -1,4 +1,5 @@
 let localStream;
+let isMuted = false;
 let peerConnection;
 let connection;
 let hubUrl;
@@ -47,6 +48,30 @@ export async function acceptInvite(rmId) {
     roomId = rmId;
 
     await connection.invoke("accept-invite", rmId);
+}
+
+// Toggle mute/unmute
+export function toggleMute() {
+    if (!localStream) {
+        console.error('No media stream available.');
+        return;
+    }
+
+    // Get the audio tracks from the local stream
+    const audioTracks = localStream.getAudioTracks();
+
+    if (audioTracks.length === 0) {
+        console.error('No audio tracks found in the media stream.');
+        return;
+    }
+
+    // Toggle the enabled property of the audio track
+    isMuted = !isMuted;
+    audioTracks[0].enabled = !isMuted;
+
+    window.ToggleMute(isMuted);
+
+    console.log(`Microphone is now ${isMuted ? 'muted' : 'unmuted'}.`);
 }
 
 export async function startCall(sendOffer = true) {

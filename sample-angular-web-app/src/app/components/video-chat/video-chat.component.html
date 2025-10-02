@@ -32,11 +32,17 @@
                 <button [disabled]="_disableStartCall" (click)="startCall()">Start Call</button>
             </div>
             <div class="col-3">
+                <button [disabled]="!_callStarted" (click)="toggleMute()">{{_isMute ? "Unmute" : "Mute"}}</button>
+            </div>
+            <div class="col-3">
                 <button [disabled]="!_callStarted" (click)="endCall()">End Call</button>
             </div>
         }
         @else
         {
+            <div class="col-3">
+                <button [disabled]="!_callStarted" (click)="toggleMute()">{{_isMute ? "Unmute" : "Mute"}}</button>
+            </div>
             <div class="col-3" style="margin-left: 5px;">
                 <button (click)="endCall()">End Call</button>
             </div>

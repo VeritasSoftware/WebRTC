@@ -6,12 +6,14 @@ namespace WebRTC.Blazor.Client
     {
         event Func<string, Task> OnInvite;
         event Func<Task> OnInviteAccepted;
+        event Func<bool, Task> OnToggleMute;
         Task SetDotNetRefAsync();
         Task SetHubUrlAsync(string url);
         Task StartHubConnectionAsync();
         Task InviteAsync();
         Task InviteAllAsync();
         Task AcceptInviteAsync(string roomId);
+        Task ToggleMuteAsync();
         Task StartCallAsync();
         Task RemoteStartCallAsync();
         Task EndCallAsync();

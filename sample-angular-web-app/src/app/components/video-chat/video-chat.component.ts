@@ -14,7 +14,8 @@ export class VideoChatComponent {
   public _inviteSent: boolean = false;
   public _inviteAccepted: boolean = false;
   public _roomId: string = "";
-
+  public _isMute: boolean = false;
+  
   public _callStarted: boolean = false;
   public _callEnded: boolean = false;
   public _errorMessage: string = "";
@@ -48,6 +49,11 @@ export class VideoChatComponent {
         this.cdr.detectChanges();
       });
     }
+    this.videoChatService.onToggleMute.subscribe( (isMute:boolean) => {
+      console.log("ToggleMute event received in component. isMute:", isMute);
+      this._isMute = isMute;
+      this.cdr.detectChanges();
+    });
   }
 
   ngAfterViewInit(): void {
@@ -63,6 +69,8 @@ export class VideoChatComponent {
       if (this.myUserType == UserType.Remote) {
         console.log("Component: Starting call as remote user.");
         await this.videoChatService.remoteStartCallAsync();
+        this._callStarted = true;
+        this.cdr.detectChanges();
       }
     })(); 
   }
@@ -113,6 +121,19 @@ export class VideoChatComponent {
       this._errorMessage = err?.message ?? "Error in startCall.";
       this._showError = true;
       this._callStarted = false;
+    }
+  }
+
+  async toggleMute(): Promise<void> {
+    try {
+      this._showError = false;
+      this._errorMessage = "";
+      await this.videoChatService.toggleMuteAsync();
+    }
+    catch (err:any) {
+      console.error("Error in toggleMute:", err);
+      this._errorMessage = err?.message ?? "Error in toggleMute.";
+      this._showError = true;
     }
   }
 

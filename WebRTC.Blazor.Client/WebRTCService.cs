@@ -11,6 +11,7 @@ namespace WebRTC.Blazor.Client
 
         public event Func<string, Task> OnInvite;
         public event Func<Task> OnInviteAccepted;
+        public event Func<bool, Task> OnToggleMute;
 
         public WebRTCService(IJSRuntime js)
         {
@@ -30,6 +31,12 @@ namespace WebRTC.Blazor.Client
         public void InviteAccepted()
         {
             this.OnInviteAccepted?.Invoke();
+        }
+
+        [JSInvokable]
+        public void ToggleMute(bool isMute)
+        {
+            this.OnToggleMute?.Invoke(isMute);
         }
 
         public async Task SetDotNetRefAsync()
@@ -74,6 +81,13 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("acceptInvite", roomId);
+        }
+
+        public async Task ToggleMuteAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("toggleMute");
         }
 
         public async Task StartCallAsync()
