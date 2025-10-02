@@ -1,4 +1,4 @@
-<div class="container">
+<div>
     @if(_showError){
         <div class="row">
             <div class="col-12" style="margin-left: 5px;">
@@ -6,12 +6,14 @@
             </div>
         </div>
     }
-    <div id="video-grid">
-        <video class="overlay" id="localVideo" autoplay muted>
-        </video>
-        <video class="background" id="remoteVideo" autoplay>
-        </video>
-    </div>
+    <div class="container">
+        <div id="video-grid">
+            <video class="overlay" id="localVideo" autoplay muted>
+            </video>
+            <video class="background" id="remoteVideo" autoplay>
+            </video>
+        </div>
+    </div>    
     <br />
     @if (_inviteAccepted) {
         <div class="row">

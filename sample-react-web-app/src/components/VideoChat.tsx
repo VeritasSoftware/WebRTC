@@ -149,19 +149,21 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
     }
 
     return (
-        <div className="container">
+        <div>
             <div>        
                 Video Chat Component ({userType === UserType.Local ? "Local" : "Remote"})
             </div>
             
             <MyErrorMessage show={_showError} />
-                            
-            <div id="video-grid">
-                <video className="overlay" id="localVideo" autoPlay muted>
-                </video>
-                <video className="background" id="remoteVideo" autoPlay>
-                </video>
-            </div>
+
+            <div className="container">
+                <div id="video-grid">
+                    <video className="overlay" id="localVideo" autoPlay muted>
+                    </video>
+                    <video className="background" id="remoteVideo" autoPlay>
+                    </video>
+                </div>
+            </div>                                    
 
             <InviteAccepted show={_inviteAccepted} />
 
