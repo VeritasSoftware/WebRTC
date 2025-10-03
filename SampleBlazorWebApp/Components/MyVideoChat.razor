@@ -28,16 +28,19 @@
     <div class="row">
         @if (this.MyUserType == UserType.Local)
         {
-            <div class="col-3" style="margin-left: 5px;">
+            <div class="col-2" style="margin-left: 5px;">
                 <button disabled="@_inviteSent"  @onclick="InviteAsync">Invite</button>
             </div>
-            <div class="col-3" style="margin-left: 5px;">
+            <div class="col-2" style="margin-left: 5px;">
                 <button disabled="@(!_inviteAccepted || _callStarted)" @onclick="StartCallAsync">Start Call</button>
             </div>
-            <div class="col-3" style="margin-left: 5px;">
+            <div class="col-2" style="margin-left: 5px;">
                 <button disabled="@(!_callStarted)" @onclick="ToggleMuteAsync">@(!_isMute ? "Mute" : "Unmute")</button>
             </div>
-            <div class="col-3">
+            <div class="col-2" style="margin-left: 5px;">
+                <button disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
+            </div>
+            <div class="col-2">
                 <button disabled="@(!_callStarted)" @onclick="EndCallAsync">End Call</button>
             </div>
         }
@@ -45,6 +48,9 @@
         {
             <div class="col-3" style="margin-left: 5px;">
                 <button disabled="@(!_callStarted)" @onclick="ToggleMuteAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+            </div>
+            <div class="col-3" style="margin-left: 5px;">
+                <button disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
             </div>
             <div class="col-3" style="margin-left: 5px;">
                 <button @onclick="EndCallAsync">End Call</button>
@@ -80,6 +86,7 @@
     private bool _inviteAccepted = false;
     private bool _callStarted = false;
     private bool _isMute = false;
+    private bool _isVideoStopped = false;
 
     private async Task InviteAsync()
     {
@@ -133,7 +140,21 @@
         {
             _errorText = ex.Message;
             _showError = true;
-            _inviteSent = false;
+        }
+    }
+
+    private async Task ToggleVideoAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            await VideoChatService.ToggleVideoAsync();
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
         }
     }
 
@@ -167,6 +188,7 @@
             }
 
             VideoChatService.OnToggleMute += ToggleMuteAsync;
+            VideoChatService.OnToggleVideo += ToggleVideoAsync;
 
             await Task.CompletedTask;
         }
@@ -207,6 +229,14 @@
     private async Task ToggleMuteAsync(bool isMute)
     {
         _isMute = isMute;
+
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    private async Task ToggleVideoAsync(bool isVideoStopped)
+    {
+        _isVideoStopped = isVideoStopped;
 
         StateHasChanged();
         await Task.CompletedTask;

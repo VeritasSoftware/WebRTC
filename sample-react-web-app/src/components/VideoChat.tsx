@@ -15,6 +15,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
 
   const [_disableStartCall, setDisableStartCall] = useState<boolean>(true);
   const [_isMute, setIsMute] = useState<boolean>(false);
+  const [_isVideoStopped, setIsVideoStopped] = useState<boolean>(false);
 
   const  handleInviteAccepted = async () => {
         console.log("handleInviteAccepted: Invite accepted.");
@@ -35,6 +36,11 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
   const toggleMute = async (e: any) => {
         console.log("toggleMute: isMute: ", e.detail);
         setIsMute(e.detail);     
+    };
+
+  const toggleVideo = async (e: any) => {
+        console.log("toggleVideo: isVideoStopped: ", e.detail);
+        setIsVideoStopped(e.detail);     
     };
 
     useEffect(() => {
@@ -59,6 +65,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                 }
 
                 window.addEventListener("onToggleMute", toggleMute);
+                window.addEventListener("onToggleVideo", toggleVideo);
             }
         };        
 
@@ -91,16 +98,19 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (!show) return null;
         return (
             <div className="row">
-                <div className="col-lg-3 col-md-3 col-sm-12" style={{marginLeft: 5}}>
+                <div className="col-lg-2 col-md-2 col-sm-12" style={{marginLeft: 5}}>
                     <button disabled={_inviteSent} onClick={() => inviteAll()}>Invite</button>
                 </div>
-                <div className="col-lg-3 col-md-3 col-sm-12">
+                <div className="col-lg-2 col-md-2 col-sm-12">
                     <button disabled={_disableStartCall} onClick={() => startCall()}>Start Call</button>
                 </div>
-                <div className="col-lg-3 col-md-3 col-sm-12">
+                <div className="col-lg-2 col-md-2 col-sm-12">
                     <button disabled={!_callStarted} onClick={async () => await toggleMuteAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
                 </div>
-                <div className="col-lg-3 col-md-3 col-sm-12">
+                <div className="col-lg-2 col-md-2 col-sm-12">
+                    <button disabled={!_callStarted} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
+                </div>
+                <div className="col-lg-2 col-md-2 col-sm-12">
                     <button disabled={!_callStarted} onClick={() => endCall()}>End Call</button>
                 </div>
             </div>
@@ -113,6 +123,9 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             <div className="row">
                 <div className="col-lg-3 col-md-3 col-sm-12">
                     <button disabled={!_callStarted} onClick={async () => await toggleMuteAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
+                </div>
+                <div className="col-lg-3 col-md-3 col-sm-12">
+                    <button disabled={!_callStarted} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
                 </div>
                 <div className="col-4" style={{marginLeft: 5}}>                    
                     <button onClick={() => endCall()}>End Call</button>
@@ -157,6 +170,18 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             try {
                 setShowError(false);               
                 await videoChatService.toggleMuteAsync();
+            } catch (error: any) {
+                setErrorMessage(error.message);
+                setShowError(true);
+            }
+        }
+    }
+
+    async function toggleVideoAsync() {
+        if (videoChatService) {
+            try {
+                setShowError(false);               
+                await videoChatService.toggleVideoAsync();
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);

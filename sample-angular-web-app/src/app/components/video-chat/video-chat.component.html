@@ -1,4 +1,4 @@
-<div>
+<div style="width: 100%; margin-top: 20px;">
     @if(_showError){
         <div class="row">
             <div class="col-12" style="margin-left: 5px;">
@@ -25,16 +25,19 @@
     <div class="row">
         @if (this.myUserType == userType.Local)
         {
-            <div class="col-3" style="margin-left: 5px;">
+            <div class="col-2" style="margin-left: 5px;">
                 <button [disabled]="_inviteSent"  (click)="inviteAll()">Invite</button>
             </div>
-            <div class="col-3" style="margin-left: 5px;">
+            <div class="col-2" style="margin-left: 5px;">
                 <button [disabled]="_disableStartCall" (click)="startCall()">Start Call</button>
             </div>
-            <div class="col-3">
+            <div class="col-2">
                 <button [disabled]="!_callStarted" (click)="toggleMute()">{{_isMute ? "Unmute" : "Mute"}}</button>
             </div>
-            <div class="col-3">
+            <div class="col-2">
+                <button [disabled]="!_callStarted" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
+            </div>
+            <div class="col-2">
                 <button [disabled]="!_callStarted" (click)="endCall()">End Call</button>
             </div>
         }
@@ -42,6 +45,9 @@
         {
             <div class="col-3">
                 <button [disabled]="!_callStarted" (click)="toggleMute()">{{_isMute ? "Unmute" : "Mute"}}</button>
+            </div>
+            <div class="col-3">
+                <button [disabled]="!_callStarted" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
             </div>
             <div class="col-3" style="margin-left: 5px;">
                 <button (click)="endCall()">End Call</button>

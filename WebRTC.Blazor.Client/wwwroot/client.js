@@ -1,5 +1,6 @@
 let localStream;
 let isMuted = false;
+let isVideoStopped = false;
 let peerConnection;
 let connection;
 let hubUrl;
@@ -98,6 +99,38 @@ export function toggleMute() {
     dotNetRef.invokeMethodAsync('ToggleMute', isMuted);
 
     console.log(`Microphone is now ${isMuted ? 'muted' : 'unmuted'}.`);
+}
+
+// Function to toggle video mute/unmute
+export function toggleVideo() {
+    if (!localStream) {
+        console.error('No media stream available.');
+        return;
+    }
+    // Get the video track from the stream
+    var videoTracks = localStream.getVideoTracks();
+
+    if (videoTracks.length === 0) {
+        console.error('No video tracks found in the media stream.');
+        return;
+    }
+
+    var videoTrack = videoTracks[0];
+
+    if (videoTrack) {
+        // Toggle the enabled property of the audio track
+        isVideoStopped = !isVideoStopped;
+
+        // Toggle the enabled property of the video track
+        videoTrack.enabled = !isVideoStopped;
+
+        dotNetRef.invokeMethodAsync('ToggleVideo', isVideoStopped);
+
+        // Log the current state
+        console.log(`Video is now ${videoTrack.enabled ? 'enabled' : 'disabled'}`);
+    } else {
+        console.warn('No video track available to toggle.');
+    }
 }
 
 export async function startCall(sendOffer = true) {

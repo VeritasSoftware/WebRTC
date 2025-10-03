@@ -15,7 +15,8 @@ export class VideoChatComponent {
   public _inviteAccepted: boolean = false;
   public _roomId: string = "";
   public _isMute: boolean = false;
-  
+  public _isVideoStopped: boolean = false;
+
   public _callStarted: boolean = false;
   public _callEnded: boolean = false;
   public _errorMessage: string = "";
@@ -52,6 +53,11 @@ export class VideoChatComponent {
     this.videoChatService.onToggleMute.subscribe( (isMute:boolean) => {
       console.log("ToggleMute event received in component. isMute:", isMute);
       this._isMute = isMute;
+      this.cdr.detectChanges();
+    });
+    this.videoChatService.onToggleVideo.subscribe( (isVideoStopped:boolean) => {
+      console.log("ToggleVideo event received in component. isVideoStopped:", isVideoStopped);
+      this._isVideoStopped = isVideoStopped;
       this.cdr.detectChanges();
     });
   }
@@ -133,6 +139,19 @@ export class VideoChatComponent {
     catch (err:any) {
       console.error("Error in toggleMute:", err);
       this._errorMessage = err?.message ?? "Error in toggleMute.";
+      this._showError = true;
+    }
+  }
+
+  async toggleVideo(): Promise<void> {
+    try {
+      this._showError = false;
+      this._errorMessage = "";
+      await this.videoChatService.toggleVideoAsync();
+    }
+    catch (err:any) {
+      console.error("Error in toggleVideo:", err);
+      this._errorMessage = err?.message ?? "Error in toggleVideo.";
       this._showError = true;
     }
   }
