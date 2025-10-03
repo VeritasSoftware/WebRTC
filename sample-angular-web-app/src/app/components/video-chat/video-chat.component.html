@@ -1,57 +1,59 @@
-<div style="width: 100%; margin-top: 20px;">
-    @if(_showError){
-        <div class="row">
-            <div class="col-12" style="margin-left: 5px;">
-                <span style="background-color: red; color: white;">Error: {{_errorMessage}}</span>
-            </div>
-        </div>
-    }
-    <div class="container">
-        <div id="video-grid">
-            <video class="overlay" id="localVideo" autoplay muted>
-            </video>
-            <video class="background" id="remoteVideo" autoplay>
-            </video>
-        </div>
-    </div>    
-    <br />
-    @if (_inviteAccepted) {
-        <div class="row">
-            <div class="col-12" style="margin-left: 5px;">
-                <span style="background-color: green; color: white;">Invite accepted.</span>
-            </div>
-        </div>
-    }
+@if(_showError){
     <div class="row">
-        @if (this.myUserType == userType.Local)
-        {
-            <div class="col-2" style="margin-left: 5px;">
-                <button [disabled]="_inviteSent"  (click)="inviteAll()">Invite</button>
-            </div>
-            <div class="col-2" style="margin-left: 5px;">
-                <button [disabled]="_disableStartCall" (click)="startCall()">Start Call</button>
-            </div>
-            <div class="col-2">
-                <button [disabled]="!_callStarted" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
-            </div>
-            <div class="col-2">
-                <button [disabled]="!_callStarted" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
-            </div>
-            <div class="col-2">
-                <button [disabled]="!_callStarted" (click)="endCall()">End Call</button>
-            </div>
-        }
-        @else
-        {
-            <div class="col-3">
-                <button [disabled]="!_callStarted" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
-            </div>
-            <div class="col-3">
-                <button [disabled]="!_callStarted" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
-            </div>
-            <div class="col-3" style="margin-left: 5px;">
-                <button (click)="endCall()">End Call</button>
-            </div>
-        }        
+        <div class="col-12" style="margin-left: 5px;">
+            <span style="background-color: red; color: white;">Error: {{_errorMessage}}</span>
+        </div>
     </div>
-</div>
+}
+<div class="container">
+    <div id="video-grid">
+        <video class="overlay" id="localVideo" autoplay muted>
+        </video>
+        <video class="background" id="remoteVideo" autoplay>
+        </video>
+    </div>
+</div>    
+<br />
+@if (_inviteAccepted) {
+    <div class="row">
+        <div class="col-12" style="margin-left: 5px;">
+            <span style="background-color: green; color: white;">Invite accepted.</span>
+        </div>
+    </div>
+}
+@if (this.myUserType == userType.Local)
+{
+    <div class="row" style="margin-top: 10px; margin-left: 5px;">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="_inviteSent" style="width: 90%;" (click)="inviteAll()">Invite</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="_disableStartCall" style="width: 90%;" (click)="startCall()">Start Call</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 10px; margin-left: 5px;">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 90%;" (click)="endCall()">End Call</button>
+        </div>
+    </div>
+}
+@else 
+{
+    <div class="row" style="margin-top: 10px; margin-left: 5px;">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button (click)="endCall()" style="width: 90%;">End Call</button>
+        </div>
+    </div>
+}

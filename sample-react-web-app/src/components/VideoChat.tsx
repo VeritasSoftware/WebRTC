@@ -97,40 +97,46 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
     const LocalButtonPanel: React.FC<{ show: boolean }> = ({ show }) => {
         if (!show) return null;
         return (
-            <div className="row">
-                <div className="col-lg-2 col-md-2 col-sm-12" style={{marginLeft: 5}}>
-                    <button disabled={_inviteSent} onClick={() => inviteAll()}>Invite</button>
+            <div style={{marginTop: 10, width: "100%"}}>
+                <div className="row" style={{marginTop: 10, marginLeft: 5}}>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={_inviteSent} style={{width: "90%"}} onClick={() => inviteAll()}>Invite</button>
+                    </div>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={_disableStartCall} style={{width: "90%"}} onClick={() => startCall()}>Start Call</button>
+                    </div>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
+                    </div>
                 </div>
-                <div className="col-lg-2 col-md-2 col-sm-12">
-                    <button disabled={_disableStartCall} onClick={() => startCall()}>Start Call</button>
+                <div className="row" style={{marginTop: 10, marginLeft: 5}}>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
+                    </div>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={() => endCall()}>End Call</button>
+                    </div>
                 </div>
-                <div className="col-lg-2 col-md-2 col-sm-12">
-                    <button disabled={!_callStarted} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
-                </div>
-                <div className="col-lg-2 col-md-2 col-sm-12">
-                    <button disabled={!_callStarted} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
-                </div>
-                <div className="col-lg-2 col-md-2 col-sm-12">
-                    <button disabled={!_callStarted} onClick={() => endCall()}>End Call</button>
-                </div>
-            </div>
+            </div>            
         );
     };
 
     const RemoteButtonPanel: React.FC<{ show: boolean }> = ({ show }) => {
         if (!show) return null;
         return (
-            <div className="row">
-                <div className="col-lg-3 col-md-3 col-sm-12">
-                    <button disabled={!_callStarted} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
+            <div style={{marginTop: 10, width: "100%"}}>
+                <div className="row" style={{marginTop: 10, marginLeft: 5}}>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
+                    </div>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
+                    </div>
+                    <div className="col-lg-4 col-md-4 col-sm-12">                    
+                        <button style={{width: "90%"}} onClick={() => endCall()}>End Call</button>
+                    </div>
                 </div>
-                <div className="col-lg-3 col-md-3 col-sm-12">
-                    <button disabled={!_callStarted} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
-                </div>
-                <div className="col-4" style={{marginLeft: 5}}>                    
-                    <button onClick={() => endCall()}>End Call</button>
-                </div>
-            </div>
+            </div>            
         );
     };
 
@@ -203,7 +209,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
 
     return (
         <div style={{width: "100%", marginTop: 20}}>
-            <div>        
+            <div style={{marginTop: 10}}>        
                 Video Chat Component ({userType === UserType.Local ? "Local" : "Remote"})
             </div>
             
@@ -216,11 +222,11 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                     <video className="background" id="remoteVideo" autoPlay>
                     </video>
                 </div>
-            </div>                                    
-
+            </div>
+                
             <InviteAccepted show={_inviteAccepted} />
 
-            <br/>
+            <br />
 
             <LocalButtonPanel show={userType === UserType.Local} />
 
