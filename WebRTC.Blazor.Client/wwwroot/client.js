@@ -78,7 +78,7 @@ export async function acceptInvite(rmId) {
 }
 
 // Toggle mute/unmute
-export function toggleMute() {
+export function toggleAudio() {
     if (!localStream) {
         console.error('No media stream available.');
         return;
@@ -96,7 +96,7 @@ export function toggleMute() {
     isMuted = !isMuted;
     audioTracks[0].enabled = !isMuted;
 
-    dotNetRef.invokeMethodAsync('ToggleMute', isMuted);
+    dotNetRef.invokeMethodAsync('ToggleAudio', isMuted);
 
     console.log(`Microphone is now ${isMuted ? 'muted' : 'unmuted'}.`);
 }

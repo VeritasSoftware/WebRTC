@@ -50,7 +50,7 @@ export class VideoChatComponent {
         this.cdr.detectChanges();
       });
     }
-    this.videoChatService.onToggleMute.subscribe( (isMute:boolean) => {
+    this.videoChatService.onToggleAudio.subscribe( (isMute:boolean) => {
       console.log("ToggleMute event received in component. isMute:", isMute);
       this._isMute = isMute;
       this.cdr.detectChanges();
@@ -130,15 +130,15 @@ export class VideoChatComponent {
     }
   }
 
-  async toggleMute(): Promise<void> {
+  async toggleAudio(): Promise<void> {
     try {
       this._showError = false;
       this._errorMessage = "";
-      await this.videoChatService.toggleMuteAsync();
+      await this.videoChatService.toggleAudioAsync();
     }
     catch (err:any) {
-      console.error("Error in toggleMute:", err);
-      this._errorMessage = err?.message ?? "Error in toggleMute.";
+      console.error("Error in toggleAudio:", err);
+      this._errorMessage = err?.message ?? "Error in toggleAudio.";
       this._showError = true;
     }
   }

@@ -33,8 +33,8 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         setShowError(false);
     };
 
-  const toggleMute = async (e: any) => {
-        console.log("toggleMute: isMute: ", e.detail);
+  const toggleAudio = async (e: any) => {
+        console.log("toggleAudio: isMute: ", e.detail);
         setIsMute(e.detail);     
     };
 
@@ -64,7 +64,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                     window.addEventListener("onInviteAccepted", handleInviteAccepted);
                 }
 
-                window.addEventListener("onToggleMute", toggleMute);
+                window.addEventListener("onToggleAudio", toggleAudio);
                 window.addEventListener("onToggleVideo", toggleVideo);
             }
         };        
@@ -105,7 +105,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                     <button disabled={_disableStartCall} onClick={() => startCall()}>Start Call</button>
                 </div>
                 <div className="col-lg-2 col-md-2 col-sm-12">
-                    <button disabled={!_callStarted} onClick={async () => await toggleMuteAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
+                    <button disabled={!_callStarted} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
                 </div>
                 <div className="col-lg-2 col-md-2 col-sm-12">
                     <button disabled={!_callStarted} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
@@ -122,7 +122,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         return (
             <div className="row">
                 <div className="col-lg-3 col-md-3 col-sm-12">
-                    <button disabled={!_callStarted} onClick={async () => await toggleMuteAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
+                    <button disabled={!_callStarted} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
                 </div>
                 <div className="col-lg-3 col-md-3 col-sm-12">
                     <button disabled={!_callStarted} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
@@ -165,11 +165,11 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         }
     }
 
-    async function toggleMuteAsync() {
+    async function toggleAudioAsync() {
         if (videoChatService) {
             try {
                 setShowError(false);               
-                await videoChatService.toggleMuteAsync();
+                await videoChatService.toggleAudioAsync();
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);
@@ -202,7 +202,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
     }
 
     return (
-        <div>
+        <div style={{width: "100%", marginTop: 20}}>
             <div>        
                 Video Chat Component ({userType === UserType.Local ? "Local" : "Remote"})
             </div>
@@ -219,6 +219,8 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             </div>                                    
 
             <InviteAccepted show={_inviteAccepted} />
+
+            <br/>
 
             <LocalButtonPanel show={userType === UserType.Local} />
 

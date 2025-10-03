@@ -1,12 +1,12 @@
 import { IWebRTCService } from "./IWebRTCService";
-import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, startCall, endCall, startHubConnection, toggleMute, toggleVideo } from './client';
+import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, startCall, endCall, startHubConnection, toggleAudio, toggleVideo } from './client';
 
 export class WebRTCService implements IWebRTCService {  
     constructor() {
         // Ensure the global functions are available for the client.js to call  
         (window as any).Invite = this.Invite.bind(this);
         (window as any).InviteAccepted = this.InviteAccepted.bind(this);
-        (window as any).ToggleMute = this.ToggleMute.bind(this);
+        (window as any).ToggleAudio = this.ToggleAudio.bind(this);
         (window as any).ToggleVideo = this.ToggleVideo.bind(this);
     }
 
@@ -52,12 +52,12 @@ export class WebRTCService implements IWebRTCService {
         window.dispatchEvent(onInviteAcceptedEvent);
     }
 
-    ToggleMute(isMute:boolean): void {
-        console.log('ToggleMute fired. isMute:', isMute);
+    ToggleAudio(isMute:boolean): void {
+        console.log('ToggleAudio fired. isMute:', isMute);
 
-        const onToggleMute = new CustomEvent<boolean>("onToggleMute", { detail: isMute });
+        const onToggleAudio = new CustomEvent<boolean>("onToggleAudio", { detail: isMute });
       
-        window.dispatchEvent(onToggleMute);
+        window.dispatchEvent(onToggleAudio);
     }
 
     ToggleVideo(isVideoStopped:boolean): void {
@@ -68,8 +68,8 @@ export class WebRTCService implements IWebRTCService {
         window.dispatchEvent(onToggleVideo);
     }
 
-    async toggleMuteAsync(): Promise<void> {
-        await toggleMute();
+    async toggleAudioAsync(): Promise<void> {
+        await toggleAudio();
     }
 
     async toggleVideoAsync(): Promise<void> {

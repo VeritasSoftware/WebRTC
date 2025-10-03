@@ -8,7 +8,7 @@
 
 <ErrorViewer ErrorText="@_errorText" ShowError="@_showError" />
 
-<div>
+<div style="width:100%; margin-top:20px">
     <div class="container">
         <div id="video-grid">
             <video class="overlay" @ref="localVideo" autoplay muted>
@@ -35,7 +35,7 @@
                 <button disabled="@(!_inviteAccepted || _callStarted)" @onclick="StartCallAsync">Start Call</button>
             </div>
             <div class="col-2" style="margin-left: 5px;">
-                <button disabled="@(!_callStarted)" @onclick="ToggleMuteAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+                <button disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
             </div>
             <div class="col-2" style="margin-left: 5px;">
                 <button disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
@@ -47,7 +47,7 @@
         else
         {
             <div class="col-3" style="margin-left: 5px;">
-                <button disabled="@(!_callStarted)" @onclick="ToggleMuteAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+                <button disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
             </div>
             <div class="col-3" style="margin-left: 5px;">
                 <button disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
@@ -128,13 +128,13 @@
         }
     }
 
-    private async Task ToggleMuteAsync()
+    private async Task ToggleAudioAsync()
     {
         try
         {
             _showError = false;
 
-            await VideoChatService.ToggleMuteAsync();
+            await VideoChatService.ToggleAudioAsync();
         }
         catch (Exception ex)
         {
@@ -187,7 +187,7 @@
                 VideoChatService.OnInviteAccepted += InviteAcceptedAsync;
             }
 
-            VideoChatService.OnToggleMute += ToggleMuteAsync;
+            VideoChatService.OnToggleAudio += ToggleAudioAsync;
             VideoChatService.OnToggleVideo += ToggleVideoAsync;
 
             await Task.CompletedTask;
@@ -226,7 +226,7 @@
         }
     }
 
-    private async Task ToggleMuteAsync(bool isMute)
+    private async Task ToggleAudioAsync(bool isMute)
     {
         _isMute = isMute;
 

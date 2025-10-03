@@ -6,7 +6,7 @@ export interface IWebRTCService {
     setSettings(userId: string, remoteUserId: string): void;
     inviteAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
-    toggleMuteAsync(): Promise<void>;
+    toggleAudioAsync(): Promise<void>;
     toggleVideoAsync(): Promise<void>;
     startCallAsync(): Promise<void>;
     remoteStartCallAsync(): Promise<void>;
@@ -14,7 +14,7 @@ export interface IWebRTCService {
     startHubConnectionAsync(): Promise<void>;
     onInvite: EventEmitter<string>;
     onInviteAccepted: EventEmitter<void>;
-    onToggleMute: EventEmitter<boolean>;
+    onToggleAudio: EventEmitter<boolean>;
     onToggleVideo: EventEmitter<boolean>;
     onCallStarted: EventEmitter<void>;
     onCallEnded: EventEmitter<void>;
