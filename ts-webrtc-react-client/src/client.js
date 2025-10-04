@@ -51,45 +51,55 @@ export async function acceptInvite(rmId) {
     await connection.invoke("accept-invite", rmId);
 }
 
-// Toggle mute/unmute
-export function toggleAudio() {
-    if (!localStream) {
-        console.error('No media stream available.');
+export function setAudio(mute) {
+    var audioTrack = getAudioTrack();
+
+    if (!audioTrack) {
+        console.warn('No audio track available to set.');
         return;
     }
 
-    // Get the audio tracks from the local stream
-    const audioTracks = localStream.getAudioTracks();
+    // Toggle the enabled property of the audio track
+    audioTrack.enabled = !mute;
 
-    if (audioTracks.length === 0) {
-        console.error('No audio tracks found in the media stream.');
+    console.log(`Microphone is now ${mute ? 'muted' : 'unmuted'}.`);
+}
+
+// Toggle mute/unmute
+export function toggleAudio() {
+    var audioTrack = getAudioTrack();
+
+    if (!audioTrack) {
+        console.warn('No audio track available to toggle.');
         return;
     }
 
     // Toggle the enabled property of the audio track
     isMuted = !isMuted;
-    audioTracks[0].enabled = !isMuted;
+    audioTrack.enabled = !isMuted;
 
     window.ToggleAudio(isMuted);
 
     console.log(`Microphone is now ${isMuted ? 'muted' : 'unmuted'}.`);
 }
 
+export function setVideo(stopVideo) {    
+    var videoTrack = getVideoTrack();
+
+    if (videoTrack) {
+        // Toggle the enabled property of the video track
+        videoTrack.enabled = !stopVideo;
+
+        // Log the current state
+        console.log(`Video is now ${videoTrack.enabled ? 'enabled' : 'disabled'}`);
+    } else {
+        console.warn('No video track available to toggle.');
+    }
+}
+
 // Function to toggle video mute/unmute
 export function toggleVideo() {
-    if (!localStream) {
-        console.error('No media stream available.');
-        return;
-    }
-    // Get the video track from the stream
-    var videoTracks = localStream.getVideoTracks();
-
-    if (videoTracks.length === 0) {
-        console.error('No video tracks found in the media stream.');
-        return;
-    }
-
-    var videoTrack = videoTracks[0];
+    var videoTrack = getVideoTrack();
 
     if (videoTrack) {
         // Toggle the enabled property of the audio track
@@ -105,6 +115,17 @@ export function toggleVideo() {
     } else {
         console.warn('No video track available to toggle.');
     }
+}
+
+export async function startLocalMedia() {
+    try {
+        console.log("Requesting local media...");
+        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localVideo.srcObject = localStream;
+    } catch (ex) {
+        console.error('Error accessing media devices.', ex);
+        return;
+    }    
 }
 
 export async function startCall(sendOffer = true) {
@@ -128,9 +149,9 @@ export async function startCall(sendOffer = true) {
             console.log("Signaling state changed to:", peerConnection.signalingState);
         });
 
-        console.log("Requesting local media...");
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        localVideo.srcObject = localStream;
+        if (!localStream) {
+            await startLocalMedia();
+        }
 
         console.log("Adding local tracks to peer connection...");
         localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
@@ -318,6 +339,39 @@ export function startHubConnection() {
             isHubConnectionStarted = true;
         })
         .catch(err => console.error("Error while starting connection:", err));
+}
+
+function getAudioTrack() {
+    if (!localStream) {
+        console.error('No media stream available.');
+        return null;
+    }
+
+    // Get the audio track from the stream
+    const audioTracks = localStream.getAudioTracks();
+    
+    if (audioTracks.length === 0) {
+        console.error('No audio tracks found in the media stream.');
+        return null;
+    }
+
+    return audioTracks[0];
+}
+
+function getVideoTrack() {
+    if (!localStream) {
+        console.error('No media stream available.');
+        return null;
+    }
+    // Get the video track from the stream
+    var videoTracks = localStream.getVideoTracks();
+
+    if (videoTracks.length === 0) {
+        console.error('No video tracks found in the media stream.');
+        return null;
+    }
+
+    return videoTracks[0];
 }
 
 function sleep(ms) {

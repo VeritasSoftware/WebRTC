@@ -90,6 +90,27 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("acceptInvite", roomId);
         }
 
+        public async Task StartLocalMediaAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("startLocalMedia");
+        }
+
+        public async Task SetAudioAsync(bool mute)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("setAudio", mute);
+        }
+
+        public async Task SetVideoAsync(bool stopVideo)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("setVideo", stopVideo);
+        }
+
         public async Task ToggleAudioAsync()
         {
             _module = await _moduleTask.Value;

@@ -134,7 +134,7 @@ export class VideoChatComponent {
     try {
       this._showError = false;
       this._errorMessage = "";
-      await this.videoChatService.toggleAudioAsync();
+      await this.videoChatService.toggleAudio();
     }
     catch (err:any) {
       console.error("Error in toggleAudio:", err);
@@ -147,7 +147,7 @@ export class VideoChatComponent {
     try {
       this._showError = false;
       this._errorMessage = "";
-      await this.videoChatService.toggleVideoAsync();
+      await this.videoChatService.toggleVideo();
     }
     catch (err:any) {
       console.error("Error in toggleVideo:", err);

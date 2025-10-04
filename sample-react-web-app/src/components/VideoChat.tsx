@@ -175,7 +175,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (videoChatService) {
             try {
                 setShowError(false);               
-                await videoChatService.toggleAudioAsync();
+                videoChatService.toggleAudio();
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);
@@ -187,7 +187,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (videoChatService) {
             try {
                 setShowError(false);               
-                await videoChatService.toggleVideoAsync();
+                videoChatService.toggleVideo();
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);

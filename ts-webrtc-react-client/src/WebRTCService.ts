@@ -1,5 +1,7 @@
 import { IWebRTCService } from "./IWebRTCService";
-import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, startCall, endCall, startHubConnection, toggleAudio, toggleVideo } from './client';
+import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
+    startCall, endCall, startHubConnection, toggleAudio, toggleVideo, startLocalMedia, 
+    setAudio, setVideo} from './client';
 
 export class WebRTCService implements IWebRTCService {  
     constructor() {
@@ -68,12 +70,24 @@ export class WebRTCService implements IWebRTCService {
         window.dispatchEvent(onToggleVideo);
     }
 
-    async toggleAudioAsync(): Promise<void> {
-        await toggleAudio();
+    async startLocalMediaAsync(): Promise<void> {
+        await startLocalMedia();
     }
 
-    async toggleVideoAsync(): Promise<void> {
-        await toggleVideo();
+    async setAudio(mute: boolean): Promise<void> {
+        setAudio(mute);
+    }
+
+    async setVideo(stopVideo: boolean): Promise<void> {
+        setVideo(stopVideo);
+    }
+
+    async toggleAudio(): Promise<void> {
+        toggleAudio();
+    }
+
+    async toggleVideo(): Promise<void> {
+        toggleVideo();
     }
     
     async startCallAsync(): Promise<void> {

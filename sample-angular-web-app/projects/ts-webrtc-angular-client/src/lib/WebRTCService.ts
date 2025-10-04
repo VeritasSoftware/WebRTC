@@ -1,6 +1,8 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { IWebRTCService } from "./IWebRTCService";
-import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, toggleVideo, startCall, endCall, startHubConnection, toggleAudio } from './client';
+import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
+            toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
+            startLocalMedia} from './client';
 
 [Injectable({
   providedIn: null
@@ -67,11 +69,23 @@ export class WebRTCService implements IWebRTCService {
         this.onToggleVideo?.emit(isVideoStopped);
     }
 
-    async toggleAudioAsync(): Promise<void> {
+    async startLocalMediaAsync(): Promise<void> {
+        await startLocalMedia();
+    }
+
+    async setAudio(mute: boolean): Promise<void> {
+        setAudio(mute);
+    }
+
+    async setVideo(stopVideo: boolean): Promise<void> {
+        setVideo(stopVideo);
+    }
+
+    async toggleAudio(): Promise<void> {
         toggleAudio();
     }
 
-    async toggleVideoAsync(): Promise<void> {
+    async toggleVideo(): Promise<void> {
         toggleVideo();
     }
     
