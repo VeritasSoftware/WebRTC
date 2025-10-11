@@ -13,6 +13,7 @@ let isRemoteSet = false;
 let isTrickleIceSent = false;
 let localVideo;
 let remoteVideo;
+let fileTransferDataChannel;
 
 export function setHubUrl(hUrl) {
     console.log("Setting Hub url: ", hUrl);
@@ -128,6 +129,41 @@ export async function startLocalMedia() {
     }    
 }
 
+export function transferFile(data, fileName, mimeType) {
+    try {
+        console.log("transferFile: file of length: ", data.length);
+        console.log("transferFile: fileName: ", fileName);
+        console.log("transferFile: mimeType: ", mimeType);
+
+        var dataBlob = new Blob([data], { type: mimeType });
+
+        const chunkSize = 64 * 1024; // 64KiB
+        let offset = 0;
+
+        function readChunk() {
+            const reader = new FileReader();
+            const slice = dataBlob.slice(offset, offset + chunkSize);
+            reader.onload = (event) => {
+                console.log("Sending file chunk.", event);
+                fileTransferDataChannel.send(event.target.result);
+                offset += chunkSize;
+                if (offset < dataBlob.size) {
+                    readChunk();
+                } else {
+                    fileTransferDataChannel.send("EOF" + ":" + fileName + ":" + mimeType);
+                    console.log("File transfer complete");
+                }
+            };
+            reader.readAsArrayBuffer(slice);
+        }
+
+        readChunk();        
+    } catch (ex) {
+        console.error('Error transfering file.', ex);
+        return;
+    }    
+}
+
 export async function startCall(sendOffer = true) {
     try { 
         if (!connection && !isHubConnectionStarted)
@@ -187,6 +223,9 @@ export async function startCall(sendOffer = true) {
         peerConnection.oniceconnectionstatechange = () => {
             console.log('ICE Connection State:', peerConnection.iceConnectionState);
         };
+
+        createFileTransferDataChannel();
+        subscribeFileTransferDataChannel();
 
         if (sendOffer) {
             console.log("Creating offer...");
@@ -339,6 +378,103 @@ export function startHubConnection() {
             isHubConnectionStarted = true;
         })
         .catch(err => console.error("Error while starting connection:", err));
+}
+
+function createFileTransferDataChannel() {
+    try {
+        console.log("createFileTransferDataChannel called.");
+
+        if (!peerConnection) {
+            console.log("Peer connection not available. Please start call first.")
+            return;
+        }
+
+        // Create a DataChannel for file transfer
+        console.log("Creating file transfer data channel.")
+        fileTransferDataChannel = peerConnection.createDataChannel("fileTransfer");
+        fileTransferDataChannel.binaryType = "arraybuffer";
+
+        console.log("Attaching file transer data channel events.")
+        // Handle DataChannel events
+        fileTransferDataChannel.onopen = () => {
+            console.log("DataChannel is open");
+        };
+
+        let receivedBuffer = [];
+        let receivedSize = 0;
+
+        fileTransferDataChannel.onmessage = (event) => {
+            console.log("local: file received.");
+
+            if (event.data.toString().startsWith("EOF")) {
+                var fileName = event.data.split(':')[1];
+                var mimeType = event.data.split(':')[2];
+                const base64String = btoa(String.fromCharCode(...receivedBuffer));
+                console.log("subscriber: onmessage: receivedBuffer: ", base64String);
+
+                window.FileTransfer(base64String,
+                    receivedSize, fileName, mimeType);
+            }
+            else {
+                console.log("subscriber: event.data: ", event.data);
+                const view = new Uint8Array(event.data);
+                receivedBuffer.push(...view);
+                receivedSize += event.data.byteLength;
+            }
+        };
+    } catch (ex) {
+        console.error('Error create file transfer data channel.', ex);
+        return;
+    }
+}
+
+function subscribeFileTransferDataChannel() {
+    try {
+        console.log("subscribeFileTransferDataChannel called.");
+
+        if (!peerConnection) {
+            console.log("Peer connection not available. Please start call first.")
+            return;
+        }
+
+        peerConnection.ondatachannel = (event) => {
+            const dataChannel = event.channel;
+
+            let receivedBuffer = [];
+            let receivedSize = 0;
+
+            dataChannel.onmessage = (event) => {
+                console.log("subscriber: file received.");
+
+                if (event.data.toString().startsWith("EOF")) {
+                    var fileName = event.data.split(':')[1];
+                    var mimeType = event.data.split(':')[2];
+                    const base64String = btoa(String.fromCharCode(...receivedBuffer));
+                    console.log("subscriber: onmessage: receivedBuffer: ", base64String);
+
+                    window.FileTransfer(base64String,
+                        receivedSize, fileName, mimeType);
+                }
+                else {
+                    console.log("subscriber: file data: ", event.data);
+                    const view = new Uint8Array(event.data);
+                    receivedBuffer.push(...view);
+                    receivedSize += event.data.byteLength;
+                }
+            };
+
+            dataChannel.onopen = () => {
+                console.log("DataChannel is open!");
+            };
+
+            dataChannel.onclose = () => {
+                console.log("DataChannel is closed!");
+            };
+        };
+    } catch (ex) {
+        console.error('Error subscribe file transfer data channel.', ex);
+        return;
+    }
 }
 
 function getAudioTrack() {

@@ -11,6 +11,26 @@
     <link rel="icon" type="image/png" href="favicon.png" />
     <link href="SampleBlazorWebApp.styles.css" rel="stylesheet" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/9.0.6/signalr.js"></script>
+    <script type="text/javascript">
+        window.downloadFileFromByteArray = (fileName, mimeType, byteArray) => {
+            // Convert the byte array to a Blob
+            console.log("downloadFileFromByteArray: fileName: ", fileName);
+            console.log("downloadFileFromByteArray: mimeType: ", mimeType);
+            console.log("downloadFileFromByteArray: byteArray: ", byteArray);
+
+            const blob = new Blob([byteArray], { type: mimeType});
+
+            // Create a temporary link element
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = fileName;
+
+            // Append the link to the body, trigger the download, and remove the link
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+    </script>
 </head>
 
 <body>

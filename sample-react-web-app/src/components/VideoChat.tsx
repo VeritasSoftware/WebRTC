@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { VideoChatProps, UserType } from './VideoChat.Models';
 import './VideoChat.css';
+import { FileTransferResult } from 'ts-webrtc-react-client'
 
 const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => {
     
@@ -43,6 +44,12 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         setIsVideoStopped(e.detail);     
     };
 
+    const fileTransfer = async (e: any) => {
+        console.log("FileTransfer event received in component. result:", e);
+        var file = e.detail as FileTransferResult;
+        (window as any).downloadFileFromByteArray(file.name!, file.type!, base64ToUint8Array(file.data!));     
+    };
+
     useEffect(() => {
         const initializeVideoChat = async () => {
             if (videoChatService) {
@@ -66,6 +73,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
 
                 window.addEventListener("onToggleAudio", toggleAudio);
                 window.addEventListener("onToggleVideo", toggleVideo);
+                window.addEventListener("onFileTransfer", fileTransfer);
             }
         };        
 
@@ -93,6 +101,17 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             </div>
         );
     };
+
+    const FileTransferPanel: React.FC<{ show: boolean }> = ({ show }) => {
+        if (!show) return null;
+        return (
+            <div className="row">
+                <div className="col-12" style={{ marginLeft: 5}}>
+                    <input type="file" onChange={async (e) => await onFileSelected(e)} />
+                </div>
+            </div>
+        );
+    };    
 
     const LocalButtonPanel: React.FC<{ show: boolean }> = ({ show }) => {
         if (!show) return null;
@@ -207,6 +226,51 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         }
     }
 
+    async function onFileSelected(e: React.ChangeEvent<HTMLInputElement>): Promise<void> {
+        try {
+            if (videoChatService) {
+                setShowError(false);
+
+                var input = e.target as HTMLInputElement;
+            
+                if (input.files && input.files.length > 0) {
+                    for (let i=0; i<input.files.length; i++)
+                    {
+                        var file:File = input.files[i];
+                        var b = new Blob([file], {type: file.type});
+                        var arr = new Uint8Array(await b.arrayBuffer());
+                        videoChatService.transferFile(arr, file.name, file.type);
+                    }
+                }
+            }                
+        }
+        catch (err:any) {
+          console.error("Error in onFileSelected:", err);
+          setErrorMessage(err?.message ?? "Error in onFileSelected.");
+          setShowError(true);
+        }    
+      }
+
+    function base64ToUint8Array(base64String: string): Uint8Array {
+        try {
+          // Decode the Base64 string into a raw string
+          const rawString = atob(base64String);
+      
+          // Create a Uint8Array with the same length as the raw string
+          const uint8Array = new Uint8Array(rawString.length);
+      
+          // Populate the Uint8Array with the character codes of the raw string
+          for (let i = 0; i < rawString.length; i++) {
+            uint8Array[i] = rawString.charCodeAt(i);
+          }
+      
+          return uint8Array;
+        } catch (error) {
+          console.error('Error converting Base64 to Uint8Array:', error);
+          throw new Error('Invalid Base64 string');
+        }
+    }
+
     return (
         <div style={{width: "100%", marginTop: 20}}>
             <div style={{marginTop: 10}}>        
@@ -223,7 +287,13 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                     </video>
                 </div>
             </div>
+
+            <br />
                 
+            <FileTransferPanel show={_callStarted}/>
+
+            <br />
+
             <InviteAccepted show={_inviteAccepted} />
 
             <br />

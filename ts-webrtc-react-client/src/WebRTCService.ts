@@ -1,7 +1,8 @@
 import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
     startCall, endCall, startHubConnection, toggleAudio, toggleVideo, startLocalMedia, 
-    setAudio, setVideo} from './client';
+    setAudio, setVideo, transferFile} from './client';
+import { FileTransferResult } from "./models";
 
 export class WebRTCService implements IWebRTCService {  
     constructor() {
@@ -10,6 +11,7 @@ export class WebRTCService implements IWebRTCService {
         (window as any).InviteAccepted = this.InviteAccepted.bind(this);
         (window as any).ToggleAudio = this.ToggleAudio.bind(this);
         (window as any).ToggleVideo = this.ToggleVideo.bind(this);
+        (window as any).FileTransfer = this.FileTransfer.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -68,6 +70,29 @@ export class WebRTCService implements IWebRTCService {
         const onToggleVideo = new CustomEvent<boolean>("onToggleVideo", { detail: isVideoStopped });
       
         window.dispatchEvent(onToggleVideo);
+    }
+
+    transferFile(data:Uint8Array, name:string, type:string): void {
+        transferFile(data, name, type);
+    }
+
+    FileTransfer(data:string, size:number, fileName:string, mimeType:string): void {
+        console.log('FileTransfer fired. data:', data);
+        console.log('FileTransfer fired. size:', size);
+        console.log('FileTransfer fired. fileName:', fileName);
+        console.log('FileTransfer fired. mimeType:', mimeType);
+        const onFileTransfer = new CustomEvent<FileTransferResult>("onFileTransfer", 
+            { 
+                detail: <FileTransferResult>
+                {
+                    data: data,
+                    size: size,
+                    name: fileName,
+                    type: mimeType
+                }}
+            );
+      
+        window.dispatchEvent(onFileTransfer);
     }
 
     async startLocalMediaAsync(): Promise<void> {

@@ -1,4 +1,5 @@
 import { EventEmitter } from "@angular/core";
+import { FileTransferResult } from "./models";
 
 export interface IWebRTCService {
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
@@ -15,19 +16,12 @@ export interface IWebRTCService {
     remoteStartCallAsync(): Promise<void>;
     endCallAsync(): Promise<void>;
     startHubConnectionAsync(): Promise<void>;
+    transferFile(data:Uint8Array, name:string, type:string): Promise<void>;
     onInvite: EventEmitter<string>;
     onInviteAccepted: EventEmitter<void>;
     onToggleAudio: EventEmitter<boolean>;
     onToggleVideo: EventEmitter<boolean>;
     onCallStarted: EventEmitter<void>;
     onCallEnded: EventEmitter<void>;
-    // Additional methods that could be added in the future:
-    // muteAudio(): void;
-    // unmuteAudio(): void;
-    // muteVideo(): void;
-    // unmuteVideo(): void;
-    // switchCamera(): Promise<void>;
-    // onCallStarted(callback: () => void): void;
-    // onCallEnded(callback: () => void): void;
-    // onError(callback: (error: any) => void): void;
+    onFileTransfer: EventEmitter<FileTransferResult>;
 }

@@ -13,8 +13,17 @@
         </video>
     </div>
 </div>    
-<br />
+
+@if(_callStarted) {
+    <br />
+    <div class="row">
+        <div class="col-12" style="margin-left: 5px;">
+            <input type="file" (change)="onFileSelected($event)" />
+        </div>
+    </div>
+}
 @if (_inviteAccepted) {
+    <br />
     <div class="row">
         <div class="col-12" style="margin-left: 5px;">
             <span style="background-color: green; color: white;">Invite accepted.</span>

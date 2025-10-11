@@ -1,0 +1,36 @@
+﻿@using SampleBlazorWebApp.Models
+
+<InputFile OnChange="LoadFiles" multiple />
+
+@code {
+    [Parameter]
+    public EventCallback<FilesResult> OnChange { get; set; }
+
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        var filesResult = new FilesResult();
+
+        foreach (var file in e.GetMultipleFiles())
+        {
+            await using var stream = file.OpenReadStream((int)file.Size);
+            // var buffer = new byte[(int)file.Size];
+            // await stream.ReadAsync(buffer, 0, (int)file.Size);
+
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            var fileBytes = memoryStream.ToArray();
+            // Process the buffer
+
+            var fileResult = new FileResult
+                {
+                    Data = fileBytes,
+                    Name = file.Name,
+                    Type = file.ContentType
+                };
+            filesResult.Files.Add(fileResult);
+        }
+
+        await this.OnChange.InvokeAsync(filesResult);            
+    }
+}

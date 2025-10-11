@@ -1,8 +1,10 @@
 ﻿@using Microsoft.Extensions.Configuration;
 
+@using SampleBlazorWebApp.Models
 @using WebRTC.Blazor.Client
 
 @inject IConfiguration Configuration
+@inject IJSRuntime JSRuntime
 
 @inject IWebRTCService VideoChatService
 
@@ -18,13 +20,20 @@
         </div>
     </div>    
     <br />
+    <div class="row">
+        <div class="col-12" style="margin-left: 5px;">
+            <Documents OnChange="FileTransfer" />
+        </div>
+    </div>
+    <br />
     @if (_inviteAccepted) {
         <div class="row">
             <div class="col-12" style="margin-left: 5px;">
                 <span style="background-color: green; color: white;">Invite accepted.</span>
             </div>
         </div>
-    }
+    }       
+
     @if (this.MyUserType == UserType.Local)
     {
         <div class="row" style="margin-top:10px; margin-left: 5px;">
@@ -92,6 +101,15 @@
     private bool _isMute = false;
     private bool _isVideoStopped = false;
 
+    private async Task FileTransfer(FilesResult files)
+    {
+        Console.WriteLine($"file count: {files.Files.Count}");
+        foreach(var file in files.Files)
+        {
+            await VideoChatService.TransferFileAsync(file.Data, file.Name, file.Type);
+        }        
+    }
+
     private async Task InviteAsync()
     {
         try
@@ -118,9 +136,11 @@
         {
             _showError = false;
 
-            _callStarted = false;
+            _callStarted = false;            
 
             await VideoChatService.StartCallAsync();
+
+            //await VideoChatService.CreateFileTransferDataChannelAsync();
 
             _callStarted = true;
         }
@@ -193,6 +213,7 @@
 
             VideoChatService.OnToggleAudio += ToggleAudioAsync;
             VideoChatService.OnToggleVideo += ToggleVideoAsync;
+            VideoChatService.OnFileTransfer += FileTransferAsync;
 
             await Task.CompletedTask;
         }
@@ -218,9 +239,9 @@
                 if (this.MyUserType == UserType.Remote)
                 {
                     await VideoChatService.RemoteStartCallAsync();
-                    _callStarted = true;
+                    _callStarted = true;                   
                     StateHasChanged();
-                }                
+                }                               
             }
         }
         catch (Exception ex)
@@ -260,6 +281,21 @@
     {
         _inviteAccepted = true;
         StateHasChanged();
+        await Task.CompletedTask;
+    }
+
+    private async Task FileTransferAsync(FileTransferResult result)
+    {
+        if (result.Data == null)
+        {
+            throw new ApplicationException("Data not received.");
+        }
+
+        await JSRuntime.InvokeVoidAsync("downloadFileFromByteArray", 
+                                        result.Name,
+                                        result.Type,
+                                        Convert.FromBase64String(result.Data));
+        Console.WriteLine($"Files size transferred: {result.Size}");
         await Task.CompletedTask;
     }
 }

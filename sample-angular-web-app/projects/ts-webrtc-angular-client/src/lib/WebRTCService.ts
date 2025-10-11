@@ -2,7 +2,8 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
-            startLocalMedia} from './client';
+            startLocalMedia, transferFile} from './client';
+import { FileTransferResult } from "./models";
 
 [Injectable({
   providedIn: null
@@ -14,6 +15,7 @@ export class WebRTCService implements IWebRTCService {
     public onToggleVideo = new EventEmitter<boolean>(); 
     public onCallStarted = new EventEmitter<void>();
     public onCallEnded = new EventEmitter<void>();
+    public onFileTransfer = new EventEmitter<FileTransferResult>();
 
     constructor() {
         // Ensure the global functions are available for the client.js to call  
@@ -21,6 +23,7 @@ export class WebRTCService implements IWebRTCService {
         (window as any).InviteAccepted = this.InviteAccepted.bind(this);
         (window as any).ToggleAudio = this.ToggleAudio.bind(this);
         (window as any).ToggleVideo = this.ToggleVideo.bind(this);
+        (window as any).FileTransfer = this.FileTransfer.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -69,6 +72,21 @@ export class WebRTCService implements IWebRTCService {
         this.onToggleVideo?.emit(isVideoStopped);
     }
 
+    FileTransfer(data:string, size:number, fileName:string, mimeType:string): void {
+        console.log('FileTransfer fired. data:', data);
+        console.log('FileTransfer fired. size:', size);
+        console.log('FileTransfer fired. fileName:', fileName);
+        console.log('FileTransfer fired. mimeType:', mimeType);
+        this.onFileTransfer?.emit(<FileTransferResult>
+            {
+                data: data,
+                size: size,
+                name: fileName,
+                type: mimeType
+            }
+        );
+    }
+
     async startLocalMediaAsync(): Promise<void> {
         await startLocalMedia();
     }
@@ -87,6 +105,10 @@ export class WebRTCService implements IWebRTCService {
 
     async toggleVideo(): Promise<void> {
         toggleVideo();
+    }
+
+    async transferFile(data:Uint8Array, name:string, type:string): Promise<void> {
+        transferFile(data, name, type);
     }
     
     async startCallAsync(): Promise<void> {

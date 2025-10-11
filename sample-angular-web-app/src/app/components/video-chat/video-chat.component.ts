@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
 import { WebRTCService } from '../../../../projects/ts-webrtc-angular-client/src/public-api';
+import { FileTransferResult } from '../../../../projects/ts-webrtc-angular-client/src/lib/models';
 
 @Component({
   selector: 'app-video-chat',
@@ -58,6 +59,11 @@ export class VideoChatComponent {
     this.videoChatService.onToggleVideo.subscribe( (isVideoStopped:boolean) => {
       console.log("ToggleVideo event received in component. isVideoStopped:", isVideoStopped);
       this._isVideoStopped = isVideoStopped;
+      this.cdr.detectChanges();
+    });
+    this.videoChatService.onFileTransfer.subscribe( (result:FileTransferResult) => {
+      console.log("FileTransfer event received in component. result.name:", result.name);
+      (window as any).downloadFileFromByteArray(result.name!, result.type!, this.base64ToUint8Array(result.data!));
       this.cdr.detectChanges();
     });
   }
@@ -166,6 +172,50 @@ export class VideoChatComponent {
       console.error("Error in endCall:", err);
       this._errorMessage = err?.message ?? "Error in endCall.";
       this._showError = true;
+    }
+  }
+
+  async onFileSelected(event: Event): Promise<void> {
+    try {
+      this._showError = false;
+      this._errorMessage = "";
+
+      const input = event.target as HTMLInputElement;
+
+      if (input.files && input.files.length > 0) {
+        for (let i=0; i<input.files.length; i++)
+        {
+          var file:File = input.files[i];
+          var b = new Blob([file], {type: file.type});
+          var arr = new Uint8Array(await b.arrayBuffer());
+          await this.videoChatService.transferFile(arr, file.name, file.type);
+        }
+      }      
+    }
+    catch (err:any) {
+      console.error("Error in onFileSelected:", err);
+      this._errorMessage = err?.message ?? "Error in onFileSelected.";
+      this._showError = true;
+    }    
+  }
+  
+  base64ToUint8Array(base64String: string): Uint8Array {
+    try {
+      // Decode the Base64 string into a raw string
+      const rawString = atob(base64String);
+  
+      // Create a Uint8Array with the same length as the raw string
+      const uint8Array = new Uint8Array(rawString.length);
+  
+      // Populate the Uint8Array with the character codes of the raw string
+      for (let i = 0; i < rawString.length; i++) {
+        uint8Array[i] = rawString.charCodeAt(i);
+      }
+  
+      return uint8Array;
+    } catch (error) {
+      console.error('Error converting Base64 to Uint8Array:', error);
+      throw new Error('Invalid Base64 string');
     }
   }
 }

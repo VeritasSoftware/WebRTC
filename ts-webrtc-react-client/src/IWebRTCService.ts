@@ -14,4 +14,5 @@ export interface IWebRTCService {
     remoteStartCallAsync(): Promise<void>;
     endCallAsync(): Promise<void>;
     startHubConnectionAsync(): Promise<void>;
+    transferFile(data:Uint8Array, name:string, type:string): void;
 }

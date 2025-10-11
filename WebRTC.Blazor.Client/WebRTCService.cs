@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using System.Runtime.InteropServices;
 
 namespace WebRTC.Blazor.Client
 {
@@ -13,6 +14,7 @@ namespace WebRTC.Blazor.Client
         public event Func<Task> OnInviteAccepted;
         public event Func<bool, Task> OnToggleAudio;
         public event Func<bool, Task> OnToggleVideo;
+        public event Func<FileTransferResult, Task> OnFileTransfer;
 
         public WebRTCService(IJSRuntime js)
         {
@@ -44,6 +46,18 @@ namespace WebRTC.Blazor.Client
         public void ToggleVideo(bool isVideoStopped)
         {
             this.OnToggleVideo?.Invoke(isVideoStopped);
+        }
+
+        [JSInvokable]
+        public void FileTransfer(string data, int size, string fileName, string mimeType)
+        {
+            this.OnFileTransfer?.Invoke(new FileTransferResult
+            {
+                Data = data,
+                Size = size,
+                Name = fileName,
+                Type = mimeType
+            });
         }
 
         public async Task SetDotNetRefAsync()
@@ -158,6 +172,13 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("setVideos", local, remote);
+        }
+
+        public async Task TransferFileAsync(byte[] data, string fileName, string mimeType)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("transferFile", data, fileName, mimeType);
         }
     }
 }
