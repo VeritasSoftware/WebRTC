@@ -48,17 +48,111 @@ You can go through my SampleBlazorWebApp to see how to use the Client.
 
 [**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/WebRTC.Blazor.Client)
 
+Below are the methods and events supported by the library.
+
+```csharp
+    public interface IWebRTCService
+    {
+        event Func<string, Task> OnInvite;
+        event Func<Task> OnInviteAccepted;
+        event Func<bool, Task> OnToggleAudio;
+        event Func<bool, Task> OnToggleVideo;
+        event Func<FileTransferResult, Task> OnFileTransfer;
+        Task SetDotNetRefAsync();
+        Task SetHubUrlAsync(string url);
+        Task StartHubConnectionAsync();
+        Task InviteAsync();
+        Task InviteAllAsync();
+        Task AcceptInviteAsync(string roomId);
+        Task StartLocalMediaAsync();
+        Task SetAudioAsync(bool mute);
+        Task SetVideoAsync(bool stopVideo);
+        Task ToggleAudioAsync();
+        Task ToggleVideoAsync();
+        Task StartCallAsync();
+        Task RemoteStartCallAsync();
+        Task EndCallAsync();
+        Task SetSettingsAsync(string userId, string myUserId);
+        Task SetVideosAsync(ElementReference local, ElementReference remote);
+        Task TransferFileAsync(byte[] data, string fileName, string mimeType);
+    }
+```
+
 ## Angular Client
 
 You can go through sample-angular-web-app to see how to use the Client.
 
 [**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/sample-angular-web-app/projects/ts-webrtc-angular-client/src/lib)
 
+Below are the methods and events supported by the library.
+
+```typescript
+export interface IWebRTCService {
+    setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
+    setHubUrl(hubUrl: string): void;
+    setSettings(userId: string, remoteUserId: string): void;
+    inviteAsync(): Promise<void>;
+    acceptInviteAsync(roomId: string): Promise<void>;
+    startLocalMediaAsync(): Promise<void>;
+    setAudio(mute: boolean): void;
+    setVideo(stopVideo: boolean): void;
+    toggleAudio(): void;
+    toggleVideo(): void;
+    startCallAsync(): Promise<void>;
+    remoteStartCallAsync(): Promise<void>;
+    endCallAsync(): Promise<void>;
+    startHubConnectionAsync(): Promise<void>;
+    transferFile(data:Uint8Array, name:string, type:string): Promise<void>;
+    onInvite: EventEmitter<string>;
+    onInviteAccepted: EventEmitter<void>;
+    onToggleAudio: EventEmitter<boolean>;
+    onToggleVideo: EventEmitter<boolean>;
+    onCallStarted: EventEmitter<void>;
+    onCallEnded: EventEmitter<void>;
+    onFileTransfer: EventEmitter<FileTransferResult>;
+}
+```
+
 ## React Client
 
 You can go through sample-react-web-app to see how to use the Client.
 
 [**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/ts-webrtc-react-client/src)
+
+Below are the methods supported by the library.
+
+```typescipt
+export interface IWebRTCService {
+    setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
+    setHubUrl(hubUrl: string): void;
+    setSettings(userId: string, remoteUserId: string): void;
+    inviteAsync(): Promise<void>;
+    inviteAllAsync(): Promise<void>;
+    acceptInviteAsync(roomId: string): Promise<void>;
+    startLocalMediaAsync(): Promise<void>;
+    setAudio(mute: boolean): void;
+    setVideo(stopVideo: boolean): void;
+    toggleAudio(): void;
+    toggleVideo(): void;
+    startCallAsync(): Promise<void>;
+    remoteStartCallAsync(): Promise<void>;
+    endCallAsync(): Promise<void>;
+    startHubConnectionAsync(): Promise<void>;
+    transferFile(data:Uint8Array, name:string, type:string): void;
+}
+```
+
+The events are:
+
+```typescript
+onInvite
+onInviteAccepted
+onToggleAudio
+onToggleVideo
+onFileTransfer
+onCallStarted
+onCallEnded
+```
 
 ## Steps to run the demo
 
