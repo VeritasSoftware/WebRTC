@@ -121,7 +121,7 @@ You can go through sample-react-web-app to see how to use the Client.
 
 Below are the methods supported by the library.
 
-```typescipt
+```typescript
 export interface IWebRTCService {
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
