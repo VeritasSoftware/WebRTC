@@ -4,6 +4,7 @@ import { FileTransferResult } from "./models";
 export interface IWebRTCService {
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
+    setRoomId(roomId:string) : void;
     setSettings(userId: string, remoteUserId: string): void;
     inviteAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;

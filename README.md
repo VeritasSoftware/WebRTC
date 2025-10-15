@@ -63,7 +63,7 @@ Below are the methods and events supported by the library.
         Task StartHubConnectionAsync();
         Task InviteAsync();
         Task InviteAllAsync();
-        Task AcceptInviteAsync(string roomId);
+        Task AcceptInviteAsync(string roomId);        
         Task StartLocalMediaAsync();
         Task SetAudioAsync(bool mute);
         Task SetVideoAsync(bool stopVideo);
@@ -72,6 +72,7 @@ Below are the methods and events supported by the library.
         Task StartCallAsync();
         Task RemoteStartCallAsync();
         Task EndCallAsync();
+        Task SetRoomIdAsync(string roomId);
         Task SetSettingsAsync(string userId, string myUserId);
         Task SetVideosAsync(ElementReference local, ElementReference remote);
         Task TransferFileAsync(byte[] data, string fileName, string mimeType);
@@ -90,6 +91,7 @@ Below are the methods and events supported by the library.
 export interface IWebRTCService {
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
+    setRoomId(roomId:string) : void;
     setSettings(userId: string, remoteUserId: string): void;
     inviteAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
@@ -125,6 +127,7 @@ Below are the methods supported by the library.
 export interface IWebRTCService {
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
+    setRoomId(roomId:string) : void;
     setSettings(userId: string, remoteUserId: string): void;
     inviteAsync(): Promise<void>;
     inviteAllAsync(): Promise<void>;

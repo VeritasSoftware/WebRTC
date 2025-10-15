@@ -14,7 +14,7 @@ namespace WebRTC.Blazor.Client
         Task StartHubConnectionAsync();
         Task InviteAsync();
         Task InviteAllAsync();
-        Task AcceptInviteAsync(string roomId);
+        Task AcceptInviteAsync(string roomId);        
         Task StartLocalMediaAsync();
         Task SetAudioAsync(bool mute);
         Task SetVideoAsync(bool stopVideo);
@@ -23,6 +23,7 @@ namespace WebRTC.Blazor.Client
         Task StartCallAsync();
         Task RemoteStartCallAsync();
         Task EndCallAsync();
+        Task SetRoomIdAsync(string roomId);
         Task SetSettingsAsync(string userId, string myUserId);
         Task SetVideosAsync(ElementReference local, ElementReference remote);
         Task TransferFileAsync(byte[] data, string fileName, string mimeType);

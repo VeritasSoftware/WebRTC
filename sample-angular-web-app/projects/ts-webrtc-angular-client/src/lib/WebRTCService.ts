@@ -2,7 +2,8 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
-            startLocalMedia, transferFile} from './client';
+            startLocalMedia, transferFile,
+            setRoomId} from './client';
 import { FileTransferResult } from "./models";
 
 [Injectable({
@@ -33,6 +34,11 @@ export class WebRTCService implements IWebRTCService {
     setHubUrl(hubUrl: string): void {
         console.log('Setting hub URL to:', hubUrl);
         setHubUrl(hubUrl);
+    }
+
+    setRoomId(roomId:string) : void {
+        console.log('Setting Room Id to:', roomId);
+        setRoomId(roomId);
     }
 
     setSettings(userId: string, remoteUserId: string): void {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
-using System.Runtime.InteropServices;
 
 namespace WebRTC.Blazor.Client
 {
@@ -102,7 +101,7 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("acceptInvite", roomId);
-        }
+        }        
 
         public async Task StartLocalMediaAsync()
         {
@@ -158,6 +157,13 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("endCall");
+        }
+
+        public async Task SetRoomIdAsync(string roomId)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("setRoomId", roomId);
         }
 
         public async Task SetSettingsAsync(string userId, string myUserId)

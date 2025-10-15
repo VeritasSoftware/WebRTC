@@ -25,20 +25,26 @@ export function setVideos(lv, rv) {
     remoteVideo = rv;
 }
 
+export function setRoomId(rmId) {
+    roomId = rmId;
+}
+
 export function setSettings(uid, myid) {
     remoteUniqueUserId = uid;
     localUniqueUserId = myid;
 }
 
 export async function invite() {
-    roomId = generateUUID();
+    if (!roomId)
+        roomId = generateUUID();
     console.log("Generated room ID: ", roomId);
 
     await connection.invoke("invite", roomId, remoteUniqueUserId);
 }
 
 export async function inviteAll() {
-    roomId = generateUUID();
+    if (!roomId)
+        roomId = generateUUID();
     console.log("Generated room ID: ", roomId);
 
     await connection.invoke("invite-all", roomId);

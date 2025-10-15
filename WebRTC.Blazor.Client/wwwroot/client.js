@@ -36,6 +36,10 @@ export function setSettings(uid, myid) {
     localUniqueUserId = myid;
 }
 
+export function setRoomId(rmId) {
+    roomId = rmId;
+}
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -57,15 +61,19 @@ function generateUUID() {
 }
 
 export async function invite() {
-    roomId = generateUUID();
-    console.log("Generated room ID: ", roomId);
+    if (!roomId)
+        roomId = generateUUID();
+
+    console.log("Room ID: ", roomId);
 
     await connection.invoke("invite", roomId, remoteUniqueUserId);
 }
 
 export async function inviteAll() {
-    roomId = generateUUID();
-    console.log("Generated room ID: ", roomId);
+    if (!roomId)
+        roomId = generateUUID();
+
+    console.log("Room ID: ", roomId);
 
     await connection.invoke("invite-all", roomId);
 }
