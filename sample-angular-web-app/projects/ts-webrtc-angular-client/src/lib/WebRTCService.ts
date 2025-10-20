@@ -25,6 +25,8 @@ export class WebRTCService implements IWebRTCService {
         (window as any).ToggleAudio = this.ToggleAudio.bind(this);
         (window as any).ToggleVideo = this.ToggleVideo.bind(this);
         (window as any).FileTransfer = this.FileTransfer.bind(this);
+        (window as any).CallStarted = this.CallStarted.bind(this);
+        (window as any).CallEnded = this.CallEnded.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -91,6 +93,16 @@ export class WebRTCService implements IWebRTCService {
                 type: mimeType
             }
         );
+    }
+
+    CallStarted(): void {
+        console.log('CallStarted fired.');
+        this.onCallStarted?.emit();
+    }
+
+    CallEnded(): void {
+        console.log('CallEnded fired.');
+        this.onCallEnded?.emit();
     }
 
     async startLocalMediaAsync(): Promise<void> {

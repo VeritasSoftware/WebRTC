@@ -388,6 +388,8 @@ export function startHubConnection() {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 
                     isRemoteSet = true;
+
+                    dotNetRef.invokeMethodAsync('CallStarted');
                 }
                 catch (ex) {
                     console.log("Answer Error: " + ex.message);
@@ -407,6 +409,7 @@ export function startHubConnection() {
 
             connection.on('end-call', () => {
                 endCall();
+                dotNetRef.invokeMethodAsync('CallEnded');
             });
 
             isHubConnectionStarted = true;

@@ -14,6 +14,8 @@ namespace WebRTC.Blazor.Client
         public event Func<bool, Task> OnToggleAudio;
         public event Func<bool, Task> OnToggleVideo;
         public event Func<FileTransferResult, Task> OnFileTransfer;
+        public event Func<Task> OnCallStarted;
+        public event Func<Task> OnCallEnded;        
 
         public WebRTCService(IJSRuntime js)
         {
@@ -57,6 +59,18 @@ namespace WebRTC.Blazor.Client
                 Name = fileName,
                 Type = mimeType
             });
+        }
+
+        [JSInvokable]
+        public void CallStarted()
+        {
+            this.OnCallStarted?.Invoke();
+        }
+
+        [JSInvokable]
+        public void CallEnded()
+        {
+            this.OnCallEnded?.Invoke();
         }
 
         public async Task SetDotNetRefAsync()
@@ -143,6 +157,8 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("startCall");
+
+            this.OnCallStarted?.Invoke();
         }
 
         public async Task RemoteStartCallAsync()
@@ -157,6 +173,8 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("endCall");
+
+            this.OnCallEnded?.Invoke();
         }
 
         public async Task SetRoomIdAsync(string roomId)

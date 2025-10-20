@@ -359,6 +359,8 @@ export function startHubConnection() {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 
                     isRemoteSet = true;
+
+                    window.CallStarted();
                 }
                 catch (ex) {
                     console.log("Answer Error: " + ex.message);
@@ -378,6 +380,7 @@ export function startHubConnection() {
 
             connection.on('end-call', () => {
                 endCall();
+                window.CallEnded();
             });
 
             isHubConnectionStarted = true;

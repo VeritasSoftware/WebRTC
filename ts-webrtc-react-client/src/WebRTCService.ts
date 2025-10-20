@@ -1,7 +1,8 @@
 import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
     startCall, endCall, startHubConnection, toggleAudio, toggleVideo, startLocalMedia, 
-    setAudio, setVideo, transferFile} from './client';
+    setAudio, setVideo, transferFile,
+    setRoomId} from './client';
 import { FileTransferResult } from "./models";
 
 export class WebRTCService implements IWebRTCService {  
@@ -12,6 +13,8 @@ export class WebRTCService implements IWebRTCService {
         (window as any).ToggleAudio = this.ToggleAudio.bind(this);
         (window as any).ToggleVideo = this.ToggleVideo.bind(this);
         (window as any).FileTransfer = this.FileTransfer.bind(this);
+        (window as any).CallStarted = this.CallStarted.bind(this);
+        (window as any).CallEnded = this.CallEnded.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -21,6 +24,11 @@ export class WebRTCService implements IWebRTCService {
     setHubUrl(hubUrl: string): void {
         console.log('Setting hub URL to:', hubUrl);
         setHubUrl(hubUrl);
+    }
+
+    setRoomId(roomId:string) : void {
+        console.log('Setting Room Id to:', roomId);
+        setRoomId(roomId);
     }
 
     setSettings(userId: string, remoteUserId: string): void {
@@ -54,6 +62,22 @@ export class WebRTCService implements IWebRTCService {
         const onInviteAcceptedEvent = new CustomEvent("onInviteAccepted");
       
         window.dispatchEvent(onInviteAcceptedEvent);
+    }
+
+    CallStarted(): void {
+        console.log('CallStarted fired.');
+        
+        const onCallStarted = new CustomEvent("onCallStarted");
+      
+        window.dispatchEvent(onCallStarted);
+    }
+
+    CallEnded(): void {
+        console.log('CallEnded fired.');
+        
+        const onCallEnded = new CustomEvent("onCallEnded");
+      
+        window.dispatchEvent(onCallEnded);
     }
 
     ToggleAudio(isMute:boolean): void {

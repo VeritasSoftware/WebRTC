@@ -25,21 +25,27 @@ export function setVideos(lv, rv) {
     remoteVideo = rv;
 }
 
+export function setRoomId(rmId) {
+    roomId = rmId;
+}
+
 export function setSettings(uid, myid) {
     remoteUniqueUserId = uid;
     localUniqueUserId = myid;
 }
 
 export async function invite() {
-    roomId = generateUUID();
-    console.log("Generated room ID: ", roomId);
+    if (!roomId)
+        roomId = generateUUID();
+    console.log("Room ID: ", roomId);
 
     await connection.invoke("invite", roomId, remoteUniqueUserId);
 }
 
 export async function inviteAll() {
-    roomId = generateUUID();
-    console.log("Generated room ID: ", roomId);
+    if (!roomId)
+        roomId = generateUUID();
+    console.log("Room ID: ", roomId);
 
     await connection.invoke("invite-all", roomId);
 }
@@ -354,6 +360,8 @@ export function startHubConnection() {
                     await peerConnection.setRemoteDescription(new RTCSessionDescription(answer));
 
                     isRemoteSet = true;
+
+                    window.CallStarted();
                 }
                 catch (ex) {
                     console.log("Answer Error: " + ex.message);
@@ -373,6 +381,7 @@ export function startHubConnection() {
 
             connection.on('end-call', () => {
                 endCall();
+                window.CallEnded();
             });
 
             isHubConnectionStarted = true;
