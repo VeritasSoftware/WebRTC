@@ -58,6 +58,8 @@ Below are the methods and events supported by the library.
         event Func<bool, Task> OnToggleAudio;
         event Func<bool, Task> OnToggleVideo;
         event Func<FileTransferResult, Task> OnFileTransfer;
+        event Func<Task> OnCallStarted;
+        event Func<Task> OnCallEnded;
         Task SetDotNetRefAsync();
         Task SetHubUrlAsync(string url);
         Task StartHubConnectionAsync();
