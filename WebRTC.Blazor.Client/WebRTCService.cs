@@ -64,12 +64,14 @@ namespace WebRTC.Blazor.Client
         [JSInvokable]
         public void CallStarted(string roomId)
         {
+            Console.WriteLine($"CallStarted fired. Room id: {roomId}");
             this.OnCallStarted?.Invoke(roomId);
         }
 
         [JSInvokable]
         public void CallEnded(string roomId)
         {
+            Console.WriteLine($"CallEnded fired. Room id: {roomId}");
             this.OnCallEnded?.Invoke(roomId);
         }
 
