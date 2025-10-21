@@ -58,8 +58,8 @@ Below are the methods and events supported by the library.
         event Func<bool, Task> OnToggleAudio;
         event Func<bool, Task> OnToggleVideo;
         event Func<FileTransferResult, Task> OnFileTransfer;
-        event Func<Task> OnCallStarted;
-        event Func<Task> OnCallEnded;
+        event Func<string, Task> OnCallStarted;
+        event Func<string, Task> OnCallEnded;
         Task SetDotNetRefAsync();
         Task SetHubUrlAsync(string url);
         Task StartHubConnectionAsync();
@@ -91,6 +91,13 @@ Below are the methods and events supported by the library.
 
 ```typescript
 export interface IWebRTCService {
+    onInvite: EventEmitter<string>;
+    onInviteAccepted: EventEmitter<void>;
+    onToggleAudio: EventEmitter<boolean>;
+    onToggleVideo: EventEmitter<boolean>;
+    onCallStarted: EventEmitter<string>;
+    onCallEnded: EventEmitter<string>;
+    onFileTransfer: EventEmitter<FileTransferResult>;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     setRoomId(roomId:string) : void;
@@ -107,13 +114,6 @@ export interface IWebRTCService {
     endCallAsync(): Promise<void>;
     startHubConnectionAsync(): Promise<void>;
     transferFile(data:Uint8Array, name:string, type:string): Promise<void>;
-    onInvite: EventEmitter<string>;
-    onInviteAccepted: EventEmitter<void>;
-    onToggleAudio: EventEmitter<boolean>;
-    onToggleVideo: EventEmitter<boolean>;
-    onCallStarted: EventEmitter<void>;
-    onCallEnded: EventEmitter<void>;
-    onFileTransfer: EventEmitter<FileTransferResult>;
 }
 ```
 

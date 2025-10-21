@@ -14,8 +14,8 @@ export class WebRTCService implements IWebRTCService {
     public onInviteAccepted = new EventEmitter<void>();
     public onToggleAudio = new EventEmitter<boolean>();
     public onToggleVideo = new EventEmitter<boolean>(); 
-    public onCallStarted = new EventEmitter<void>();
-    public onCallEnded = new EventEmitter<void>();
+    public onCallStarted = new EventEmitter<string>();
+    public onCallEnded = new EventEmitter<string>();
     public onFileTransfer = new EventEmitter<FileTransferResult>();
 
     constructor() {
@@ -95,14 +95,14 @@ export class WebRTCService implements IWebRTCService {
         );
     }
 
-    CallStarted(): void {
-        console.log('CallStarted fired.');
-        this.onCallStarted?.emit();
+    CallStarted(roomId: string): void {
+        console.log('CallStarted fired. Room id:', roomId);
+        this.onCallStarted?.emit(roomId);
     }
 
-    CallEnded(): void {
-        console.log('CallEnded fired.');
-        this.onCallEnded?.emit();
+    CallEnded(roomId: string): void {
+        console.log('CallEnded fired. Room id:', roomId);
+        this.onCallEnded?.emit(roomId);
     }
 
     async startLocalMediaAsync(): Promise<void> {

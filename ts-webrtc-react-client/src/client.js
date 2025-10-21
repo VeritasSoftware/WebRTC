@@ -361,7 +361,7 @@ export function startHubConnection() {
 
                     isRemoteSet = true;
 
-                    window.CallStarted();
+                    window.CallStarted(roomId);
                 }
                 catch (ex) {
                     console.log("Answer Error: " + ex.message);
@@ -381,7 +381,7 @@ export function startHubConnection() {
 
             connection.on('end-call', () => {
                 endCall();
-                window.CallEnded();
+                window.CallEnded(roomId);
             });
 
             isHubConnectionStarted = true;

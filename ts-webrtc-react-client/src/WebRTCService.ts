@@ -64,18 +64,18 @@ export class WebRTCService implements IWebRTCService {
         window.dispatchEvent(onInviteAcceptedEvent);
     }
 
-    CallStarted(): void {
-        console.log('CallStarted fired.');
+    CallStarted(roomId: string): void {
+        console.log('CallStarted fired. RoomId:', roomId);
         
-        const onCallStarted = new CustomEvent("onCallStarted");
+        const onCallStarted = new CustomEvent<string>("onCallStarted", { detail: roomId });
       
         window.dispatchEvent(onCallStarted);
     }
 
-    CallEnded(): void {
-        console.log('CallEnded fired.');
+    CallEnded(roomId: string): void {
+        console.log('CallEnded fired. RoomId:', roomId);
         
-        const onCallEnded = new CustomEvent("onCallEnded");
+        const onCallEnded = new CustomEvent<string>("onCallEnded", { detail: roomId });
       
         window.dispatchEvent(onCallEnded);
     }
@@ -141,26 +141,14 @@ export class WebRTCService implements IWebRTCService {
     
     async startCallAsync(): Promise<void> {
         await startCall(true);
-
-        const onCallStarted = new CustomEvent("onCallStarted");
-      
-        window.dispatchEvent(onCallStarted);
     }
 
     async remoteStartCallAsync(): Promise<void> {
         await startCall(false);
-
-        const onCallStarted = new CustomEvent("onCallStarted");
-      
-        window.dispatchEvent(onCallStarted);
     }
 
     async endCallAsync(): Promise<void> {
         await endCall();
-
-        const onCallEnded = new CustomEvent("onCallEnded");
-      
-        window.dispatchEvent(onCallEnded);
     }
 
     async startHubConnectionAsync(): Promise<void> {

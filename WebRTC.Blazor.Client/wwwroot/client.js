@@ -389,7 +389,7 @@ export function startHubConnection() {
 
                     isRemoteSet = true;
 
-                    dotNetRef.invokeMethodAsync('CallStarted');
+                    dotNetRef.invokeMethodAsync('CallStarted', roomId);
                 }
                 catch (ex) {
                     console.log("Answer Error: " + ex.message);
@@ -409,7 +409,7 @@ export function startHubConnection() {
 
             connection.on('end-call', () => {
                 endCall();
-                dotNetRef.invokeMethodAsync('CallEnded');
+                dotNetRef.invokeMethodAsync('CallEnded', roomId);
             });
 
             isHubConnectionStarted = true;

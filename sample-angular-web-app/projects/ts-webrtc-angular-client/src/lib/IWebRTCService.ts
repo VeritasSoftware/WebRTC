@@ -2,6 +2,13 @@ import { EventEmitter } from "@angular/core";
 import { FileTransferResult } from "./models";
 
 export interface IWebRTCService {
+    onInvite: EventEmitter<string>;
+    onInviteAccepted: EventEmitter<void>;
+    onToggleAudio: EventEmitter<boolean>;
+    onToggleVideo: EventEmitter<boolean>;
+    onCallStarted: EventEmitter<string>;
+    onCallEnded: EventEmitter<string>;
+    onFileTransfer: EventEmitter<FileTransferResult>;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     setRoomId(roomId:string) : void;
@@ -18,11 +25,4 @@ export interface IWebRTCService {
     endCallAsync(): Promise<void>;
     startHubConnectionAsync(): Promise<void>;
     transferFile(data:Uint8Array, name:string, type:string): Promise<void>;
-    onInvite: EventEmitter<string>;
-    onInviteAccepted: EventEmitter<void>;
-    onToggleAudio: EventEmitter<boolean>;
-    onToggleVideo: EventEmitter<boolean>;
-    onCallStarted: EventEmitter<void>;
-    onCallEnded: EventEmitter<void>;
-    onFileTransfer: EventEmitter<FileTransferResult>;
 }
