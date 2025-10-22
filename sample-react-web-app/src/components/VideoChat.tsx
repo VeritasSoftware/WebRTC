@@ -194,7 +194,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (videoChatService) {
             try {
                 setShowError(false);               
-                videoChatService.toggleAudio();
+                videoChatService.toggleAudioAsync();
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);
@@ -206,7 +206,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (videoChatService) {
             try {
                 setShowError(false);               
-                videoChatService.toggleVideo();
+                videoChatService.toggleVideoAsync();
             } catch (error: any) {
                 setErrorMessage(error.message);
                 setShowError(true);
@@ -239,7 +239,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                         var file:File = input.files[i];
                         var b = new Blob([file], {type: file.type});
                         var arr = new Uint8Array(await b.arrayBuffer());
-                        videoChatService.transferFile(arr, file.name, file.type);
+                        videoChatService.transferFileAsync(arr, file.name, file.type);
                     }
                 }
             }                

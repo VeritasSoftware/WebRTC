@@ -10,10 +10,10 @@ export interface IWebRTCService {
     startLocalMediaAsync(): Promise<void>;
     startCallAsync(): Promise<void>;
     remoteStartCallAsync(): Promise<void>;
-    setAudio(mute: boolean): void;
-    setVideo(stopVideo: boolean): void;
-    toggleAudio(): void;
-    toggleVideo(): void;
-    transferFile(data:Uint8Array, name:string, type:string): void;
+    setAudioAsync(mute: boolean): Promise<void>;
+    setVideoAsync(stopVideo: boolean): Promise<void>;
+    toggleAudioAsync(): Promise<void>;
+    toggleVideoAsync(): Promise<void>;
+    transferFileAsync(data:Uint8Array, name:string, type:string): Promise<void>;
     endCallAsync(): Promise<void>;        
 }

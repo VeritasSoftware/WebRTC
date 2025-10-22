@@ -140,7 +140,7 @@ export class VideoChatComponent {
     try {
       this._showError = false;
       this._errorMessage = "";
-      await this.videoChatService.toggleAudio();
+      await this.videoChatService.toggleAudioAsync();
     }
     catch (err:any) {
       console.error("Error in toggleAudio:", err);
@@ -153,7 +153,7 @@ export class VideoChatComponent {
     try {
       this._showError = false;
       this._errorMessage = "";
-      await this.videoChatService.toggleVideo();
+      await this.videoChatService.toggleVideoAsync();
     }
     catch (err:any) {
       console.error("Error in toggleVideo:", err);
@@ -188,7 +188,7 @@ export class VideoChatComponent {
           var file:File = input.files[i];
           var b = new Blob([file], {type: file.type});
           var arr = new Uint8Array(await b.arrayBuffer());
-          await this.videoChatService.transferFile(arr, file.name, file.type);
+          await this.videoChatService.transferFileAsync(arr, file.name, file.type);
         }
       }      
     }

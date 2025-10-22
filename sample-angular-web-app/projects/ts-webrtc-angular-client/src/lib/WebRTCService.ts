@@ -109,24 +109,39 @@ export class WebRTCService implements IWebRTCService {
         await startLocalMedia();
     }
 
-    async setAudio(mute: boolean): Promise<void> {
-        setAudio(mute);
+    async setAudioAsync(mute: boolean): Promise<void> {
+        await new Promise<void>(async (resolve) => {
+            await new Promise((res) => setAudio(mute));
+            resolve();
+          });
     }
 
-    async setVideo(stopVideo: boolean): Promise<void> {
-        setVideo(stopVideo);
+    async setVideoAsync(stopVideo: boolean): Promise<void> {
+        await new Promise<void>(async (resolve) => {
+            await new Promise((res) => setVideo(stopVideo));
+            resolve();
+          });
     }
 
-    async toggleAudio(): Promise<void> {
-        toggleAudio();
+    async toggleAudioAsync(): Promise<void> {
+        await new Promise<void>(async (resolve) => {
+            await new Promise((res) => toggleAudio());
+            resolve();
+          }); 
     }
 
-    async toggleVideo(): Promise<void> {
-        toggleVideo();
+    async toggleVideoAsync(): Promise<void> {        
+        await new Promise<void>(async (resolve) => {
+            await new Promise((res) => toggleVideo());
+            resolve();
+          }); 
     }
 
-    async transferFile(data:Uint8Array, name:string, type:string): Promise<void> {
-        transferFile(data, name, type);
+    async transferFileAsync(data:Uint8Array, name:string, type:string): Promise<void> {
+        await new Promise<void>(async (resolve) => {
+            await new Promise((res) => transferFile(data, name, type));
+            resolve();
+          });        
     }
     
     async startCallAsync(): Promise<void> {
