@@ -55,29 +55,29 @@ Below are the methods and events supported by the library.
     {
         event Func<string, Task> OnInvite;
         event Func<Task> OnInviteAccepted;
+        event Func<string, Task> OnCallStarted;
         event Func<bool, Task> OnToggleAudio;
         event Func<bool, Task> OnToggleVideo;
-        event Func<FileTransferResult, Task> OnFileTransfer;
-        event Func<string, Task> OnCallStarted;
+        event Func<FileTransferResult, Task> OnFileTransfer;        
         event Func<string, Task> OnCallEnded;
-        Task SetDotNetRefAsync();
+        Task SetDotNetRefAsync();        
+        Task SetRoomIdAsync(string roomId);
+        Task SetSettingsAsync(string userId, string myUserId);
+        Task SetVideosAsync(ElementReference local, ElementReference remote);
         Task SetHubUrlAsync(string url);
         Task StartHubConnectionAsync();
         Task InviteAsync();
         Task InviteAllAsync();
-        Task AcceptInviteAsync(string roomId);        
+        Task AcceptInviteAsync(string roomId);
         Task StartLocalMediaAsync();
+        Task StartCallAsync();
+        Task RemoteStartCallAsync();
         Task SetAudioAsync(bool mute);
         Task SetVideoAsync(bool stopVideo);
         Task ToggleAudioAsync();
         Task ToggleVideoAsync();
-        Task StartCallAsync();
-        Task RemoteStartCallAsync();
-        Task EndCallAsync();
-        Task SetRoomIdAsync(string roomId);
-        Task SetSettingsAsync(string userId, string myUserId);
-        Task SetVideosAsync(ElementReference local, ElementReference remote);
         Task TransferFileAsync(byte[] data, string fileName, string mimeType);
+        Task EndCallAsync();               
     }
 ```
 
@@ -93,27 +93,28 @@ Below are the methods and events supported by the library.
 export interface IWebRTCService {
     onInvite: EventEmitter<string>;
     onInviteAccepted: EventEmitter<void>;
+    onCallStarted: EventEmitter<string>;
     onToggleAudio: EventEmitter<boolean>;
     onToggleVideo: EventEmitter<boolean>;
-    onCallStarted: EventEmitter<string>;
-    onCallEnded: EventEmitter<string>;
-    onFileTransfer: EventEmitter<FileTransferResult>;
-    setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
-    setHubUrl(hubUrl: string): void;
+    onFileTransfer: EventEmitter<FileTransferResult>;    
+    onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
     setSettings(userId: string, remoteUserId: string): void;
+    setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
+    setHubUrl(hubUrl: string): void;
+    startHubConnectionAsync(): Promise<void>;
     inviteAsync(): Promise<void>;
+    inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
     startLocalMediaAsync(): Promise<void>;
+    startCallAsync(): Promise<void>;
+    remoteStartCallAsync(): Promise<void>;
     setAudio(mute: boolean): void;
     setVideo(stopVideo: boolean): void;
     toggleAudio(): void;
     toggleVideo(): void;
-    startCallAsync(): Promise<void>;
-    remoteStartCallAsync(): Promise<void>;
-    endCallAsync(): Promise<void>;
-    startHubConnectionAsync(): Promise<void>;
     transferFile(data:Uint8Array, name:string, type:string): Promise<void>;
+    endCallAsync(): Promise<void>;        
 }
 ```
 
@@ -127,23 +128,23 @@ Below are the methods supported by the library.
 
 ```typescript
 export interface IWebRTCService {
-    setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
-    setHubUrl(hubUrl: string): void;
     setRoomId(roomId:string) : void;
     setSettings(userId: string, remoteUserId: string): void;
+    setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
+    setHubUrl(hubUrl: string): void;
+    startHubConnectionAsync(): Promise<void>;
     inviteAsync(): Promise<void>;
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
     startLocalMediaAsync(): Promise<void>;
+    startCallAsync(): Promise<void>;
+    remoteStartCallAsync(): Promise<void>;
     setAudio(mute: boolean): void;
     setVideo(stopVideo: boolean): void;
     toggleAudio(): void;
     toggleVideo(): void;
-    startCallAsync(): Promise<void>;
-    remoteStartCallAsync(): Promise<void>;
-    endCallAsync(): Promise<void>;
-    startHubConnectionAsync(): Promise<void>;
     transferFile(data:Uint8Array, name:string, type:string): void;
+    endCallAsync(): Promise<void>;        
 }
 ```
 
@@ -152,10 +153,10 @@ The events are:
 ```typescript
 onInvite
 onInviteAccepted
+onCallStarted
 onToggleAudio
 onToggleVideo
 onFileTransfer
-onCallStarted
 onCallEnded
 ```
 
