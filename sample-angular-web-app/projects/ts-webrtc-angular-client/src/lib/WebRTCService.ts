@@ -110,8 +110,8 @@ export class WebRTCService implements IWebRTCService {
         await startLocalMedia();
     }
 
-    async startLocalScreenMediaAsync(): Promise<void> {
-        await startLocalScreenMedia();
+    async startLocalScreenMediaAsync(startAudio: boolean = false): Promise<void> {
+        await startLocalScreenMedia(startAudio);
     }
 
     async setAudioAsync(mute: boolean): Promise<void> {

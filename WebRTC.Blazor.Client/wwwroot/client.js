@@ -163,12 +163,12 @@ export async function startLocalMedia() {
     }
 }
 
-export async function startLocalScreenMedia() {
+export async function startLocalScreenMedia(startAudio = false) {
     try {
         console.log("Requesting local screen media...");
         localStream = await navigator.mediaDevices.getDisplayMedia({
             video: true,
-            audio: true // Set to true if you want to capture audio as well
+            audio: startAudio // Set to true if you want to capture audio as well
         });
         localVideo.srcObject = localStream;
     } catch (ex) {
