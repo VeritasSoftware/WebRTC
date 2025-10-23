@@ -10,7 +10,6 @@ A .NET library for WebRTC, enabling real-time communication in your web applicat
 - Data channels for real-time data transfer
 - High-level API for simplified WebRTC operations
 - Client available for Blazor, Angular, React
-- Easy integration with ASP.NET Core web applications
 - Cross-platform support (Windows, macOS, Linux) for Server
 
 ## Server
