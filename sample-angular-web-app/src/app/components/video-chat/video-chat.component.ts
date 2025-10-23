@@ -79,6 +79,8 @@ export class VideoChatComponent {
       console.log("Component: Starting hub connection.");
       await this.videoChatService.startHubConnectionAsync();
       if (this.myUserType == UserType.Remote) {
+        // Start local media (screen sharing)
+        //await this.videoChatService.startLocalScreenMediaAsync();
         console.log("Component: Starting call as remote user.");
         await this.videoChatService.remoteStartCallAsync();
         this._callStarted = true;
@@ -123,7 +125,9 @@ export class VideoChatComponent {
     try {
       this._showError = false;
       this._errorMessage = "";
-      this._callStarted = false;      
+      this._callStarted = false;
+      // Start local media (screen sharing)
+      //await this.videoChatService.startLocalScreenMediaAsync();      
       await this.videoChatService.startCallAsync();
       this._callStarted = true;
       this._disableStartCall = true;

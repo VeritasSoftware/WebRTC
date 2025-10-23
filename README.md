@@ -5,6 +5,8 @@ A .NET library for WebRTC, enabling real-time communication in your web applicat
 ## Features
 
 - Peer-to-peer audio and video communication
+- Peer-to-peer screen sharing
+- Peer-to-peer file transfer
 - Data channels for real-time data transfer
 - High-level API for simplified WebRTC operations
 - Client available for Blazor, Angular, React
@@ -70,6 +72,7 @@ Below are the methods and events supported by the library.
         Task InviteAllAsync();
         Task AcceptInviteAsync(string roomId);
         Task StartLocalMediaAsync();
+        Task StartLocalScreenMediaAsync();
         Task StartCallAsync();
         Task RemoteStartCallAsync();
         Task SetAudioAsync(bool mute);
@@ -107,6 +110,7 @@ export interface IWebRTCService {
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
     startLocalMediaAsync(): Promise<void>;
+    startLocalScreenMediaAsync(): Promise<void>;
     startCallAsync(): Promise<void>;
     remoteStartCallAsync(): Promise<void>;
     setAudioAsync(mute: boolean): Promise<void>;
@@ -137,6 +141,7 @@ export interface IWebRTCService {
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
     startLocalMediaAsync(): Promise<void>;
+    startLocalScreenMediaAsync(): Promise<void>;
     startCallAsync(): Promise<void>;
     remoteStartCallAsync(): Promise<void>;
     setAudioAsync(mute: boolean): Promise<void>;

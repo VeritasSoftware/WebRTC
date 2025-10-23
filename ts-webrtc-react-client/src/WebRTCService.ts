@@ -2,7 +2,8 @@ import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
     startCall, endCall, startHubConnection, toggleAudio, toggleVideo, startLocalMedia, 
     setAudio, setVideo, transferFile,
-    setRoomId} from './client';
+    setRoomId,
+    startLocalScreenMedia} from './client';
 import { FileTransferResult } from "./models";
 
 export class WebRTCService implements IWebRTCService {  
@@ -124,6 +125,10 @@ export class WebRTCService implements IWebRTCService {
 
     async startLocalMediaAsync(): Promise<void> {
         await startLocalMedia();
+    }
+
+    async startLocalScreenMediaAsync(): Promise<void> {
+        await startLocalScreenMedia();
     }
 
     async setAudioAsync(mute: boolean): Promise<void> {

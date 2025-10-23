@@ -136,7 +136,10 @@
         {
             _showError = false;
 
-            _callStarted = false;            
+            _callStarted = false;
+
+            // Start local media (screen sharing)
+            //await VideoChatService.StartLocalScreenMediaAsync();
 
             await VideoChatService.StartCallAsync();
 
@@ -238,6 +241,8 @@
 
                 if (this.MyUserType == UserType.Remote)
                 {
+                    // Start local media (screen sharing)
+                    //await VideoChatService.StartLocalScreenMediaAsync();
                     await VideoChatService.RemoteStartCallAsync();
                     _callStarted = true;                   
                     StateHasChanged();

@@ -21,6 +21,7 @@ namespace WebRTC.Blazor.Client
         Task InviteAllAsync();
         Task AcceptInviteAsync(string roomId);
         Task StartLocalMediaAsync();
+        Task StartLocalScreenMediaAsync();
         Task StartCallAsync();
         Task RemoteStartCallAsync();
         Task SetAudioAsync(bool mute);

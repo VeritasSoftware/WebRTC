@@ -3,7 +3,8 @@ import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
             startLocalMedia, transferFile,
-            setRoomId} from './client';
+            setRoomId,
+            startLocalScreenMedia} from './client';
 import { FileTransferResult } from "./models";
 
 [Injectable({
@@ -107,6 +108,10 @@ export class WebRTCService implements IWebRTCService {
 
     async startLocalMediaAsync(): Promise<void> {
         await startLocalMedia();
+    }
+
+    async startLocalScreenMediaAsync(): Promise<void> {
+        await startLocalScreenMedia();
     }
 
     async setAudioAsync(mute: boolean): Promise<void> {

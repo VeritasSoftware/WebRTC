@@ -163,6 +163,20 @@ export async function startLocalMedia() {
     }
 }
 
+export async function startLocalScreenMedia() {
+    try {
+        console.log("Requesting local screen media...");
+        localStream = await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+            audio: true // Set to true if you want to capture audio as well
+        });
+        localVideo.srcObject = localStream;
+    } catch (ex) {
+        console.error('Error accessing screen media devices.', ex);
+        return;
+    }
+}
+
 export function transferFile(data, fileName, mimeType) {
     try {
         console.log("transferFile: file of length: ", data.length);

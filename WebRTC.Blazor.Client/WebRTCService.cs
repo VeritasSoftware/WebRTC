@@ -126,6 +126,13 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("startLocalMedia");
         }
 
+        public async Task StartLocalScreenMediaAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("startLocalScreenMedia");
+        }
+
         public async Task SetAudioAsync(bool mute)
         {
             _module = await _moduleTask.Value;

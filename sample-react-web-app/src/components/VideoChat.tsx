@@ -61,6 +61,8 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                 await videoChatService.startHubConnectionAsync();
 
                 if (userType === UserType.Remote) {
+                    // Start local media (screen sharing)
+                    //await videoChatService.startLocalScreenMediaAsync();
                     await videoChatService.remoteStartCallAsync();
 
                     setCallStarted(true);
@@ -177,7 +179,9 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         if (videoChatService) {
             try {
                 setShowError(false);
-                setCallStarted(false);               
+                setCallStarted(false);
+                // Start local media (screen sharing)
+                //await videoChatService.startLocalScreenMediaAsync();               
                 await videoChatService.startCallAsync();
                 setCallStarted(true);
                 setDisableStartCall(true);
