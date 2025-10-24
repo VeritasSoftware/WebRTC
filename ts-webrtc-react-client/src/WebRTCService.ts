@@ -3,7 +3,11 @@ import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite,
     startCall, endCall, startHubConnection, toggleAudio, toggleVideo, startLocalMedia, 
     setAudio, setVideo, transferFile,
     setRoomId,
-    startLocalScreenMedia} from './client';
+    startLocalScreenMedia,
+    startPeerConnection,
+    startScreenShare,
+    switchVideoToScreenShare,
+    switchScreenShareToVideo} from './client';
 import { FileTransferResult } from "./models";
 
 export class WebRTCService implements IWebRTCService {  
@@ -158,13 +162,33 @@ export class WebRTCService implements IWebRTCService {
             resolve();
           });
     }
+
+    async startPeerConnectionAsync(iceServerUrl: string = 'stun:stun.l.google.com:19302'): Promise<void> {
+        await startPeerConnection(iceServerUrl);
+    }
     
     async startCallAsync(): Promise<void> {
         await startCall(true);
     }
 
+    async startScreenShareAsync(): Promise<void> {
+        await startScreenShare();
+    }
+
     async remoteStartCallAsync(): Promise<void> {
         await startCall(false);
+    }
+
+    async remoteStartScreenShareAsync(): Promise<void> {
+        await startScreenShare(false);
+    }
+
+    async switchVideoToScreenShareAsync(): Promise<void> {
+        await switchVideoToScreenShare();
+    }
+
+    async switchScreenShareToVideoAsync(): Promise<void> {
+        await switchScreenShareToVideo();
     }
 
     async endCallAsync(): Promise<void> {

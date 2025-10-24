@@ -23,7 +23,11 @@ namespace WebRTC.Blazor.Client
         Task StartLocalMediaAsync();
         Task StartLocalScreenMediaAsync(bool startAudio = false);
         Task StartCallAsync();
+        Task StartScreenShareAsync();
         Task RemoteStartCallAsync();
+        Task RemoteStartScreenShareAsync();
+        Task SwitchVideoToScreenShareAsync();
+        Task SwitchScreenShareToVideoAsync();
         Task SetAudioAsync(bool mute);
         Task SetVideoAsync(bool stopVideo);
         Task ToggleAudioAsync();

@@ -19,8 +19,13 @@ export interface IWebRTCService {
     acceptInviteAsync(roomId: string): Promise<void>;
     startLocalMediaAsync(): Promise<void>;
     startLocalScreenMediaAsync(startAudio: boolean): Promise<void>;
+    startPeerConnectionAsync(iceServerUrl: string): Promise<void>;
     startCallAsync(): Promise<void>;
+    startScreenShareAsync(): Promise<void>;
     remoteStartCallAsync(): Promise<void>;
+    remoteStartScreenShareAsync(): Promise<void>;
+    switchVideoToScreenShareAsync(): Promise<void>;
+    switchScreenShareToVideoAsync(): Promise<void>;
     setAudioAsync(mute: boolean): Promise<void>;
     setVideoAsync(stopVideo: boolean): Promise<void>;
     toggleAudioAsync(): Promise<void>;

@@ -168,11 +168,39 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("startCall");
         }
 
+        public async Task StartScreenShareAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("startScreenShare");
+        }
+
         public async Task RemoteStartCallAsync()
         {
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("startCall", false);
+        }
+
+        public async Task RemoteStartScreenShareAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("startScreenShare", false);
+        }
+
+        public async Task SwitchVideoToScreenShareAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("switchVideoToScreenShare", false);
+        }
+
+        public async Task SwitchScreenShareToVideoAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("switchScreenShareToVideo", false);
         }
 
         public async Task EndCallAsync()

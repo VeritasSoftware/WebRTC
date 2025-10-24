@@ -2,9 +2,8 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
-            startLocalMedia, transferFile,
-            setRoomId,
-            startLocalScreenMedia} from './client';
+            startLocalMedia, transferFile, setRoomId, startLocalScreenMedia, startScreenShare,
+            switchVideoToScreenShare, switchScreenShareToVideo, startPeerConnection} from './client';
 import { FileTransferResult } from "./models";
 
 [Injectable({
@@ -148,20 +147,37 @@ export class WebRTCService implements IWebRTCService {
             resolve();
           });        
     }
-    
+
     async startCallAsync(): Promise<void> {
         await startCall();
-        this.onCallStarted?.emit();
+    }
+    
+    async startPeerConnectionAsync(iceServerUrl: string = 'stun:stun.l.google.com:19302'): Promise<void> {
+        await startPeerConnection(iceServerUrl);
+    }
+
+    async startScreenShareAsync(): Promise<void> {
+        await startScreenShare();
     }
 
     async remoteStartCallAsync(): Promise<void> {
         await startCall(false);
-        this.onCallStarted?.emit();
+    }
+
+    async remoteStartScreenShareAsync(): Promise<void> {
+        await startScreenShare(false);
+    }
+
+    async switchVideoToScreenShareAsync(): Promise<void> {
+        await switchVideoToScreenShare();
+    }
+
+    async switchScreenShareToVideoAsync(): Promise<void> {
+        await switchScreenShareToVideo();
     }
 
     async endCallAsync(): Promise<void> {
         await endCall();
-        this.onCallEnded?.emit();
     }
 
     async startHubConnectionAsync(): Promise<void> {

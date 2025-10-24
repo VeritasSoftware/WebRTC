@@ -1,4 +1,5 @@
 let localStream;
+let localScreenStream;
 let isMuted = false;
 let isVideoStopped = false;
 let peerConnection;
@@ -138,13 +139,56 @@ export async function startLocalMedia() {
 export async function startLocalScreenMedia(startAudio = false) {
     try {
         console.log("Requesting local screen media...");
-        localStream = await navigator.mediaDevices.getDisplayMedia({
-            video: true,
-            audio: startAudio // Set to true if you want to capture audio as well
-        });
-        localVideo.srcObject = localStream;
+        const displayMediaOptions = {
+            video: {
+                cursor: 'always' // or 'motion', 'never'
+            },
+            audio: startAudio // Set to true if you want to include system audio
+        };
+        localScreenStream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+        localVideo.srcObject = localScreenStream;
     } catch (ex) {
         console.error('Error accessing screen media devices.', ex);
+        return;
+    }
+}
+
+export async function switchVideoToScreenShare() {
+    try {
+        var videoSender = peerConnection.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+
+        if (!localScreenStream) {
+            await startLocalScreenMedia();
+            await startConnection(false, true);
+        }
+
+        if (videoSender) {
+            // Replace the video track with the screen share track
+            await videoSender.replaceTrack(localScreenStream.getVideoTracks()[0]);
+            console.log("Replaced video track with screen share track.");
+        }
+    } catch (ex) {
+        console.error('Error switching to screen share.', ex);
+        return;
+    }
+}
+
+export async function switchScreenShareToVideo() {
+    try {
+        var videoSender = peerConnection.getSenders().find(sender => sender.track && sender.track.kind === 'video');
+
+        if (!localStream) {
+            await startLocalMedia();
+            await startConnection(false, false);
+        }
+
+        if (videoSender) {
+            // Replace the video track with the screen share track
+            await videoSender.replaceTrack(localStream.getVideoTracks()[0]);
+            console.log("Replaced screen share track with video track.");
+        }
+    } catch (ex) {
+        console.error('Error switching to video.', ex);
         return;
     }
 }
@@ -185,6 +229,14 @@ export function transferFile(data, fileName, mimeType) {
 }
 
 export async function startCall(sendOffer = true) {
+    await startConnection(sendOffer, false);
+}
+
+export async function startScreenShare(sendOffer = true) {
+    await startConnection(sendOffer, true);
+}
+
+async function startConnection(sendOffer = true, startScreenShare= false) {
     try { 
         if (!connection && !isHubConnectionStarted)
             startHubConnection();
@@ -194,23 +246,64 @@ export async function startCall(sendOffer = true) {
             await sleep(50);
         }
 
+        if (!peerConnection)
+            await startPeerConnection();
+
+        if (!startScreenShare) {
+            if(!localStream)
+                await startLocalMedia();
+
+            console.log("Adding local tracks to peer connection...");
+            localStream.getTracks().forEach(track =>  { 
+                peerConnection.addTrack(track, localStream);
+            });
+        }
+        else if (startScreenShare) {
+            if(!localScreenStream)
+                await startLocalScreenMedia();
+
+            console.log("Adding local screen tracks to peer connection...");
+            localScreenStream.getTracks().forEach(track =>  { 
+                peerConnection.addTrack(track, localScreenStream);
+            });
+        } 
+
+        if (!fileTransferDataChannel)
+            createFileTransferDataChannel();
+        
+        subscribeFileTransferDataChannel();
+
+        if (sendOffer) {
+            await sendOfferAsync();
+        }        
+
+        console.log("call started. send offer: " + sendOffer);
+    } catch (error) {
+        console.error('Error starting call:', error);
+    }
+}
+
+async function sendOfferAsync() {
+    console.log("Creating offer...");
+    const offer = await peerConnection.createOffer();
+    await peerConnection.setLocalDescription(offer);
+    console.log("Sending offer to signaling server...");
+    await connection.invoke("offer", offer, roomId);
+    console.log("Offer sent.");
+}
+
+export async function startPeerConnection(iceServerUrl = 'stun:stun.l.google.com:19302') {
+    try {         
         console.log("Starting call...");               
 
         console.log("Establishing peer connection...");
         peerConnection = new RTCPeerConnection({
-            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] // STUN server for NAT traversal
+            iceServers: [{ urls: iceServerUrl }] // STUN server for NAT traversal
         });
 
         peerConnection.addEventListener('signalingstatechange', async () => {
             console.log("Signaling state changed to:", peerConnection.signalingState);
-        });
-
-        if (!localStream) {
-            await startLocalMedia();
-        }
-
-        console.log("Adding local tracks to peer connection...");
-        localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
+        });                       
 
         peerConnection.onicecandidate = async e => {
             if (e.candidate && isRemoteSet && !isTrickleIceSent) {
@@ -236,27 +329,13 @@ export async function startCall(sendOffer = true) {
         };
 
         peerConnection.ontrack = e => {
-            console.log("Received remote track");
+            console.log("Received remote track", e);            
             remoteVideo.srcObject = e.streams[0];
         };
 
         peerConnection.oniceconnectionstatechange = () => {
             console.log('ICE Connection State:', peerConnection.iceConnectionState);
         };
-
-        createFileTransferDataChannel();
-        subscribeFileTransferDataChannel();
-
-        if (sendOffer) {
-            console.log("Creating offer...");
-            const offer = await peerConnection.createOffer();
-            await peerConnection.setLocalDescription(offer);
-            console.log("Sending offer to signaling server...");
-            await connection.invoke("offer", offer, roomId);
-            console.log("Offer sent.");
-        }        
-
-        console.log("call started. send offer: " + sendOffer);
     } catch (error) {
         console.error('Error starting call:', error);
     }
@@ -271,6 +350,10 @@ export async function endCall() {
         if (localStream) {
             localStream.getTracks().forEach(track => track.stop());
             localStream = null;
+        }
+        if (localScreenStream) {
+            localScreenStream.getTracks().forEach(track => track.stop());
+            localScreenStream = null;
         }
         remoteVideo.srcObject = null;
         if (connection) {
