@@ -148,13 +148,13 @@ export class WebRTCService implements IWebRTCService {
           });        
     }
 
-    async startCallAsync(): Promise<void> {
-        await startCall();
-    }
-    
     async startPeerConnectionAsync(iceServerUrl: string = 'stun:stun.l.google.com:19302'): Promise<void> {
         await startPeerConnection(iceServerUrl);
     }
+    
+    async startCallAsync(): Promise<void> {
+        await startCall();
+    }        
 
     async startScreenShareAsync(): Promise<void> {
         await startScreenShare();

@@ -237,16 +237,7 @@
                 await VideoChatService.SetVideosAsync(localVideo, remoteVideo);
                 await VideoChatService.SetDotNetRefAsync();
                 await VideoChatService.SetHubUrlAsync(Configuration["HubUrl"]!);
-                await VideoChatService.StartHubConnectionAsync();
-
-                if (this.MyUserType == UserType.Remote)
-                {
-                    // Start local media (screen sharing)
-                    //await VideoChatService.StartLocalScreenMediaAsync();
-                    await VideoChatService.RemoteStartCallAsync();
-                    _callStarted = true;                   
-                    StateHasChanged();
-                }                               
+                await VideoChatService.StartHubConnectionAsync();                              
             }
         }
         catch (Exception ex)
@@ -275,6 +266,10 @@
     private async Task InviteAsync(string roomId)
     {
         _roomId = roomId;
+
+        await VideoChatService.RemoteStartCallAsync();
+        _callStarted = true;
+        StateHasChanged();
 
         await VideoChatService.AcceptInviteAsync(roomId);
 

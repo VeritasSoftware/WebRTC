@@ -38,6 +38,12 @@ export class VideoChatComponent {
       this.videoChatService.onInvite.subscribe( async (roomId:string) => {
         console.log("Invite received in component. Room id:", roomId);
         this._roomId = roomId;
+
+        console.log("Component: Starting call as remote user.");
+        await this.videoChatService.remoteStartCallAsync();
+        this._callStarted = true;
+        this.cdr.detectChanges();
+
         await this.videoChatService.acceptInviteAsync(roomId);        
       });
     }
@@ -78,14 +84,6 @@ export class VideoChatComponent {
     (async () => {
       console.log("Component: Starting hub connection.");
       await this.videoChatService.startHubConnectionAsync();
-      if (this.myUserType == UserType.Remote) {
-        // Start local media (screen sharing)
-        //await this.videoChatService.startLocalScreenMediaAsync();
-        console.log("Component: Starting call as remote user.");
-        await this.videoChatService.remoteStartCallAsync();
-        this._callStarted = true;
-        this.cdr.detectChanges();
-      }
     })(); 
   }
 

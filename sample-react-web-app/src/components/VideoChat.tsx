@@ -28,6 +28,10 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
   const handleInvite = async (e: any) => {
         if (!videoChatService) return;
         console.log("handleInvite: Received invite for roomId: ", e.detail);
+
+        await videoChatService.remoteStartCallAsync();
+        setCallStarted(true);
+
         await videoChatService.acceptInviteAsync(e.detail);
         setRoomId(e.detail);
         setInviteSent(true);
@@ -61,12 +65,6 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                 await videoChatService.startHubConnectionAsync();
 
                 if (userType === UserType.Remote) {
-                    // Start local media (screen sharing)
-                    //await videoChatService.startLocalScreenMediaAsync();
-                    await videoChatService.remoteStartCallAsync();
-
-                    setCallStarted(true);
-                    
                     window.addEventListener("onInvite", handleInvite);
                 }
                 else {
