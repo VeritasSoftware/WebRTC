@@ -52,7 +52,7 @@
                 <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
+                <button style="width: 90%;" disabled="@(!_callStarted || _isScreenShare)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="EndCallAsync">End Call</button>
@@ -168,7 +168,7 @@
             if (_isScreenShare)
             {
                 await VideoChatService.SwitchScreenShareToVideoAsync();
-                _isScreenShare = false;
+                _isScreenShare = false;                
             }
             else {
                 await VideoChatService.SwitchVideoToScreenShareAsync();

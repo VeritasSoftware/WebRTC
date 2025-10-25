@@ -587,36 +587,68 @@ function subscribeFileTransferDataChannel() {
 }
 
 function getAudioTrack() {
-    if (!localStream) {
+    if (!localStream && !localScreenStream) {
         console.error('No media stream available.');
         return null;
     }
 
     // Get the audio track from the stream
-    const audioTracks = localStream.getAudioTracks();
-    
-    if (audioTracks.length === 0) {
+    var audioTracks;
+    var audioTracks1;
+
+    if (localStream)
+        audioTracks = localStream.getAudioTracks();
+
+    if (localScreenStream)
+        audioTracks1 = localScreenStream.getAudioTracks();
+
+    var all = [];
+
+    if (audioTracks && audioTracks.length > 0) {
+        all = [...audioTracks];
+    }
+    if (audioTracks1 && audioTracks1.length > 0) {
+        all = [...all, ...audioTracks1];
+    }
+
+    if (all.length === 0) {
         console.error('No audio tracks found in the media stream.');
         return null;
     }
 
-    return audioTracks[0];
+    return all[0];
 }
 
 function getVideoTrack() {
-    if (!localStream) {
+    if (!localStream && !localScreenStream) {
         console.error('No media stream available.');
         return null;
     }
     // Get the video track from the stream
-    var videoTracks = localStream.getVideoTracks();
+    var videoTracks;
+    var videoTracks1;
 
-    if (videoTracks.length === 0) {
+    if (localStream)
+        videoTracks = localStream.getVideoTracks();
+
+    if (localScreenStream)
+        videoTracks1 = localScreenStream.getVideoTracks();
+
+    var all = [];
+
+    if (videoTracks && videoTracks.length > 0) {
+        all = [...videoTracks];
+    }
+    if (videoTracks1 && videoTracks1.length > 0) {
+        all = [...all, ...videoTracks1];
+    }
+
+    if (all.length === 0) {
         console.error('No video tracks found in the media stream.');
         return null;
     }
 
-    return videoTracks[0];
+    return all[0];
 }
 
 function sleep(ms) {

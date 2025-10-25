@@ -135,7 +135,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                         <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
                     </div>
                     <div className="col-lg-4 col-md-4 col-sm-12">
-                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
+                        <button disabled={!_callStarted || _isScreenShare} style={{width: "90%"}} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
                     </div>
                     <div className="col-lg-4 col-md-4 col-sm-12">
                         <button disabled={!_callStarted} style={{width: "90%"}} onClick={() => endCall()}>End Call</button>

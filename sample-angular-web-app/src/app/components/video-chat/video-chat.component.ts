@@ -140,7 +140,7 @@ export class VideoChatComponent {
     }
   }
 
-  async switch(): Promise<void> {
+  async switchMe(): Promise<void> {
     try {
       this._showError = false;
       this._errorMessage = "";
