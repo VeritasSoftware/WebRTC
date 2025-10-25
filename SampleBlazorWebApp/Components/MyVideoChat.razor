@@ -44,10 +44,13 @@
                 <button style="width: 90%;" disabled="@(!_inviteAccepted || _callStarted)" @onclick="StartCallAsync">Start Call</button>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
-            </div>
+                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="SwitchMeAsync">@(_isScreenShare ? "To Video" : "To Screen")</button>
+            </div>            
         </div>
         <div class="row" style="margin-top:10px;margin-left: 5px;">
+            <div class="col-lg-4 col-md-4 col-sm-12">
+                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+            </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
                 <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
             </div>
@@ -101,6 +104,8 @@
     private bool _isMute = false;
     private bool _isVideoStopped = false;
 
+    private bool _isScreenShare = false;
+
     private async Task FileTransfer(FilesResult files)
     {
         Console.WriteLine($"file count: {files.Files.Count}");
@@ -138,12 +143,37 @@
 
             _callStarted = false;
 
-            // Start local media (screen sharing)
-            //await VideoChatService.StartLocalScreenMediaAsync();
+            _isScreenShare = false;
 
             await VideoChatService.StartCallAsync();
 
-            //await VideoChatService.CreateFileTransferDataChannelAsync();
+            _callStarted = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _callStarted = false;
+        }
+    }
+
+    private async Task SwitchMeAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            _callStarted = false;
+
+            if (_isScreenShare)
+            {
+                await VideoChatService.SwitchScreenShareToVideoAsync();
+                _isScreenShare = false;
+            }
+            else {
+                await VideoChatService.SwitchVideoToScreenShareAsync();
+                _isScreenShare = true;
+            }
 
             _callStarted = true;
         }

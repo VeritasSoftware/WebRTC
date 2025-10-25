@@ -25,6 +25,8 @@ export class VideoChatComponent {
 
   public _disableStartCall: boolean = true;
 
+  public _isScreenShare: boolean = false;
+
   constructor(private videoChatService:WebRTCService, private cdr: ChangeDetectorRef) { }
   
   @Input() myUserType: UserType = UserType.Local;
@@ -127,6 +129,32 @@ export class VideoChatComponent {
       // Start local media (screen sharing)
       //await this.videoChatService.startLocalScreenMediaAsync();      
       await this.videoChatService.startCallAsync();
+      this._callStarted = true;
+      this._disableStartCall = true;
+    }
+    catch (err:any) {
+      console.error("Error in startCall:", err);
+      this._errorMessage = err?.message ?? "Error in startCall.";
+      this._showError = true;
+      this._callStarted = false;
+    }
+  }
+
+  async switch(): Promise<void> {
+    try {
+      this._showError = false;
+      this._errorMessage = "";
+      this._callStarted = false; 
+      
+      if (this._isScreenShare) {
+        await this.videoChatService.switchScreenShareToVideoAsync();
+        this._isScreenShare = false;
+      }
+      else {
+        await this.videoChatService.switchVideoToScreenShareAsync();
+        this._isScreenShare = true;
+      }
+
       this._callStarted = true;
       this._disableStartCall = true;
     }

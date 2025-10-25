@@ -161,6 +161,9 @@ export async function switchVideoToScreenShare() {
             await startLocalScreenMedia();
             await startConnection(false, true);
         }
+        else {
+            await startLocalScreenMedia();
+        }
 
         if (videoSender) {
             // Replace the video track with the screen share track
@@ -181,6 +184,9 @@ export async function switchScreenShareToVideo() {
             await startLocalMedia();
             await startConnection(false, false);
         }
+        else {
+            await startLocalMedia();
+        } 
 
         if (videoSender) {
             // Replace the video track with the screen share track

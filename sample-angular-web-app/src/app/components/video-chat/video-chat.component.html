@@ -40,10 +40,13 @@
             <button [disabled]="_disableStartCall" style="width: 90%;" (click)="startCall()">Start Call</button>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
-        </div>
+            <button [disabled]="!_callStarted" style="width: 90%;" (click)="switch()">{{_isScreenShare ? "To Video" : "To Screen"}}</button>
+        </div>        
     </div>
     <div class="row" style="margin-top: 10px; margin-left: 5px;">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
+        </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
             <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
         </div>

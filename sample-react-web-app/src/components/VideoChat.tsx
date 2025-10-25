@@ -18,6 +18,8 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
   const [_isMute, setIsMute] = useState<boolean>(false);
   const [_isVideoStopped, setIsVideoStopped] = useState<boolean>(false);
 
+  const [_isScreenShare, setIsScreenShare] = useState<boolean>(false);
+
   const  handleInviteAccepted = async () => {
         console.log("handleInviteAccepted: Invite accepted.");
         setInviteAccepted(true);
@@ -125,10 +127,13 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                         <button disabled={_disableStartCall} style={{width: "90%"}} onClick={() => startCall()}>Start Call</button>
                     </div>
                     <div className="col-lg-4 col-md-4 col-sm-12">
-                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
-                    </div>
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={() => switchMe()}>{_isScreenShare ? "To Video" : "To Screen"}</button>
+                    </div>                    
                 </div>
                 <div className="row" style={{marginTop: 10, marginLeft: 5}}>
+                    <div className="col-lg-4 col-md-4 col-sm-12">
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleAudioAsync()}>{!_isMute ? "Mute" : "Unmute"}</button>
+                    </div>
                     <div className="col-lg-4 col-md-4 col-sm-12">
                         <button disabled={!_callStarted} style={{width: "90%"}} onClick={async () => await toggleVideoAsync()}>{!_isVideoStopped ? "Stop Video" : "Start Video"}</button>
                     </div>
@@ -178,9 +183,34 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             try {
                 setShowError(false);
                 setCallStarted(false);
+                setIsScreenShare(false);
                 // Start local media (screen sharing)
                 //await videoChatService.startLocalScreenMediaAsync();               
                 await videoChatService.startCallAsync();
+                setCallStarted(true);
+                setDisableStartCall(true);
+            } catch (error: any) {
+                setErrorMessage(error.message);
+                setShowError(true);
+                setDisableStartCall(false);
+                setCallStarted(false);
+            }
+        }
+    }
+
+    async function switchMe() {
+        if (videoChatService) {
+            try {
+                setShowError(false);
+                setCallStarted(false);
+                if (_isScreenShare) {
+                    await videoChatService.switchScreenShareToVideoAsync();                    
+                    setIsScreenShare(false);
+
+                } else {
+                    await videoChatService.switchVideoToScreenShareAsync();
+                    setIsScreenShare(true);
+                }
                 setCallStarted(true);
                 setDisableStartCall(true);
             } catch (error: any) {
