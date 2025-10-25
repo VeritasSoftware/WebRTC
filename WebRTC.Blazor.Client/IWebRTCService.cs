@@ -22,6 +22,7 @@ namespace WebRTC.Blazor.Client
         Task AcceptInviteAsync(string roomId);
         Task StartLocalMediaAsync();
         Task StartLocalScreenMediaAsync(bool startAudio = false);
+        Task StartPeerConnectionAsync(string iceServerUrl = "stun:stun.l.google.com:19302");
         Task StartCallAsync();
         Task StartScreenShareAsync();
         Task RemoteStartCallAsync();

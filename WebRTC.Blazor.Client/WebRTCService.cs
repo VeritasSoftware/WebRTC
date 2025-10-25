@@ -161,6 +161,13 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("toggleVideo");
         }
 
+        public async Task StartPeerConnectionAsync(string iceServerUrl = "stun:stun.l.google.com:19302")
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("startPeerConnection", iceServerUrl);
+        }
+
         public async Task StartCallAsync()
         {
             _module = await _moduleTask.Value;

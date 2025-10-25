@@ -72,6 +72,7 @@ Below are the methods and events supported by the library.
         Task AcceptInviteAsync(string roomId);
         Task StartLocalMediaAsync();
         Task StartLocalScreenMediaAsync(bool startAudio = false);
+        Task StartPeerConnectionAsync(string iceServerUrl = "stun:stun.l.google.com:19302");
         Task StartCallAsync();
         Task StartScreenShareAsync();
         Task RemoteStartCallAsync();
