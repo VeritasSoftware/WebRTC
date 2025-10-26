@@ -22,6 +22,29 @@
         </div>
     </div>
 }
+
+@if(_callStarted) {
+    <div class="row">
+        <div class="col-12" style="margin-left: 5px;">
+            <textarea rows="5" #localChat style="width:400px;">
+            </textarea>
+        </div>            
+    </div>
+    <div class="row">
+        <div class="col-12" style="margin-left: 5px; width:400px;">
+            <button style="width: 400px;" [disabled]="!_callStarted" (click)="sendMessage()">Send Message</button>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-12" style="margin-left: 5px;">
+            <textarea rows="5" #remoteChat style="width:400px;">
+            </textarea>
+        </div>
+    </div>
+    <br />
+}
+
 @if (_inviteAccepted) {
     <br />
     <div class="row">

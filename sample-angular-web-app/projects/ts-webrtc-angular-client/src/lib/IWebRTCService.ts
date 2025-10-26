@@ -7,6 +7,7 @@ export interface IWebRTCService {
     onCallStarted: EventEmitter<string>;
     onToggleAudio: EventEmitter<boolean>;
     onToggleVideo: EventEmitter<boolean>;
+    onChatMessage: EventEmitter<string>;
     onFileTransfer: EventEmitter<FileTransferResult>;    
     onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
@@ -30,6 +31,7 @@ export interface IWebRTCService {
     setVideoAsync(stopVideo: boolean): Promise<void>;
     toggleAudioAsync(): Promise<void>;
     toggleVideoAsync(): Promise<void>;
+    sendChatMessageAsync(message: string): Promise<void>;
     transferFileAsync(data:Uint8Array, name:string, type:string): Promise<void>;
     endCallAsync(): Promise<void>;        
 }

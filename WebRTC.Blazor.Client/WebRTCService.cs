@@ -13,6 +13,7 @@ namespace WebRTC.Blazor.Client
         public event Func<Task> OnInviteAccepted;
         public event Func<bool, Task> OnToggleAudio;
         public event Func<bool, Task> OnToggleVideo;
+        public event Func<string, Task> OnChatMessage;
         public event Func<FileTransferResult, Task> OnFileTransfer;
         public event Func<string, Task> OnCallStarted;
         public event Func<string, Task> OnCallEnded;        
@@ -59,6 +60,12 @@ namespace WebRTC.Blazor.Client
                 Name = fileName,
                 Type = mimeType
             });
+        }
+
+        [JSInvokable]
+        public void Chat(string data)
+        {
+            this.OnChatMessage?.Invoke(data);
         }
 
         [JSInvokable]
@@ -243,6 +250,13 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("transferFile", data, fileName, mimeType);
+        }
+
+        public async Task SendChatMessageAsync(string message)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("sendMessage", message);
         }
     }
 }

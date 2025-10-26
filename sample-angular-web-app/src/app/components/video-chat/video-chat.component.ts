@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { WebRTCService } from '../../../../projects/ts-webrtc-angular-client/src/public-api';
 import { FileTransferResult } from '../../../../projects/ts-webrtc-angular-client/src/lib/models';
 
@@ -30,6 +30,9 @@ export class VideoChatComponent {
   constructor(private videoChatService:WebRTCService, private cdr: ChangeDetectorRef) { }
   
   @Input() myUserType: UserType = UserType.Local;
+
+  @ViewChild('localChat') localChat!: ElementRef;
+  @ViewChild('remoteChat') remoteChat!: ElementRef;
 
   public get userType(): typeof UserType {
     return UserType; 
@@ -67,6 +70,11 @@ export class VideoChatComponent {
     this.videoChatService.onToggleVideo.subscribe( (isVideoStopped:boolean) => {
       console.log("ToggleVideo event received in component. isVideoStopped:", isVideoStopped);
       this._isVideoStopped = isVideoStopped;
+      this.cdr.detectChanges();
+    });
+    this.videoChatService.onChatMessage.subscribe( (message:string) => {
+      console.log("ChatMessage event received in component. message:", message);
+      this.remoteChat.nativeElement.textContent = message
       this.cdr.detectChanges();
     });
     this.videoChatService.onFileTransfer.subscribe( (result:FileTransferResult) => {
@@ -137,6 +145,19 @@ export class VideoChatComponent {
       this._errorMessage = err?.message ?? "Error in startCall.";
       this._showError = true;
       this._callStarted = false;
+    }
+  }
+
+  async sendMessage(): Promise<void> {
+    try {
+      this._showError = false;
+      this._errorMessage = "";   
+      await this.videoChatService.sendChatMessageAsync(this.localChat.nativeElement.value);
+    }
+    catch (err:any) {
+      console.error("Error in sendMessage:", err);
+      this._errorMessage = err?.message ?? "Error in sendMessage.";
+      this._showError = true;
     }
   }
 

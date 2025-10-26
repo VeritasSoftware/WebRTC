@@ -20,6 +20,9 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
 
   const [_isScreenShare, setIsScreenShare] = useState<boolean>(false);
 
+  const [_localChat, setLocalChat] = useState<string>("");
+  const [_remoteChat, setRemoteChat] = useState<string>("");
+
   const  handleInviteAccepted = async () => {
         console.log("handleInviteAccepted: Invite accepted.");
         setInviteAccepted(true);
@@ -50,11 +53,56 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         setIsVideoStopped(e.detail);     
     };
 
+    const chatMessage = async (e: any) => {
+        console.log("ChatMessage event received in component. e:", e);
+        setRemoteChat(e.detail);
+    }
+
     const fileTransfer = async (e: any) => {
         console.log("FileTransfer event received in component. result:", e);
         var file = e.detail as FileTransferResult;
         (window as any).downloadFileFromByteArray(file.name!, file.type!, base64ToUint8Array(file.data!));     
     };
+
+    const handleChange = (e: any) => {
+        // Update the 'text' state with the new value from the textarea.
+        setLocalChat(e.target.value);
+    };
+
+    useEffect(() => {
+        // Cleanup event listeners on unmount
+        return () => {
+            if (userType === UserType.Remote) { 
+                window.removeEventListener("onInvite", handleInvite);
+            }
+            else {
+                window.removeEventListener("onInviteAccepted", handleInviteAccepted);
+            }
+            window.removeEventListener("onToggleAudio", toggleAudio);
+            window.removeEventListener("onToggleVideo", toggleVideo);
+            window.removeEventListener("onChatMessage", chatMessage);
+            window.removeEventListener("onFileTransfer", fileTransfer);
+        };
+    }, [videoChatService]);
+
+    // useEffect(() => {
+    //     console.log("Local chat updated:", _localChat);
+
+    //     const localChatUpdated = async () => {
+    //         if (videoChatService) {
+    //             try {
+    //                 setShowError(false);
+    //                 await videoChatService.sendMessageAsync(_localChat);
+    //             } catch (error: any) {
+    //                 setErrorMessage(error.message);
+    //                 setShowError(true);
+    //             }
+    //         }
+    //     };
+
+    //     localChatUpdated();
+
+    // }, [_localChat]);
 
     useEffect(() => {
         const initializeVideoChat = async () => {
@@ -75,6 +123,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
 
                 window.addEventListener("onToggleAudio", toggleAudio);
                 window.addEventListener("onToggleVideo", toggleVideo);
+                window.addEventListener("onChatMessage", chatMessage);
                 window.addEventListener("onFileTransfer", fileTransfer);
             }
         };        
@@ -90,6 +139,35 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                     <span style={{backgroundColor: 'red', color: 'white'}}>Error: {_errorMessage}</span>
                 </div>
             </div>
+        );
+    };
+
+    const Chat: React.FC<{ show: boolean }> = ({ show }) => {
+        if (!show) return null;
+        return (
+            <div>
+                <form>
+                    <div className="row">
+                        <div className="col-12" style={{marginLeft: 5}}>
+                            <textarea id="localChat" rows={parseInt("5")} style={{width:400}} onChange={handleChange} value={_localChat}>
+                            </textarea>                        
+                        </div>                           
+                    </div>
+                    <div className="row">
+                        <div className="col-12" style={{marginLeft: 5}}>
+                            <button type='button' style={{width: 400}} onClick={async () => await sendMessage()}>Send Message</button>
+                        </div>                           
+                    </div>
+                </form>                
+                <br />
+                <div className="row">
+                    <div className="col-12" style={{marginLeft: 5}}>
+                        <textarea id="remoteChat" rows={parseInt("5")} style={{width:400}} value={_remoteChat} readOnly>
+                        </textarea>
+                    </div>
+                </div>
+                <br />
+            </div>            
         );
     };
 
@@ -194,6 +272,18 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                 setShowError(true);
                 setDisableStartCall(false);
                 setCallStarted(false);
+            }
+        }
+    }
+
+    async function sendMessage() {
+        if (videoChatService) {
+            try {
+                setShowError(false);
+                await videoChatService.sendChatMessageAsync(_localChat);
+            } catch (error: any) {
+                setErrorMessage(error.message);
+                setShowError(true);
             }
         }
     }
@@ -323,6 +413,10 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             <br />
                 
             <FileTransferPanel show={_callStarted}/>
+
+            <br />
+
+            <Chat show={_callStarted} />
 
             <br />
 

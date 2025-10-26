@@ -14,6 +14,7 @@ let iceCandidates = [];
 let isRemoteSet = false;
 let isTrickleIceSent = false;
 let fileTransferDataChannel;
+let chatDataChannel;
 
 export function setDotNetRef(ref) {
     dotNetRef = ref;
@@ -262,6 +263,14 @@ export function transferFile(data, fileName, mimeType) {
     }    
 }
 
+export function sendMessage(message) {
+    if (!chatDataChannel) {
+        console.log("Chat DataChannel not started. Please start call or start screen sharing first.");
+        return;
+    }
+    chatDataChannel.send(message);
+}
+
 export async function startCall(sendOffer = true) {
     await startConnection(sendOffer, false);
 }
@@ -306,6 +315,11 @@ async function startConnection(sendOffer = true, startScreenShare = false) {
             createFileTransferDataChannel();
 
         subscribeFileTransferDataChannel();
+
+        if (!chatDataChannel)
+            createChatDataChannel();
+
+        subscribeChatDataChannel();
 
         if (sendOffer) {
             await sendOfferAsync();
@@ -515,6 +529,51 @@ export function startHubConnection() {
             isHubConnectionStarted = true;
         })
         .catch(err => console.error("Error while starting connection:", err));
+}
+
+function createChatDataChannel() {
+    console.log("createChatDataChannel called.");
+    // Create a DataChannel on the local connection
+    chatDataChannel = peerConnection.createDataChannel("chat");
+
+    // Set up event listeners for the DataChannel
+    chatDataChannel.onopen = () => console.log("Chat DataChannel is open!");
+    chatDataChannel.onmessage = (event) => {
+        console.log("Chat message received:", event.data);
+        dotNetRef.invokeMethodAsync('Chat', event.data);
+    };
+}
+
+function subscribeChatDataChannel() {
+    try {
+        console.log("subscribeChatDataChannel called.");
+
+        if (!peerConnection) {
+            console.log("Peer connection not available. Please start call first.")
+            return;
+        }
+
+        peerConnection.ondatachannel = (event) => {
+            const dataChannel = event.channel;
+
+            dataChannel.onmessage = (event) => {
+                console.log("Chat subscriber: message received.", event.data);
+
+                dotNetRef.invokeMethodAsync('Chat', event.data);
+            };
+
+            dataChannel.onopen = () => {
+                console.log("Chat DataChannel is open!");
+            };
+
+            dataChannel.onclose = () => {
+                console.log("Chat DataChannel is closed!");
+            };
+        };
+    } catch (ex) {
+        console.error('Error subscribe chat data channel.', ex);
+        return;
+    }
 }
 
 function createFileTransferDataChannel() {

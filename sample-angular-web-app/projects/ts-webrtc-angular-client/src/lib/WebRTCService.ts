@@ -3,7 +3,8 @@ import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
             startLocalMedia, transferFile, setRoomId, startLocalScreenMedia, startScreenShare,
-            switchVideoToScreenShare, switchScreenShareToVideo, startPeerConnection} from './client';
+            switchVideoToScreenShare, switchScreenShareToVideo, startPeerConnection,
+            sendMessage} from './client';
 import { FileTransferResult } from "./models";
 
 [Injectable({
@@ -17,6 +18,7 @@ export class WebRTCService implements IWebRTCService {
     public onCallStarted = new EventEmitter<string>();
     public onCallEnded = new EventEmitter<string>();
     public onFileTransfer = new EventEmitter<FileTransferResult>();
+    public onChatMessage = new EventEmitter<string>();
 
     constructor() {
         // Ensure the global functions are available for the client.js to call  
@@ -27,6 +29,7 @@ export class WebRTCService implements IWebRTCService {
         (window as any).FileTransfer = this.FileTransfer.bind(this);
         (window as any).CallStarted = this.CallStarted.bind(this);
         (window as any).CallEnded = this.CallEnded.bind(this);
+        (window as any).Chat = this.Chat.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -95,6 +98,12 @@ export class WebRTCService implements IWebRTCService {
         );
     }
 
+    Chat(message:string): void {
+        console.log('Chat fired. message:', message);
+
+        this.onChatMessage?.emit(message);
+    }
+
     CallStarted(roomId: string): void {
         console.log('CallStarted fired. Room id:', roomId);
         this.onCallStarted?.emit(roomId);
@@ -148,10 +157,17 @@ export class WebRTCService implements IWebRTCService {
           });        
     }
 
+    async sendChatMessageAsync(message: string): Promise<void> {
+        await new Promise<void>(async (resolve) => {
+            await new Promise((res) => sendMessage(message));
+            resolve();
+          }); 
+    }
+
     async startPeerConnectionAsync(iceServerUrl: string = 'stun:stun.l.google.com:19302'): Promise<void> {
         await startPeerConnection(iceServerUrl);
     }
-    
+
     async startCallAsync(): Promise<void> {
         await startCall();
     }        

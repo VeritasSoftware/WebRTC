@@ -7,7 +7,8 @@ import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite,
     startPeerConnection,
     startScreenShare,
     switchVideoToScreenShare,
-    switchScreenShareToVideo} from './client';
+    switchScreenShareToVideo,
+    sendMessage} from './client';
 import { FileTransferResult } from "./models";
 
 export class WebRTCService implements IWebRTCService {  
@@ -20,6 +21,7 @@ export class WebRTCService implements IWebRTCService {
         (window as any).FileTransfer = this.FileTransfer.bind(this);
         (window as any).CallStarted = this.CallStarted.bind(this);
         (window as any).CallEnded = this.CallEnded.bind(this);
+        (window as any).Chat = this.Chat.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -108,6 +110,13 @@ export class WebRTCService implements IWebRTCService {
           }); 
     }
 
+    async sendChatMessageAsync(message: string): Promise<void> {
+        await new Promise<void>(async (resolve) => {
+            await new Promise((res) => sendMessage(message));
+            resolve();
+          }); 
+    }
+
     FileTransfer(data:string, size:number, fileName:string, mimeType:string): void {
         console.log('FileTransfer fired. data:', data);
         console.log('FileTransfer fired. size:', size);
@@ -125,6 +134,16 @@ export class WebRTCService implements IWebRTCService {
             );
       
         window.dispatchEvent(onFileTransfer);
+    }
+
+    Chat(message:string): void {
+        console.log('Chat fired. message:', message);
+        const onChatMessage = new CustomEvent<string>("onChatMessage", 
+            { 
+                detail: message
+            });
+      
+        window.dispatchEvent(onChatMessage);
     }
 
     async startLocalMediaAsync(): Promise<void> {

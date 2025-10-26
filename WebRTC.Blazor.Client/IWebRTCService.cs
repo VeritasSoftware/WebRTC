@@ -9,6 +9,7 @@ namespace WebRTC.Blazor.Client
         event Func<string, Task> OnCallStarted;
         event Func<bool, Task> OnToggleAudio;
         event Func<bool, Task> OnToggleVideo;
+        event Func<string, Task> OnChatMessage;
         event Func<FileTransferResult, Task> OnFileTransfer;        
         event Func<string, Task> OnCallEnded;
         Task SetDotNetRefAsync();        
@@ -33,6 +34,7 @@ namespace WebRTC.Blazor.Client
         Task SetVideoAsync(bool stopVideo);
         Task ToggleAudioAsync();
         Task ToggleVideoAsync();
+        Task SendChatMessageAsync(string message);
         Task TransferFileAsync(byte[] data, string fileName, string mimeType);
         Task EndCallAsync();               
     }

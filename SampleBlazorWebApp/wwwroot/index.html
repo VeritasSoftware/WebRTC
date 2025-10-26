@@ -12,6 +12,14 @@
     <link href="SampleBlazorWebApp.styles.css" rel="stylesheet" />
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/9.0.6/signalr.js"></script>
     <script type="text/javascript">
+        function getTextAreaValue(element) {
+            return element.value;
+        }
+        function setTextareaValue(element, value) {
+            if (element) {
+                element.value = value;
+            }
+        }
         window.downloadFileFromByteArray = (fileName, mimeType, byteArray) => {
             // Convert the byte array to a Blob
             console.log("downloadFileFromByteArray: fileName: ", fileName);
