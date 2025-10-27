@@ -4,10 +4,10 @@ A .NET library for WebRTC, enabling real-time communication in your web applicat
 
 ## Features
 
-- Peer-to-peer audio and video communication
+- Peer-to-peer audio+video chat
+- Peer-to-peer text chat
 - Peer-to-peer screen sharing
 - Peer-to-peer file transfer
-- Data channels for real-time data transfer
 - High-level API for simplified WebRTC operations
 - Client available for Blazor, Angular, React
 - Cross-platform support (Windows, macOS, Linux) for Server
@@ -64,7 +64,7 @@ Below are the methods and events supported by the library.
         event Func<string, Task> OnCallEnded;
         Task SetDotNetRefAsync();        
         Task SetRoomIdAsync(string roomId);
-        Task SetSettingsAsync(string userId, string myUserId);
+        Task SetSettingsAsync(string uniqueId, string remoteUniqueId);
         Task SetVideosAsync(ElementReference local, ElementReference remote);
         Task SetHubUrlAsync(string url);
         Task StartHubConnectionAsync();
@@ -109,7 +109,7 @@ export interface IWebRTCService {
     onFileTransfer: EventEmitter<FileTransferResult>;    
     onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
-    setSettings(userId: string, remoteUserId: string): void;
+    setSettings(uniqueId: string, remoteUniqueId: string): void;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     startHubConnectionAsync(): Promise<void>;
@@ -146,7 +146,7 @@ Below are the methods supported by the library.
 ```typescript
 export interface IWebRTCService {
     setRoomId(roomId:string) : void;
-    setSettings(userId: string, remoteUserId: string): void;
+    setSettings(uniqueId: string, remoteUniqueId: string): void;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     startHubConnectionAsync(): Promise<void>;
