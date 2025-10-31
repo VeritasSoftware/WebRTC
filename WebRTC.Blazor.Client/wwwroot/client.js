@@ -314,12 +314,10 @@ async function startConnection(sendOffer = true, startScreenShare = false) {
         if (!fileTransferDataChannel)
             createFileTransferDataChannel();
 
-        subscribeFileTransferDataChannel();
-
         if (!chatDataChannel)
             createChatDataChannel();
 
-        subscribeChatDataChannel();
+        subscribeDataChannels();
 
         if (sendOffer) {
             await sendOfferAsync();
@@ -544,38 +542,6 @@ function createChatDataChannel() {
     };
 }
 
-function subscribeChatDataChannel() {
-    try {
-        console.log("subscribeChatDataChannel called.");
-
-        if (!peerConnection) {
-            console.log("Peer connection not available. Please start call first.")
-            return;
-        }
-
-        peerConnection.ondatachannel = (event) => {
-            const dataChannel = event.channel;
-
-            dataChannel.onmessage = (event) => {
-                console.log("Chat subscriber: message received.", event.data);
-
-                dotNetRef.invokeMethodAsync('Chat', event.data);
-            };
-
-            dataChannel.onopen = () => {
-                console.log("Chat DataChannel is open!");
-            };
-
-            dataChannel.onclose = () => {
-                console.log("Chat DataChannel is closed!");
-            };
-        };
-    } catch (ex) {
-        console.error('Error subscribe chat data channel.', ex);
-        return;
-    }
-}
-
 function createFileTransferDataChannel() {
     try {
         console.log("createFileTransferDataChannel called.");
@@ -624,10 +590,9 @@ function createFileTransferDataChannel() {
     }
 }
 
-function subscribeFileTransferDataChannel() {
+function subscribeDataChannels() {
+    console.log("subscribeDataChannels called.");
     try {
-        console.log("subscribeFileTransferDataChannel called.");
-
         if (!peerConnection) {
             console.log("Peer connection not available. Please start call first.")
             return;
@@ -636,28 +601,43 @@ function subscribeFileTransferDataChannel() {
         peerConnection.ondatachannel = (event) => {
             const dataChannel = event.channel;
 
-            let receivedBuffer = [];
-            let receivedSize = 0;
+            console.log("subscribeDataChannels: data channel label: ", dataChannel.label);
+            console.log("subscribeDataChannels: data channel type: ", dataChannel.binaryType);
 
-            dataChannel.onmessage = (event) => {
-                console.log("subscriber: file received.");
+            if (dataChannel.label === "fileTransfer") {
+                let receivedBuffer = [];
+                let receivedSize = 0;
 
-                if (event.data.toString().startsWith("EOF")) {
-                    var fileName = event.data.split(':')[1];
-                    var mimeType = event.data.split(':')[2];
-                    const base64String = btoa(String.fromCharCode(...receivedBuffer));
-                    console.log("subscriber: onmessage: receivedBuffer: ", base64String);
+                dataChannel.onmessage = (event) => {
+                    console.log("fileTransfer.subscriber.onmessage called.");
+                    console.log("fileTransfer.subscriber.onmessage: event.data: ", event.data);
 
-                    dotNetRef.invokeMethodAsync('FileTransfer', base64String,
-                        receivedSize, fileName, mimeType);
-                }
-                else {
-                    console.log("subscriber: file data: ", event.data);
-                    const view = new Uint8Array(event.data);
-                    receivedBuffer.push(...view);
-                    receivedSize += event.data.byteLength;
-                }
-            };
+                    console.log("subscriber: file received.");
+
+                    if (event.data.toString().startsWith("EOF")) {
+                        var fileName = event.data.split(':')[1];
+                        var mimeType = event.data.split(':')[2];
+                        const base64String = btoa(String.fromCharCode(...receivedBuffer));
+                        console.log("subscriber: onmessage: receivedBuffer: ", base64String);
+
+                        dotNetRef.invokeMethodAsync('FileTransfer', base64String,
+                            receivedSize, fileName, mimeType);
+                    }
+                    else {
+                        console.log("subscriber: file data: ", event.data);
+                        const view = new Uint8Array(event.data);
+                        receivedBuffer.push(...view);
+                        receivedSize += event.data.byteLength;
+                    }
+                };
+            }
+            else if (dataChannel.label === "chat") {
+                dataChannel.onmessage = (event) => {
+                    console.log("Chat subscriber: message received.", event.data);
+
+                    dotNetRef.invokeMethodAsync('Chat', event.data);
+                };
+            }
 
             dataChannel.onopen = () => {
                 console.log("DataChannel is open!");
