@@ -1,4 +1,5 @@
 let localStream;
+let remoteStream;
 let localScreenStream;
 let isMuted = false;
 let isVideoStopped = false;
@@ -15,6 +16,107 @@ let isRemoteSet = false;
 let isTrickleIceSent = false;
 let fileTransferDataChannel;
 let chatDataChannel;
+let mediaRecorderLocal;
+let mediaRecorderRemote;
+let recordedBlobs = [];
+let recordedBlobsRemote = [];
+
+function handleDataAvailable(event) {
+    console.log("handleDataAvailable called. event: ", event);
+    if (event.data && event.data.size > 0) {
+        recordedBlobs.push(event.data);
+    }
+}
+
+function handleStop(event) {
+    console.log('Recorder stopped: ', event);
+
+    recordedBlobs.forEach(async b => {
+        const videoBuffer = b;
+
+        console.log("videoBuffer: ", videoBuffer)
+
+        let arrayBuffer = await videoBuffer.arrayBuffer();
+
+        const view = new Uint8Array(arrayBuffer);
+        console.log("view: ", view);
+
+        const base64String = uint8ArrayToBase64(view);
+
+        dotNetRef.invokeMethodAsync('Recording', base64String, b.type, true);
+    });
+
+    recordedBlobs = [];
+}
+
+function handleDataAvailableRemote(event) {
+    console.log("handleDataAvailableRemote called. event: ", event);
+    if (event.data && event.data.size > 0) {
+        recordedBlobsRemote.push(event.data);
+    }
+}
+
+function handleStopRemote(event) {
+    console.log('Remote Recorder stopped: ', event);
+
+    recordedBlobsRemote.forEach(async b => {
+        const videoBuffer = b;
+
+        console.log("videoBuffer: ", videoBuffer)
+
+        let arrayBuffer = await videoBuffer.arrayBuffer();
+
+        const view = new Uint8Array(arrayBuffer);
+        console.log("view: ", view);
+        
+        const base64String = uint8ArrayToBase64(view);
+
+        dotNetRef.invokeMethodAsync('Recording', base64String, b.type, false);
+    });
+
+    recordedBlobsRemote = [];
+}
+
+function uint8ArrayToBase64(uint8Array) {
+    const binaryString = Array.from(uint8Array, byte => String.fromCharCode(byte)).join('');
+    return btoa(binaryString);
+}
+
+export function startRecording() {
+    if (!localStream || !remoteStream) {
+        console.log("No video stream to record. Please start call.");
+        return;
+    }
+    let options = { mimeType: 'video/webm' };
+    recordedBlobs = [];
+    recordedBlobsRemote = [];
+    try {
+        mediaRecorderLocal = new MediaRecorder(localStream, options);
+        mediaRecorderRemote = new MediaRecorder(remoteStream, options);
+    } catch (e0) {
+        console.log('Try different mimeType');
+    }
+    console.log('Created Local MediaRecorder', mediaRecorderLocal, 'with options', options);
+    console.log('Created Remote MediaRecorder', mediaRecorderRemote, 'with options', options);
+    mediaRecorderLocal.onstop = handleStop;
+    mediaRecorderLocal.ondataavailable = handleDataAvailable;
+
+    mediaRecorderRemote.onstop = handleStopRemote;
+    mediaRecorderRemote.ondataavailable = handleDataAvailableRemote;
+
+    mediaRecorderLocal.start();
+    mediaRecorderRemote.start();
+    console.log('MediaRecorders started', mediaRecorderLocal, mediaRecorderRemote);
+}
+
+export function stopRecording() {
+    console.log("stopRecording called.");
+
+    mediaRecorderLocal.stop();
+    mediaRecorderRemote.stop();
+    console.log('Recorded Local Blobs: ', recordedBlobs);
+    console.log('Recorded Remote Blobs: ', recordedBlobsRemote);
+}
 
 export function setDotNetRef(ref) {
     dotNetRef = ref;
@@ -376,6 +478,7 @@ export async function startPeerConnection(iceServerUrl = 'stun:stun.l.google.com
 
         peerConnection.ontrack = e => {
             console.log("Received remote track", e);
+            remoteStream = e.streams[0];
             remoteVideo.srcObject = e.streams[0];
         };
 

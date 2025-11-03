@@ -15,6 +15,7 @@ namespace WebRTC.Blazor.Client
         public event Func<bool, Task> OnToggleVideo;
         public event Func<string, Task> OnChatMessage;
         public event Func<FileTransferResult, Task> OnFileTransfer;
+        public event Func<VideoSessionRecordingResult, Task> OnVideoSessionRecording;
         public event Func<string, Task> OnCallStarted;
         public event Func<string, Task> OnCallEnded;        
 
@@ -59,6 +60,17 @@ namespace WebRTC.Blazor.Client
                 Size = size,
                 Name = fileName,
                 Type = mimeType
+            });
+        }
+
+        [JSInvokable]
+        public void Recording(string base64String, string mimeType, bool isLocal)
+        {
+            this.OnVideoSessionRecording?.Invoke(new VideoSessionRecordingResult
+            {
+                Data = base64String,
+                Type = mimeType,
+                StreamType = isLocal ? StreamType.Local : StreamType.Remote
             });
         }
 
@@ -250,6 +262,20 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("transferFile", data, fileName, mimeType);
+        }
+
+        public async Task StartRecordingAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("startRecording");
+        }
+
+        public async Task StopRecordingAsync()
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("stopRecording");
         }
 
         public async Task SendChatMessageAsync(string message)

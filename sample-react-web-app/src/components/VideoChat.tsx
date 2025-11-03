@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { VideoChatProps, UserType } from './VideoChat.Models';
 import './VideoChat.css';
 import { FileTransferResult } from 'ts-webrtc-react-client'
+import { StreamType, VideoSessionRecordingResult } from 'ts-webrtc-react-client/dist/models';
 
 const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => {
     
@@ -19,6 +20,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
   const [_isVideoStopped, setIsVideoStopped] = useState<boolean>(false);
 
   const [_isScreenShare, setIsScreenShare] = useState<boolean>(false);
+  const [_isRecordingStarted, setIsRecordingStarted] = useState<boolean>(false);
 
   const [_localChat, setLocalChat] = useState<string>("");
   const [_remoteChat, setRemoteChat] = useState<string>("");
@@ -64,9 +66,21 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         (window as any).downloadFileFromByteArray(file.name!, file.type!, base64ToUint8Array(file.data!));     
     };
 
+    const videoSessionRecording = async (e: any) => {
+        console.log("videoSessionRecording event received in component. result:", e);
+        var result = e.detail as VideoSessionRecordingResult;
+        var fileName = `VideoSessionRecording (${result.streamType?.toString()})_${new Date().toISOString()}`;
+        (window as any).downloadFileFromByteArray(fileName, result.type!, base64ToUint8Array(result.data!));     
+    };
+
     const handleChange = (e: any) => {
+        e.stopPropagation();
         // Update the 'text' state with the new value from the textarea.
-        setLocalChat(e.target.value);
+        setLocalChat(e.target.value);        
+
+        var textarea = document.getElementById("localChat") as HTMLTextAreaElement;
+        var cursorPosition = textarea.selectionStart;
+        textarea.selectionStart = textarea.selectionEnd = cursorPosition + 1;
     };
 
     useEffect(() => {
@@ -82,27 +96,9 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
             window.removeEventListener("onToggleVideo", toggleVideo);
             window.removeEventListener("onChatMessage", chatMessage);
             window.removeEventListener("onFileTransfer", fileTransfer);
+            window.removeEventListener("onVideoSessionRecording", videoSessionRecording);
         };
     }, [videoChatService]);
-
-    // useEffect(() => {
-    //     console.log("Local chat updated:", _localChat);
-
-    //     const localChatUpdated = async () => {
-    //         if (videoChatService) {
-    //             try {
-    //                 setShowError(false);
-    //                 await videoChatService.sendMessageAsync(_localChat);
-    //             } catch (error: any) {
-    //                 setErrorMessage(error.message);
-    //                 setShowError(true);
-    //             }
-    //         }
-    //     };
-
-    //     localChatUpdated();
-
-    // }, [_localChat]);
 
     useEffect(() => {
         const initializeVideoChat = async () => {
@@ -125,6 +121,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                 window.addEventListener("onToggleVideo", toggleVideo);
                 window.addEventListener("onChatMessage", chatMessage);
                 window.addEventListener("onFileTransfer", fileTransfer);
+                window.addEventListener("onVideoSessionRecording", videoSessionRecording);
             }
         };        
 
@@ -149,7 +146,7 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                 <form>
                     <div className="row">
                         <div className="col-12" style={{marginLeft: 5}}>
-                            <textarea id="localChat" rows={parseInt("5")} style={{width:400}} onChange={handleChange} value={_localChat}>
+                            <textarea id="localChat" rows={parseInt("5")} style={{width:400}} key="stableKey" onChange={handleChange} value={_localChat}>
                             </textarea>                        
                         </div>                           
                     </div>
@@ -198,14 +195,17 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
         return (
             <div style={{marginTop: 10, width: "100%"}}>
                 <div className="row" style={{marginTop: 10, marginLeft: 5}}>
-                    <div className="col-lg-4 col-md-4 col-sm-12">
+                    <div className="col-lg-3 col-md-3 col-sm-12">
                         <button disabled={_inviteSent} style={{width: "90%"}} onClick={() => inviteAll()}>Invite</button>
                     </div>
-                    <div className="col-lg-4 col-md-4 col-sm-12">
+                    <div className="col-lg-3 col-md-3 col-sm-12">
                         <button disabled={_disableStartCall} style={{width: "90%"}} onClick={() => startCall()}>Start Call</button>
                     </div>
-                    <div className="col-lg-4 col-md-4 col-sm-12">
+                    <div className="col-lg-3 col-md-3 col-sm-12">
                         <button disabled={!_callStarted} style={{width: "90%"}} onClick={() => switchMe()}>{_isScreenShare ? "To Video" : "To Screen"}</button>
+                    </div>
+                    <div className="col-lg-3 col-md-3 col-sm-12">
+                        <button disabled={!_callStarted} style={{width: "90%"}} onClick={() => startStopRecording()}>{_isRecordingStarted ? "Stop Recording" : "Start Recording"}</button>
                     </div>                    
                 </div>
                 <div className="row" style={{marginTop: 10, marginLeft: 5}}>
@@ -272,6 +272,28 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
                 setShowError(true);
                 setDisableStartCall(false);
                 setCallStarted(false);
+            }
+        }
+    }
+
+    function startStopRecording() {
+        if (videoChatService) {
+            try {
+                setShowError(false);
+                console.log("startStopRecording: _isRecordingStarted:", _isRecordingStarted);
+                if (!_isRecordingStarted) {
+                    videoChatService.startRecording();
+                    console.log("startStopRecording: Recording started.");
+                    setIsRecordingStarted(true);
+                }
+                else {
+                    videoChatService.stopRecording();
+                    console.log("startStopRecording: Recording stopped.");
+                    setIsRecordingStarted(false);
+                }
+            } catch (error: any) {
+                setErrorMessage(error.message);
+                setShowError(true);
             }
         }
     }

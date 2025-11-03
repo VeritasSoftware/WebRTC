@@ -60,25 +60,28 @@
     @if (this.MyUserType == UserType.Local)
     {
         <div class="row" style="margin-top:10px; margin-left: 5px;">
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@_inviteSent" @onclick="InviteAsync">Invite</button>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <button style="width: 90%;height:50px;" disabled="@_inviteSent" @onclick="InviteAsync">Invite</button>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_inviteAccepted || _callStarted)" @onclick="StartCallAsync">Start Call</button>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <button style="width: 90%;height:50px;" disabled="@(!_inviteAccepted || _callStarted)" @onclick="StartCallAsync">Start Call</button>
             </div>
-            <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="SwitchMeAsync">@(_isScreenShare ? "To Video" : "To Screen")</button>
-            </div>            
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <button style="width: 90%;height:50px;" disabled="@(!_callStarted)" @onclick="SwitchMeAsync">@(_isScreenShare ? "To Video" : "To Screen")</button>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-12">
+                <button style="width: 90%;height:50px;" disabled="@(!_callStarted)" @onclick="StartStopRecordingAsync">@(_isRecordingStarted ? "Stop Recording" : "Start Recording")</button>
+            </div>
         </div>
         <div class="row" style="margin-top:10px;margin-left: 5px;">
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+                <button style="width: 90%;height:50px;" disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted || _isScreenShare)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
+                <button style="width: 90%;height:50px;" disabled="@(!_callStarted || _isScreenShare)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="EndCallAsync">End Call</button>
+                <button style="width: 90%;height:50px;" disabled="@(!_callStarted)" @onclick="EndCallAsync">End Call</button>
             </div>
         </div>
     }
@@ -86,13 +89,13 @@
     {
         <div class="row" style="margin-top:10px; margin-left: 5px;">
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
+                <button style="width: 90%;height:50px;" disabled="@(!_callStarted)" @onclick="ToggleAudioAsync">@(!_isMute ? "Mute" : "Unmute")</button>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
+                <button style="width: 90%;height:50px;" disabled="@(!_callStarted)" @onclick="ToggleVideoAsync">@(!_isVideoStopped ? "Stop Video" : "Start Video")</button>
             </div>
             <div class="col-lg-4 col-md-4 col-sm-12">
-                <button style="width: 90%;" @onclick="EndCallAsync">End Call</button>
+                <button style="width: 90%;height:50px;" @onclick="EndCallAsync">End Call</button>
             </div>
         </div>
     }
@@ -129,6 +132,7 @@
     private bool _callStarted = false;
     private bool _isMute = false;
     private bool _isVideoStopped = false;
+    private bool _isRecordingStarted = false;
 
     private bool _isScreenShare = false;
 
@@ -229,6 +233,31 @@
         }
     }
 
+    private async Task StartStopRecordingAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            if (_isRecordingStarted)
+            {
+                await VideoChatService.StopRecordingAsync();
+                _isRecordingStarted = false;
+            }
+            else
+            {
+                await VideoChatService.StartRecordingAsync();
+                _isRecordingStarted = true;
+            }
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _isRecordingStarted = false;
+        }
+    }
+
     private async Task ToggleAudioAsync()
     {
         try
@@ -292,6 +321,7 @@
             VideoChatService.OnToggleVideo += ToggleVideoAsync;
             VideoChatService.OnFileTransfer += FileTransferAsync;
             VideoChatService.OnChatMessage += ChatMessageAsync;
+            VideoChatService.OnVideoSessionRecording += VideoSessionRecordingAsync;
 
             await Task.CompletedTask;
         }
@@ -372,6 +402,20 @@
                                         Convert.FromBase64String(result.Data));
         Console.WriteLine($"Files size transferred: {result.Size}");
         await Task.CompletedTask;
+    }
+
+    private async Task VideoSessionRecordingAsync(VideoSessionRecordingResult result)
+    {
+        if (result.Data == null)
+        {
+            throw new ApplicationException("Data not received.");
+        }
+
+        await JSRuntime.InvokeVoidAsync("downloadFileFromByteArray",
+                                        $"Video Session Recording ({result.StreamType.ToString()})",
+                                        result.Type,
+                                        Convert.FromBase64String(result.Data));
+        Console.WriteLine($"Files size transferred: {result.Data.Length}");
     }
 
     private async Task ChatMessageAsync(string data)

@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { WebRTCService } from '../../../../projects/ts-webrtc-angular-client/src/public-api';
-import { FileTransferResult } from '../../../../projects/ts-webrtc-angular-client/src/lib/models';
+import { FileTransferResult, StreamType, VideoSessionRecordingResult } from '../../../../projects/ts-webrtc-angular-client/src/lib/models';
 
 @Component({
   selector: 'app-video-chat',
@@ -26,6 +26,8 @@ export class VideoChatComponent {
   public _disableStartCall: boolean = true;
 
   public _isScreenShare: boolean = false;
+
+  public _isRecordingStarted: boolean = false;
 
   constructor(private videoChatService:WebRTCService, private cdr: ChangeDetectorRef) { }
   
@@ -80,6 +82,12 @@ export class VideoChatComponent {
     this.videoChatService.onFileTransfer.subscribe( (result:FileTransferResult) => {
       console.log("FileTransfer event received in component. result.name:", result.name);
       (window as any).downloadFileFromByteArray(result.name!, result.type!, this.base64ToUint8Array(result.data!));
+      this.cdr.detectChanges();
+    });
+    this.videoChatService.onVideoSessionRecording.subscribe( (result:VideoSessionRecordingResult) => {
+      let name = "Video Session Recording";
+      name += (result.streamType == StreamType.Local ? " (Local)" : " (Remote)");
+      (window as any).downloadFileFromByteArray(name, result.type!, this.base64ToUint8Array(result.data!));
       this.cdr.detectChanges();
     });
   }
@@ -184,6 +192,32 @@ export class VideoChatComponent {
       this._errorMessage = err?.message ?? "Error in startCall.";
       this._showError = true;
       this._callStarted = false;
+    }
+  }
+
+  startStopRecording(): void {
+    try {
+      this._showError = false;
+      this._errorMessage = ""; 
+      
+      console.log("Start/Stop recording clicked. _isRecordingStarted:", this._isRecordingStarted);
+
+      if (this._isRecordingStarted) {
+        this.videoChatService.stopRecording();
+        console.log("Recording stopped.");
+        this._isRecordingStarted = false;
+      }
+      else {
+        this.videoChatService.startRecording();
+        console.log("Recording started.");
+        this._isRecordingStarted = true;
+      }
+      this.cdr.detectChanges();
+    }
+    catch (err:any) {
+      console.error("Error in startStopRecording:", err);
+      this._errorMessage = err?.message ?? "Error in startStopRecording.";
+      this._showError = true;
     }
   }
 

@@ -22,5 +22,7 @@ export interface IWebRTCService {
     toggleVideoAsync(): Promise<void>;
     sendChatMessageAsync(message: string): Promise<void>;
     transferFileAsync(data:Uint8Array, name:string, type:string): Promise<void>;
+    startRecording(): void;
+    stopRecording(): void;
     endCallAsync(): Promise<void>;        
 }

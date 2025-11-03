@@ -1,15 +1,10 @@
 import { IWebRTCService } from "./IWebRTCService";
 import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
     startCall, endCall, startHubConnection, toggleAudio, toggleVideo, startLocalMedia, 
-    setAudio, setVideo, transferFile,
-    setRoomId,
-    startLocalScreenMedia,
-    startPeerConnection,
-    startScreenShare,
-    switchVideoToScreenShare,
-    switchScreenShareToVideo,
-    sendMessage} from './client';
-import { FileTransferResult } from "./models";
+    setAudio, setVideo, transferFile, setRoomId, startLocalScreenMedia, startPeerConnection,
+    startScreenShare, switchVideoToScreenShare, switchScreenShareToVideo, sendMessage,
+    startRecording, stopRecording} from './client';
+import { FileTransferResult, StreamType, VideoSessionRecordingResult } from "./models";
 
 export class WebRTCService implements IWebRTCService {  
     constructor() {
@@ -22,6 +17,7 @@ export class WebRTCService implements IWebRTCService {
         (window as any).CallStarted = this.CallStarted.bind(this);
         (window as any).CallEnded = this.CallEnded.bind(this);
         (window as any).Chat = this.Chat.bind(this);
+        (window as any).Recording = this.Recording.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -110,6 +106,16 @@ export class WebRTCService implements IWebRTCService {
           }); 
     }
 
+    startRecording(): void {
+        console.log('startRecording called from WebRTCService');
+        startRecording();
+    }
+
+    stopRecording(): void {
+        console.log('stopRecording called from WebRTCService');
+        stopRecording();
+    }
+
     async sendChatMessageAsync(message: string): Promise<void> {
         await new Promise<void>(async (resolve) => {
             await new Promise((res) => sendMessage(message));
@@ -134,6 +140,24 @@ export class WebRTCService implements IWebRTCService {
             );
       
         window.dispatchEvent(onFileTransfer);
+    }
+
+    Recording = (data:string, mimeType:string, isLocal: boolean) : void => {
+        console.log('Recording fired. data:', data);
+        console.log('Recording fired. mimeType:', mimeType);
+        console.log('Recording fired. isLocal:', isLocal);
+
+        const onVideoSessionRecording = new CustomEvent<VideoSessionRecordingResult>("onVideoSessionRecording", 
+            { 
+                detail: <VideoSessionRecordingResult>
+                {
+                    data: data,
+                    type: mimeType,
+                    streamType: isLocal ? StreamType.Local : StreamType.Remote
+                }}
+            );
+      
+        window.dispatchEvent(onVideoSessionRecording);
     }
 
     Chat(message:string): void {

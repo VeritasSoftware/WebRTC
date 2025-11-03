@@ -1,5 +1,5 @@
 import { EventEmitter } from "@angular/core";
-import { FileTransferResult } from "./models";
+import { FileTransferResult, VideoSessionRecordingResult } from "./models";
 
 export interface IWebRTCService {
     onInvite: EventEmitter<string>;
@@ -8,7 +8,8 @@ export interface IWebRTCService {
     onToggleAudio: EventEmitter<boolean>;
     onToggleVideo: EventEmitter<boolean>;
     onChatMessage: EventEmitter<string>;
-    onFileTransfer: EventEmitter<FileTransferResult>;    
+    onFileTransfer: EventEmitter<FileTransferResult>;
+    onVideoSessionRecording: EventEmitter<VideoSessionRecordingResult>;    
     onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
     setSettings(uniqueId: string, remoteUniqueId: string): void;
@@ -33,5 +34,7 @@ export interface IWebRTCService {
     toggleVideoAsync(): Promise<void>;
     sendChatMessageAsync(message: string): Promise<void>;
     transferFileAsync(data:Uint8Array, name:string, type:string): Promise<void>;
+    startRecording(): void;
+    stopRecording(): void;
     endCallAsync(): Promise<void>;        
 }

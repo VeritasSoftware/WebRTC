@@ -18,5 +18,7 @@ export declare function toggleAudio(): void;
 export declare function toggleVideo(): void;
 export declare function endCall(): Promise<void>;
 export declare function startHubConnection(): Promise<void>;
-export function sendMessage(message:string): void;
+export declare function sendMessage(message:string): void;
 export declare function transferFile(data: Uint8Array, fileName: string, mimeType: string): void;
+export declare function startRecording(): void;
+export declare function stopRecording(): void;

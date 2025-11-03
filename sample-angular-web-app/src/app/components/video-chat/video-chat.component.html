@@ -56,25 +56,28 @@
 @if (this.myUserType == userType.Local)
 {
     <div class="row" style="margin-top: 10px; margin-left: 5px;">
-        <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="_inviteSent" style="width: 90%;" (click)="inviteAll()">Invite</button>
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            <button [disabled]="_inviteSent" style="width: 90%;height:50px;" (click)="inviteAll()">Invite</button>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="_disableStartCall" style="width: 90%;" (click)="startCall()">Start Call</button>
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            <button [disabled]="_disableStartCall" style="width: 90%;height:50px;" (click)="startCall()">Start Call</button>
         </div>
-        <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="!_callStarted" style="width: 90%;" (click)="switchMe()">{{_isScreenShare ? "To Video" : "To Screen"}}</button>
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 90%;height:50px;" (click)="switchMe()">{{_isScreenShare ? "To Video" : "To Screen"}}</button>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-12">
+            <button [disabled]="!_callStarted" style="width: 100%;height:50px;" (click)="startStopRecording()">{{_isRecordingStarted ? "Stop Recording" : "Start Recording"}}</button>
         </div>        
     </div>
     <div class="row" style="margin-top: 10px; margin-left: 5px;">
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
+            <button [disabled]="!_callStarted" style="width: 90%;height:50px;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="!_callStarted || _isScreenShare" style="width: 90%;" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
+            <button [disabled]="!_callStarted || _isScreenShare" style="width: 90%;height:50px;" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="!_callStarted" style="width: 90%;" (click)="endCall()">End Call</button>
+            <button [disabled]="!_callStarted" style="width: 90%;height:50px;" (click)="endCall()">End Call</button>
         </div>
     </div>
 }
@@ -82,13 +85,13 @@
 {
     <div class="row" style="margin-top: 10px; margin-left: 5px;">
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
+            <button [disabled]="!_callStarted" style="width: 90%;height:50px;" (click)="toggleAudio()">{{_isMute ? "Unmute" : "Mute"}}</button>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button [disabled]="!_callStarted" style="width: 90%;" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
+            <button [disabled]="!_callStarted" style="width: 90%;height:50px;" (click)="toggleVideo()">{{_isVideoStopped ? "Start Video" : "Stop Video"}}</button>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button (click)="endCall()" style="width: 90%;">End Call</button>
+            <button (click)="endCall()" style="width: 90%;height:50px;">End Call</button>
         </div>
     </div>
 }

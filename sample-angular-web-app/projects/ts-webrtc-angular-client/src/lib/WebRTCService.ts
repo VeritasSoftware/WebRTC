@@ -4,8 +4,10 @@ import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite,
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
             startLocalMedia, transferFile, setRoomId, startLocalScreenMedia, startScreenShare,
             switchVideoToScreenShare, switchScreenShareToVideo, startPeerConnection,
-            sendMessage} from './client';
-import { FileTransferResult } from "./models";
+            sendMessage,
+            startRecording,
+            stopRecording} from './client';
+import { FileTransferResult, StreamType, VideoSessionRecordingResult } from "./models";
 
 [Injectable({
   providedIn: null
@@ -18,6 +20,7 @@ export class WebRTCService implements IWebRTCService {
     public onCallStarted = new EventEmitter<string>();
     public onCallEnded = new EventEmitter<string>();
     public onFileTransfer = new EventEmitter<FileTransferResult>();
+    public onVideoSessionRecording = new EventEmitter<VideoSessionRecordingResult>();
     public onChatMessage = new EventEmitter<string>();
 
     constructor() {
@@ -30,6 +33,7 @@ export class WebRTCService implements IWebRTCService {
         (window as any).CallStarted = this.CallStarted.bind(this);
         (window as any).CallEnded = this.CallEnded.bind(this);
         (window as any).Chat = this.Chat.bind(this);
+        (window as any).Recording = this.Recording.bind(this);
     }
 
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void {
@@ -98,6 +102,19 @@ export class WebRTCService implements IWebRTCService {
         );
     }
 
+    Recording = (data:string, mimeType:string, isLocal: boolean) : void => {
+        console.log('Recording fired. data:', data);
+        console.log('Recording fired. mimeType:', mimeType);
+        console.log('Recording fired. isLocal:', isLocal);
+        this.onVideoSessionRecording?.emit(<VideoSessionRecordingResult>
+            {
+                data: data,
+                type: mimeType,
+                streamType: isLocal ? StreamType.Local : StreamType.Remote
+            }
+        );
+    }
+
     Chat(message:string): void {
         console.log('Chat fired. message:', message);
 
@@ -155,6 +172,16 @@ export class WebRTCService implements IWebRTCService {
             await new Promise((res) => transferFile(data, name, type));
             resolve();
           });        
+    }
+
+    startRecording(): void {
+        console.log('startRecording called from WebRTCService');
+        startRecording();
+    }
+
+    stopRecording(): void {
+        console.log('stopRecording called from WebRTCService');
+        stopRecording();
     }
 
     async sendChatMessageAsync(message: string): Promise<void> {
