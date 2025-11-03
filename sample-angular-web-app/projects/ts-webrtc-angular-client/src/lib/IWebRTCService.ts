@@ -8,8 +8,8 @@ export interface IWebRTCService {
     onToggleAudio: EventEmitter<boolean>;
     onToggleVideo: EventEmitter<boolean>;
     onChatMessage: EventEmitter<string>;
-    onFileTransfer: EventEmitter<FileTransferResult>;
-    onVideoSessionRecording: EventEmitter<VideoSessionRecordingResult>;    
+    onVideoSessionRecording: EventEmitter<VideoSessionRecordingResult>;
+    onFileTransfer: EventEmitter<FileTransferResult>;    
     onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
     setSettings(uniqueId: string, remoteUniqueId: string): void;

@@ -60,6 +60,7 @@ Below are the methods and events supported by the library.
         event Func<bool, Task> OnToggleAudio;
         event Func<bool, Task> OnToggleVideo;
         event Func<string, Task> OnChatMessage;
+        event Func<VideoSessionRecordingResult, Task> OnVideoSessionRecording;
         event Func<FileTransferResult, Task> OnFileTransfer;        
         event Func<string, Task> OnCallEnded;
         Task SetDotNetRefAsync();        
@@ -86,6 +87,8 @@ Below are the methods and events supported by the library.
         Task ToggleVideoAsync();
         Task SendChatMessageAsync(string message);
         Task TransferFileAsync(byte[] data, string fileName, string mimeType);
+        Task StartRecordingAsync();
+        Task StopRecordingAsync();
         Task EndCallAsync();               
     }
 ```
@@ -106,6 +109,7 @@ export interface IWebRTCService {
     onToggleAudio: EventEmitter<boolean>;
     onToggleVideo: EventEmitter<boolean>;
     onChatMessage: EventEmitter<string>;
+    onVideoSessionRecording: EventEmitter<VideoSessionRecordingResult>;
     onFileTransfer: EventEmitter<FileTransferResult>;    
     onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
@@ -131,6 +135,8 @@ export interface IWebRTCService {
     toggleVideoAsync(): Promise<void>;
     sendChatMessageAsync(message: string): Promise<void>;
     transferFileAsync(data:Uint8Array, name:string, type:string): Promise<void>;
+    startRecording(): void;
+    stopRecording(): void;
     endCallAsync(): Promise<void>;        
 }
 ```
@@ -168,6 +174,8 @@ export interface IWebRTCService {
     toggleVideoAsync(): Promise<void>;
     sendChatMessageAsync(message: string): Promise<void>;
     transferFileAsync(data:Uint8Array, name:string, type:string): Promise<void>;
+    startRecording(): void;
+    stopRecording(): void;
     endCallAsync(): Promise<void>;        
 }
 ```
@@ -181,6 +189,7 @@ onCallStarted
 onToggleAudio
 onToggleVideo
 onChatMessage
+onVideoSessionRecording
 onFileTransfer
 onCallEnded
 ```
