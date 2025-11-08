@@ -10,7 +10,7 @@ export declare function switchScreenShareToVideo(): Promise<void>;
 export declare function invite(): Promise<void>;
 export declare function inviteAll(): Promise<void>;
 export declare function acceptInvite(roomId: string): Promise<void>;
-export declare function startLocalMedia(): Promise<void>;
+export declare function startLocalMedia(startVideo: boolean = true, startAudio: boolean = true): Promise<void>;
 export declare function startLocalScreenMedia(startAudio:boolean = false): Promise<void>;
 export declare function setAudio(mute: boolean): void;
 export declare function setVideo(stopVideo: boolean): void;

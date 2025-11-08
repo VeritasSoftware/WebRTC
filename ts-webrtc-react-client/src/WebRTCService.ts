@@ -170,8 +170,8 @@ export class WebRTCService implements IWebRTCService {
         window.dispatchEvent(onChatMessage);
     }
 
-    async startLocalMediaAsync(): Promise<void> {
-        await startLocalMedia();
+    async startLocalMediaAsync(startVideo: boolean = true, startAudio: boolean = true): Promise<void> {
+        await startLocalMedia(startVideo, startAudio);
     }
 
     async startLocalScreenMediaAsync(startAudio: boolean = false): Promise<void> {

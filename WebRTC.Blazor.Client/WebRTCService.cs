@@ -138,11 +138,11 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("acceptInvite", roomId);
         }        
 
-        public async Task StartLocalMediaAsync()
+        public async Task StartLocalMediaAsync(bool startVideo = true, bool startAudio = true)
         {
             _module = await _moduleTask.Value;
 
-            await _module.InvokeVoidAsync("startLocalMedia");
+            await _module.InvokeVoidAsync("startLocalMedia", startVideo, startAudio);
         }
 
         public async Task StartLocalScreenMediaAsync(bool startAudio = false)

@@ -19,7 +19,7 @@ export interface IWebRTCService {
     inviteAsync(): Promise<void>;
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
-    startLocalMediaAsync(): Promise<void>;
+    startLocalMediaAsync(startVideo: boolean, startAudio: boolean): Promise<void>;
     startLocalScreenMediaAsync(startAudio: boolean): Promise<void>;
     startPeerConnectionAsync(iceServerUrl: string): Promise<void>;
     startCallAsync(): Promise<void>;

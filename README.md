@@ -72,7 +72,7 @@ Below are the methods and events supported by the library.
         Task InviteAsync();
         Task InviteAllAsync();
         Task AcceptInviteAsync(string roomId);
-        Task StartLocalMediaAsync();
+        Task StartLocalMediaAsync(bool startVideo = true, bool startAudio = true);
         Task StartLocalScreenMediaAsync(bool startAudio = false);
         Task StartPeerConnectionAsync(string iceServerUrl = "stun:stun.l.google.com:19302");
         Task StartCallAsync();
@@ -120,7 +120,7 @@ export interface IWebRTCService {
     inviteAsync(): Promise<void>;
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
-    startLocalMediaAsync(): Promise<void>;
+    startLocalMediaAsync(startVideo: boolean, startAudio: boolean): Promise<void>;
     startLocalScreenMediaAsync(startAudio: boolean): Promise<void>;
     startPeerConnectionAsync(iceServerUrl: string): Promise<void>;
     startCallAsync(): Promise<void>;
@@ -159,7 +159,7 @@ export interface IWebRTCService {
     inviteAsync(): Promise<void>;
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
-    startLocalMediaAsync(): Promise<void>;
+    startLocalMediaAsync(startVideo: boolean, startAudio: boolean): Promise<void>;
     startLocalScreenMediaAsync(startAudio: boolean): Promise<void>;
     startPeerConnectionAsync(iceServerUrl: string): Promise<void>;
     startCallAsync(): Promise<void>;

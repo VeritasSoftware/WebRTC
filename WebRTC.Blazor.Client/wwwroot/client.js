@@ -256,10 +256,10 @@ export function toggleVideo() {
     }
 }
 
-export async function startLocalMedia() {
+export async function startLocalMedia(startVideo = true, startAudio = true) {
     try {
         console.log("Requesting local media...");
-        localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        localStream = await navigator.mediaDevices.getUserMedia({ video: startVideo, audio: startAudio });
         localVideo.srcObject = localStream;
     } catch (ex) {
         console.error('Error accessing media devices.', ex);
