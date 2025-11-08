@@ -15,7 +15,7 @@ namespace WebRTC.Blazor.Client
         event Func<string, Task> OnCallEnded;
         Task SetDotNetRefAsync();        
         Task SetRoomIdAsync(string roomId);
-        Task SetSettingsAsync(string uniqueId, string remoteUniqueId);
+        Task SetSettingsAsync(string localUniqueId, string remoteUniqueId);
         Task SetVideosAsync(ElementReference local, ElementReference remote);
         Task SetHubUrlAsync(string url);
         Task StartHubConnectionAsync();

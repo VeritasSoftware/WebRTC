@@ -12,7 +12,7 @@ export interface IWebRTCService {
     onFileTransfer: EventEmitter<FileTransferResult>;    
     onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
-    setSettings(uniqueId: string, remoteUniqueId: string): void;
+    setSettings(localUniqueId: string, remoteUniqueId: string): void;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     startHubConnectionAsync(): Promise<void>;

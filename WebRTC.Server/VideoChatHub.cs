@@ -5,11 +5,11 @@ namespace WebRTC.Server
     public class VideoChatHub : Hub
     {
         [HubMethodName("invite")]
-        public async Task Invite(string roomId, string userId)
+        public async Task Invite(string roomId, string remoteUniqueId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
 
-            await Clients.All.SendAsync(userId, roomId);
+            await Clients.All.SendAsync(remoteUniqueId, roomId);
         }
 
         [HubMethodName("invite-all")]

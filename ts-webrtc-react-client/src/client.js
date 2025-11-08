@@ -8,8 +8,8 @@ let connection;
 let hubUrl;
 let isHubConnectionStarted;
 let roomId;
-let remoteUniqueUserId;
-let localUniqueUserId;
+let remoteUniqueId;
+let localUniqueId;
 let iceCandidates = [];
 let isRemoteSet = false;
 let isTrickleIceSent = false;
@@ -134,8 +134,8 @@ export function setRoomId(rmId) {
 }
 
 export function setSettings(uid, myid) {
-    remoteUniqueUserId = uid;
-    localUniqueUserId = myid;
+    remoteUniqueId = uid;
+    localUniqueId = myid;
 }
 
 export async function invite() {
@@ -143,7 +143,7 @@ export async function invite() {
         roomId = generateUUID();
     console.log("Room ID: ", roomId);
 
-    await connection.invoke("invite", roomId, remoteUniqueUserId);
+    await connection.invoke("invite", roomId, remoteUniqueId);
 }
 
 export async function inviteAll() {
@@ -504,10 +504,10 @@ export function startHubConnection() {
         .then(() => {
             console.log("Connection started");            
 
-            if (localUniqueUserId) {
-                console.log("Starting listener on: " + localUniqueUserId);
+            if (localUniqueId) {
+                console.log("Starting listener on: " + localUniqueId);
 
-                connection.on(localUniqueUserId, function (roomId) {
+                connection.on(localUniqueId, function (roomId) {
                     try {
                         console.log("Invite received from server:", roomId);
                         window.Invite(roomId);

@@ -34,9 +34,9 @@ export class WebRTCService implements IWebRTCService {
         setRoomId(roomId);
     }
 
-    setSettings(uniqueId: string, remoteUniqueId: string): void {
-        console.log('Setting IDs. Local:', uniqueId, 'Remote:', remoteUniqueId);
-        setSettings(uniqueId, remoteUniqueId); 
+    setSettings(localUniqueId: string, remoteUniqueId: string): void {
+        console.log('Setting IDs. Local:', localUniqueId, 'Remote:', remoteUniqueId);
+        setSettings(localUniqueId, remoteUniqueId); 
     }
 
     async inviteAsync(): Promise<void> {

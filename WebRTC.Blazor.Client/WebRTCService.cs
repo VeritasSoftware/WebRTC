@@ -243,11 +243,11 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("setRoomId", roomId);
         }
 
-        public async Task SetSettingsAsync(string uniqueId, string remoteUniqueId)
+        public async Task SetSettingsAsync(string localUniqueId, string remoteUniqueId)
         {
             _module = await _moduleTask.Value;
 
-            await _module.InvokeVoidAsync("setSettings", uniqueId, remoteUniqueId);
+            await _module.InvokeVoidAsync("setSettings", localUniqueId, remoteUniqueId);
         }
 
         public async Task SetVideosAsync(ElementReference local, ElementReference remote)

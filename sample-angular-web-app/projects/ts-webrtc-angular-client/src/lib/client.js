@@ -8,8 +8,8 @@ let connection;
 let hubUrl;
 let isHubConnectionStarted;
 let roomId;
-let remoteUniqueUserId;
-let localUniqueUserId;
+let remoteUniqueId;
+let localUniqueId;
 var localVideo;
 var remoteVideo;
 let iceCandidates = [];
@@ -134,8 +134,8 @@ export function setRoomId(rmId) {
 }
 
 export function setSettings(uid, myid) {
-    remoteUniqueUserId = uid;
-    localUniqueUserId = myid;
+    remoteUniqueId = uid;
+    localUniqueId = myid;
 }
 
 export async function invite() {
@@ -143,7 +143,7 @@ export async function invite() {
         roomId = generateUUID();
     console.log("Generated room ID: ", roomId);
 
-    await connection.invoke("invite", roomId, remoteUniqueUserId);
+    await connection.invoke("invite", roomId, remoteUniqueId);
 }
 
 export async function inviteAll() {
@@ -507,9 +507,9 @@ export function startHubConnection() {
         .then(() => {
             console.log("Connection started");            
 
-            if (localUniqueUserId) {
-                console.log("Starting listener on: " + localUniqueUserId);
-                connection.on(localUniqueUserId, function (roomId) {
+            if (localUniqueId) {
+                console.log("Starting listener on: " + localUniqueId);
+                connection.on(localUniqueId, function (roomId) {
                     try {
                         console.log("Invite received from server:", roomId);
                         window.Invite(roomId);

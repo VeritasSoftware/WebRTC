@@ -1,6 +1,6 @@
 export interface IWebRTCService {
     setRoomId(roomId:string) : void;
-    setSettings(uniqueId: string, remoteUniqueId: string): void;
+    setSettings(localUniqueId: string, remoteUniqueId: string): void;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     startHubConnectionAsync(): Promise<void>;
