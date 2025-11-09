@@ -14,7 +14,9 @@ A .NET library for WebRTC, enabling real-time communication in your web applicat
 
 ## Server
 
-You can use any ASP.NET Core web application to host the Server.
+You can use any ASP.NET Core web application to host the Server. Server supports .NET 8.0 & 9.0.
+
+[**Browse server library**](https://github.com/VeritasSoftware/WebRTC/tree/master/WebRTC.Server).
 
 You can even use just a Console app as a Server.
 
@@ -45,7 +47,7 @@ app.MapHub<VideoChatHub>("/chathub");
 
 ## Blazor Client
 
-You can go through my SampleBlazorWebApp to see how to use the Client.
+You can go through my SampleBlazorWebApp to see how to use the Client. Client supports .NET 8.0 & 9.0.
 
 [**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/WebRTC.Blazor.Client)
 
@@ -193,6 +195,19 @@ onVideoSessionRecording
 onFileTransfer
 onCallEnded
 ```
+
+## Client library usage
+
+Create a `Console app` or `Web API` to host the Server. Use the Server package `WebRTC.Server` in your hosting app.
+
+Add `javascript SignalR client` to your web app. In your index.html file. Eg.
+
+```html
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/9.0.6/signalr.js"></script>
+```
+
+Then, in your component, you can use the client library as shown in the sample web apps.
+
 
 ## Steps to run the demo
 
