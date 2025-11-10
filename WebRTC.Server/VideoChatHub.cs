@@ -12,6 +12,15 @@ namespace WebRTC.Server
             await Clients.All.SendAsync(remoteUniqueId, roomId);
         }
 
+        [HubMethodName("invite-group")]
+        public async Task InviteGroup(string roomId, string[] remoteUniqueIds)
+        {
+            await Groups.AddToGroupAsync(Context.ConnectionId, roomId);
+
+            foreach (var remoteUniqueId in remoteUniqueIds) 
+                await Clients.All.SendAsync(remoteUniqueId, roomId);
+        }
+
         [HubMethodName("invite-all")]
         public async Task InviteAll(string roomId)
         {

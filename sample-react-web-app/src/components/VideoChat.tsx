@@ -103,6 +103,8 @@ const VideoChat: React.FC<VideoChatProps> = ({ videoChatService, userType }) => 
     useEffect(() => {
         const initializeVideoChat = async () => {
             if (videoChatService) {
+                //Set local unique id, if you want to use InviteAsync & InviteGroupAsync methods
+                //videoChatService.setLocalUniqueId("your localUniqueId");
                 videoChatService.setHubUrl("https://localhost:7298/chathub");
                 const localVideo = document.getElementById("localVideo") as HTMLVideoElement;
                 const remoteVideo = document.getElementById("remoteVideo") as HTMLVideoElement;

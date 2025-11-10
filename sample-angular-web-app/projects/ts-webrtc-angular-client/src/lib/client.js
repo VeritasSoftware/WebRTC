@@ -133,17 +133,26 @@ export function setRoomId(rmId) {
     roomId = rmId;
 }
 
-export function setSettings(uid, myid) {
-    remoteUniqueId = uid;
+export function setLocalUniqueId(myid) {
     localUniqueId = myid;
 }
 
-export async function invite() {
+export async function invite(remoteUniqueId) {
     if (!roomId)
         roomId = generateUUID();
-    console.log("Generated room ID: ", roomId);
+
+    console.log("Room ID: ", roomId);
 
     await connection.invoke("invite", roomId, remoteUniqueId);
+}
+
+export async function inviteGroup(remoteUniqueIds) {
+    if (!roomId)
+        roomId = generateUUID();
+
+    console.log("Room ID: ", roomId);
+
+    await connection.invoke("invite-group", roomId, remoteUniqueIds); 
 }
 
 export async function inviteAll() {

@@ -8,7 +8,6 @@ let connection;
 let hubUrl;
 let isHubConnectionStarted;
 let roomId;
-let remoteUniqueId;
 let localUniqueId;
 let dotNetRef;
 let iceCandidates = [];
@@ -135,8 +134,7 @@ export function setVideos(lv, rv) {
     remoteVideo = rv;
 }
 
-export function setSettings(uid, myid) {
-    remoteUniqueId = uid;
+export function setLocalUniqueId(myid) {
     localUniqueId = myid;
 }
 
@@ -164,13 +162,22 @@ function generateUUID() {
     });
 }
 
-export async function invite() {
+export async function invite(remoteUniqueId) {
     if (!roomId)
         roomId = generateUUID();
 
     console.log("Room ID: ", roomId);
 
     await connection.invoke("invite", roomId, remoteUniqueId);
+}
+
+export async function inviteGroup(remoteUniqueIds) {
+    if (!roomId)
+        roomId = generateUUID();
+
+    console.log("Room ID: ", roomId);
+
+    await connection.invoke("invite-group", roomId, remoteUniqueIds); 
 }
 
 export async function inviteAll() {

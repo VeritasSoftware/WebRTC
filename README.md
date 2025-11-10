@@ -67,11 +67,12 @@ Below are the methods and events supported by the library.
         event Func<string, Task> OnCallEnded;
         Task SetDotNetRefAsync();        
         Task SetRoomIdAsync(string roomId);
-        Task SetSettingsAsync(string localUniqueId, string remoteUniqueId);
+        Task SetLocalUniqueIdAsync(string localUniqueId);
         Task SetVideosAsync(ElementReference local, ElementReference remote);
         Task SetHubUrlAsync(string url);
         Task StartHubConnectionAsync();
-        Task InviteAsync();
+        Task InviteAsync(string remoteUniqueId);
+        Task InviteGroupAsync(string[] remoteUniqueIds);
         Task InviteAllAsync();
         Task AcceptInviteAsync(string roomId);
         Task StartLocalMediaAsync(bool startVideo = true, bool startAudio = true);
@@ -115,11 +116,12 @@ export interface IWebRTCService {
     onFileTransfer: EventEmitter<FileTransferResult>;    
     onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
-    setSettings(localUniqueId: string, remoteUniqueId: string): void;
+    setLocalUniqueId(localUniqueId: string): void;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     startHubConnectionAsync(): Promise<void>;
-    inviteAsync(): Promise<void>;
+    inviteAsync(remoteUniqueId: string): Promise<void>;
+    inviteGroupAsync(remoteUniqueIds: string[]): Promise<void>;
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
     startLocalMediaAsync(startVideo: boolean, startAudio: boolean): Promise<void>;
@@ -154,11 +156,12 @@ Below are the methods supported by the library.
 ```typescript
 export interface IWebRTCService {
     setRoomId(roomId:string) : void;
-    setSettings(localUniqueId: string, remoteUniqueId: string): void;
+    setLocalUniqueId(localUniqueId: string): void;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
     setHubUrl(hubUrl: string): void;
     startHubConnectionAsync(): Promise<void>;
-    inviteAsync(): Promise<void>;
+    inviteAsync(remoteUniqueId: string): Promise<void>;
+    inviteGroupAsync(remoteUniqueIds: string[]): Promise<void>;
     inviteAllAsync(): Promise<void>;
     acceptInviteAsync(roomId: string): Promise<void>;
     startLocalMediaAsync(startVideo: boolean, startAudio: boolean): Promise<void>;

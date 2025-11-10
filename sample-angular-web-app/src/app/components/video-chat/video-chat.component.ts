@@ -93,7 +93,8 @@ export class VideoChatComponent {
   }
 
   ngAfterViewInit(): void {
-    //this.videoChatService.setSettings("localUniqueUserId", "remoteUniqueUserId");
+    //Set local unique id, if you want to use InviteAsync & InviteGroupAsync methods
+    //this.videoChatService.setLocalUniqueId("your localUniqueId");
     this.videoChatService.setHubUrl("https://localhost:7298/chathub");
     const localVideo = document.getElementById("localVideo") as HTMLVideoElement;
     const remoteVideo = document.getElementById("remoteVideo") as HTMLVideoElement;
@@ -103,22 +104,6 @@ export class VideoChatComponent {
       console.log("Component: Starting hub connection.");
       await this.videoChatService.startHubConnectionAsync();
     })(); 
-  }
-
-  async invite(): Promise<void> {
-    try {
-      this._showError = false;
-      this._errorMessage = "";
-      this._inviteSent = false;
-      await this.videoChatService.inviteAsync();
-      this._inviteSent = true;
-    }
-    catch (err:any) {
-      console.error("Error in invite:", err);
-      this._errorMessage = err?.message ?? "Error in invite.";
-      this._showError = true;
-      this._inviteSent = false;
-    }
   }
 
   async inviteAll(): Promise<void> {

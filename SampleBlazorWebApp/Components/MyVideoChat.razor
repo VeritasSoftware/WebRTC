@@ -338,9 +338,10 @@
         {
             if (firstRender)
             {
-                //await VideoChatService.SetSettingsAsync(this.RemoteUniqueUserId, this.LocalUniqueUserId);
-                await VideoChatService.SetVideosAsync(localVideo, remoteVideo);
                 await VideoChatService.SetDotNetRefAsync();
+                //Set local unique id, if you want to use InviteAsync & InviteGroupAsync methods
+                //await VideoChatService.SetLocalUniqueId(this.LocalUniqueUserId);
+                await VideoChatService.SetVideosAsync(localVideo, remoteVideo);                
                 await VideoChatService.SetHubUrlAsync(Configuration["HubUrl"]!);
                 await VideoChatService.StartHubConnectionAsync();                              
             }

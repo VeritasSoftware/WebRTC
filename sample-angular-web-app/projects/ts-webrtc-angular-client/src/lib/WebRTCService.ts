@@ -1,12 +1,10 @@
 import { EventEmitter, Injectable } from "@angular/core";
 import { IWebRTCService } from "./IWebRTCService";
-import { setVideos, setHubUrl, setSettings, invite, inviteAll, acceptInvite, 
+import { setVideos, setHubUrl, invite, inviteAll, acceptInvite, 
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
             startLocalMedia, transferFile, setRoomId, startLocalScreenMedia, startScreenShare,
             switchVideoToScreenShare, switchScreenShareToVideo, startPeerConnection,
-            sendMessage,
-            startRecording,
-            stopRecording} from './client';
+            sendMessage, startRecording, stopRecording, setLocalUniqueId, inviteGroup} from './client';
 import { FileTransferResult, StreamType, VideoSessionRecordingResult } from "./models";
 
 [Injectable({
@@ -50,13 +48,17 @@ export class WebRTCService implements IWebRTCService {
         setRoomId(roomId);
     }
 
-    setSettings(localUniqueId: string, remoteUniqueId: string): void {
-        console.log('Setting IDs. Local:', localUniqueId, 'Remote:', remoteUniqueId);
-        setSettings(localUniqueId, remoteUniqueId); 
+    setLocalUniqueId(localUniqueId: string): void {
+        console.log('Setting IDs. Local:', localUniqueId);
+        setLocalUniqueId(localUniqueId); 
     }
 
-    async inviteAsync(): Promise<void> {
-        await invite();
+    async inviteAsync(remoteUniqueId: string): Promise<void> {
+        await invite(remoteUniqueId);
+    }
+
+    async inviteGroupAsync(remoteUniqueIds: string[]): Promise<void> {
+        await inviteGroup(remoteUniqueIds);
     }
 
     async inviteAllAsync(): Promise<void> {

@@ -117,11 +117,18 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("setHubUrl", url);
         }
 
-        public async Task InviteAsync()
+        public async Task InviteAsync(string remoteUniqueId)
         {
             _module = await _moduleTask.Value;
 
-            await _module.InvokeVoidAsync("invite");
+            await _module.InvokeVoidAsync("invite", remoteUniqueId);
+        }
+
+        public async Task InviteGroupAsync(string[] remoteUniqueIds)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("inviteGroup", remoteUniqueIds);
         }
 
         public async Task InviteAllAsync()
@@ -243,11 +250,11 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("setRoomId", roomId);
         }
 
-        public async Task SetSettingsAsync(string localUniqueId, string remoteUniqueId)
+        public async Task SetLocalUniqueIdAsync(string localUniqueId)
         {
             _module = await _moduleTask.Value;
 
-            await _module.InvokeVoidAsync("setSettings", localUniqueId, remoteUniqueId);
+            await _module.InvokeVoidAsync("setLocalUniqueId", localUniqueId);
         }
 
         public async Task SetVideosAsync(ElementReference local, ElementReference remote)
