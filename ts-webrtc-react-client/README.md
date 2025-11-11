@@ -1,4 +1,4 @@
-﻿# Angular client for .NET WebRTC
+﻿# React client for .NET WebRTC
 
 A .NET library for WebRTC, enabling real-time communication in your web applications.
 
@@ -22,23 +22,14 @@ The .NET WebRTC Server package.
 
 ## Client
 
-You can go through the [**Sample Angular Web App**](https://github.com/VeritasSoftware/WebRTC/tree/master/sample-angular-web-app) to see how to use the Client. 
+You can go through the [**Sample React Web App**](https://github.com/VeritasSoftware/WebRTC/tree/master/sample-react-web-app) to see how to use the Client. 
 
-[**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/sample-angular-web-app/projects/ts-webrtc-angular-client)
+[**Browse client library**](https://github.com/VeritasSoftware/WebRTC/tree/master/ts-webrtc-react-client)
 
-Below are the methods and events supported by the library.
+Below are the methods supported by the library.
 
 ```typescript
 export interface IWebRTCService {
-    onInvite: EventEmitter<string>;
-    onInviteAccepted: EventEmitter<void>;
-    onCallStarted: EventEmitter<string>;
-    onToggleAudio: EventEmitter<boolean>;
-    onToggleVideo: EventEmitter<boolean>;
-    onChatMessage: EventEmitter<string>;
-    onVideoSessionRecording: EventEmitter<VideoSessionRecordingResult>;
-    onFileTransfer: EventEmitter<FileTransferResult>;    
-    onCallEnded: EventEmitter<string>;    
     setRoomId(roomId:string) : void;
     setLocalUniqueId(localUniqueId: string): void;
     setVideos(localVideoElement: HTMLVideoElement, remoteVideoElement: HTMLVideoElement): void;
@@ -67,6 +58,20 @@ export interface IWebRTCService {
     stopRecording(): void;
     endCallAsync(): Promise<void>;        
 }
+```
+
+The events are:
+
+```
+onInvite
+onInviteAccepted
+onCallStarted
+onToggleAudio
+onToggleVideo
+onChatMessage
+onVideoSessionRecording
+onFileTransfer
+onCallEnded
 ```
 
 ## Documentation
