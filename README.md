@@ -2,14 +2,16 @@
 
 A .NET library for WebRTC, enabling real-time communication in your web applications.
 
+### Supports .NET 8/9.
+
 ## Features
 
+- High-level API for simplified WebRTC operations
 - Peer-to-peer audio+video chat
 - Peer-to-peer text chat
 - Peer-to-peer screen sharing
 - Peer-to-peer file transfer
-- High-level API for simplified WebRTC operations
-- Client available for Blazor, Angular, React
+- Client available for `Blazor`, `Angular`, `React`
 - Cross-platform support (Windows, macOS, Linux) for Server
 
 ## Server
