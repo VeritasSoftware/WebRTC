@@ -291,5 +291,12 @@ namespace WebRTC.Blazor.Client
 
             await _module.InvokeVoidAsync("sendMessage", message);
         }
+
+        public async Task SetBackgroundImageAsync(string url)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("setBgImage", url);
+        }
     }
 }

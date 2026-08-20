@@ -1,3 +1,7 @@
+import WebrtcBgModifier from "./WebrtcBgModifier/index.module.js";
+
+const bgModifier = new WebrtcBgModifier({});
+
 let localStream;
 let remoteStream;
 let localScreenStream;
@@ -19,6 +23,44 @@ let mediaRecorderLocal;
 let mediaRecorderRemote;
 let recordedBlobs = [];
 let recordedBlobsRemote = [];
+let bgUrl = null;
+
+export async function setBgImage(url) {
+    console.log("Setting background image: ", url);
+    bgUrl = url;
+
+    var newStream = await bgModifier.setBackgroundImage(url).setBlur(0).setStream(localStream).makePreview();
+    localVideo.srcObject = newStream;
+}
+
+export async function setReaction(emoji, x = 0, y = 0, duration = 0) {
+    bgModifier.addReaction(emoji, x, y, duration)
+}
+
+export async function changeBgColor(color) {
+    var newStream = await bgModifier.setBackgroundColor(color).setStream(localStream).makePreview();
+    localVideo.srcObject = newStream;
+}
+
+export async function setBrightness(value) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setBrightness(value).setStream(localStream).makePreview();
+}
+
+export async function setContrast(value) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setContrast(value).setStream(localStream).makePreview();
+}
+
+export async function setBlur(value) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setBlur(value).setStream(localStream).makePreview();
+}
+
+export async function setFPSRange(value) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setFps(value).setStream(localStream).makePreview();
+}
+
+export async function setGrayScale(isGrayScale) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setGrayScale(isGrayScale).setStream(localStream).makePreview();
+}
 
 function handleDataAvailable(event) {
     console.log("handleDataAvailable called. event: ", event);

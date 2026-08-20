@@ -34,6 +34,7 @@ namespace WebRTC.Blazor.Client
         Task SwitchScreenShareToVideoAsync();
         Task SetAudioAsync(bool mute);
         Task SetVideoAsync(bool stopVideo);
+        Task SetBackgroundImageAsync(string url);
         Task ToggleAudioAsync();
         Task ToggleVideoAsync();
         Task SendChatMessageAsync(string message);

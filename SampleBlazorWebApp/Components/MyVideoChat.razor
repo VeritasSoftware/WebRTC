@@ -5,6 +5,7 @@
 
 @inject IConfiguration Configuration
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavManager
 
 @inject IWebRTCService VideoChatService
 
@@ -176,6 +177,8 @@
             _isScreenShare = false;
 
             await VideoChatService.StartCallAsync();
+
+            await VideoChatService.SetBackgroundImageAsync($"{NavManager.BaseUri}lights.jpg");
 
             _callStarted = true;
         }
