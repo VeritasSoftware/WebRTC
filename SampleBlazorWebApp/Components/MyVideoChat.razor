@@ -100,6 +100,18 @@
             </div>
         </div>
     }
+
+    <div class="row" style="margin-top:10px; margin-left: 5px;">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" @onclick="StartLocalMediaAsync">Start Local Media</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetBackgroundImageAsync">Set Background Image</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_setBackgroundImage)" @onclick="SetReactionAsync">Set Reaction</button>
+        </div>
+    </div>
 </div>
 
 @code {
@@ -136,6 +148,62 @@
     private bool _isRecordingStarted = false;
 
     private bool _isScreenShare = false;
+
+    private bool _setBackgroundImage = false;
+    private bool _localMediaStarted = false;
+
+    private async Task StartLocalMediaAsync()
+    {
+        try
+        {
+            _showError = false;
+
+            _callStarted = false;
+            _isScreenShare = false;
+
+            _localMediaStarted = false;
+
+            await VideoChatService.StartLocalMediaAsync();
+
+            _localMediaStarted = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _localMediaStarted = false;
+        }
+    }
+
+    private async Task SetBackgroundImageAsync()
+    {
+        try
+        {
+            _showError = false;
+            await VideoChatService.SetBackgroundImageAsync($"{NavManager.BaseUri}lights.jpg");
+            _setBackgroundImage = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _setBackgroundImage = false;
+        }
+    }
+
+    private async Task SetReactionAsync()
+    {
+        try
+        {
+            _showError = false;
+            await VideoChatService.SetReactionAsync("👍️", 400, 300, 10000);
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+        }
+    }
 
     private async Task FileTransfer(FilesResult files)
     {
@@ -177,8 +245,6 @@
             _isScreenShare = false;
 
             await VideoChatService.StartCallAsync();
-
-            await VideoChatService.SetBackgroundImageAsync($"{NavManager.BaseUri}lights.jpg");
 
             _callStarted = true;
         }

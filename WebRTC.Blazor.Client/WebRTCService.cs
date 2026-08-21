@@ -17,7 +17,7 @@ namespace WebRTC.Blazor.Client
         public event Func<FileTransferResult, Task> OnFileTransfer;
         public event Func<VideoSessionRecordingResult, Task> OnVideoSessionRecording;
         public event Func<string, Task> OnCallStarted;
-        public event Func<string, Task> OnCallEnded;        
+        public event Func<string, Task> OnCallEnded;
 
         public WebRTCService(IJSRuntime js)
         {
@@ -99,7 +99,7 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("setDotNetRef", DotNetObjectReference.Create(this));
-        }        
+        }
 
         public async Task StartHubConnectionAsync()
         {
@@ -143,7 +143,7 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("acceptInvite", roomId);
-        }        
+        }
 
         public async Task StartLocalMediaAsync(bool startVideo = true, bool startAudio = true)
         {
@@ -297,6 +297,12 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("setBgImage", url);
+        }
+
+        public async Task SetReactionAsync(string reaction, int x = 0, int y = 0, int duration = 5000)
+        {
+            _module = await _moduleTask.Value;
+            await _module.InvokeVoidAsync("setReaction", reaction, x, y, duration);
         }
     }
 }

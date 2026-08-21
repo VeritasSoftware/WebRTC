@@ -33,8 +33,9 @@ export async function setBgImage(url) {
     localVideo.srcObject = newStream;
 }
 
-export async function setReaction(emoji, x = 0, y = 0, duration = 0) {
-    bgModifier.addReaction(emoji, x, y, duration)
+export async function setReaction(emoji, x = 0, y = 0, duration = 5000) {
+    console.log("Adding reaction: ", emoji, " at (", x, ",", y, ") for duration: ", duration);
+    await bgModifier.addReaction(emoji, x, y, duration)
 }
 
 export async function changeBgColor(color) {
