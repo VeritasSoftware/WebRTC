@@ -89,11 +89,16 @@ public interface IWebRTCService
     Task SetAudioAsync(bool mute);
     Task SetVideoAsync(bool stopVideo);
     Task SetBackgroundImageAsync(string url);
+    // Reaction - Accepts any valid CSS emoji character (e.g., "😀", "❤️", "👍", etc.).
     Task SetReactionAsync(string reaction, int x = 0, int y = 0, int duration = 5000);
+    // Background color - Accepts any valid CSS color value (e.g., "red", "#FF0000", "rgb(255, 0, 0)", etc.).
     Task SetBackgroundColorAsync(string color);
     Task SetBrightnessAsync(decimal brightness = 1.0m);
+    // Contrast - Minimum value is 0.0, maximum value is 2.0, default value is 1.0, step of 0.1.
     Task SetContrastAsync(decimal contrast = 1.0m);
+    // Blur - Minimum value is 0, maximum value is 20, default value is 0, step is 1.
     Task SetBlurAsync(int blur = 0);
+    // FPS - Minimum value is 1, maximum value is 30, default value is 24, step of 1.
     Task SetFPSAsync(int fps = 24);
     Task SetGrayScaleAsync(bool grayScale = false);
     Task ToggleAudioAsync();
