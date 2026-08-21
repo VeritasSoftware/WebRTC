@@ -56,46 +56,54 @@ You can go through my SampleBlazorWebApp to see how to use the Client. Client su
 Below are the methods and events supported by the library.
 
 ```csharp
-    public interface IWebRTCService
-    {
-        event Func<string, Task> OnInvite;
-        event Func<Task> OnInviteAccepted;
-        event Func<string, Task> OnCallStarted;
-        event Func<bool, Task> OnToggleAudio;
-        event Func<bool, Task> OnToggleVideo;
-        event Func<string, Task> OnChatMessage;
-        event Func<VideoSessionRecordingResult, Task> OnVideoSessionRecording;
-        event Func<FileTransferResult, Task> OnFileTransfer;        
-        event Func<string, Task> OnCallEnded;
-        Task SetDotNetRefAsync();        
-        Task SetRoomIdAsync(string roomId);
-        Task SetLocalUniqueIdAsync(string localUniqueId);
-        Task SetVideosAsync(ElementReference local, ElementReference remote);
-        Task SetHubUrlAsync(string url);
-        Task StartHubConnectionAsync();
-        Task InviteAsync(string remoteUniqueId);
-        Task InviteGroupAsync(string[] remoteUniqueIds);
-        Task InviteAllAsync();
-        Task AcceptInviteAsync(string roomId);
-        Task StartLocalMediaAsync(bool startVideo = true, bool startAudio = true);
-        Task StartLocalScreenMediaAsync(bool startAudio = false);
-        Task StartPeerConnectionAsync(string iceServerUrl = "stun:stun.l.google.com:19302");
-        Task StartCallAsync();
-        Task StartScreenShareAsync();
-        Task RemoteStartCallAsync();
-        Task RemoteStartScreenShareAsync();
-        Task SwitchVideoToScreenShareAsync();
-        Task SwitchScreenShareToVideoAsync();
-        Task SetAudioAsync(bool mute);
-        Task SetVideoAsync(bool stopVideo);
-        Task ToggleAudioAsync();
-        Task ToggleVideoAsync();
-        Task SendChatMessageAsync(string message);
-        Task TransferFileAsync(byte[] data, string fileName, string mimeType);
-        Task StartRecordingAsync();
-        Task StopRecordingAsync();
-        Task EndCallAsync();               
-    }
+public interface IWebRTCService
+{
+    event Func<string, Task> OnInvite;
+    event Func<Task> OnInviteAccepted;
+    event Func<string, Task> OnCallStarted;
+    event Func<bool, Task> OnToggleAudio;
+    event Func<bool, Task> OnToggleVideo;
+    event Func<string, Task> OnChatMessage;
+    event Func<VideoSessionRecordingResult, Task> OnVideoSessionRecording;
+    event Func<FileTransferResult, Task> OnFileTransfer;        
+    event Func<string, Task> OnCallEnded;
+    Task SetDotNetRefAsync();        
+    Task SetRoomIdAsync(string roomId);
+    Task SetLocalUniqueIdAsync(string localUniqueId);
+    Task SetVideosAsync(ElementReference local, ElementReference remote);
+    Task SetHubUrlAsync(string url);
+    Task StartHubConnectionAsync();
+    Task InviteAsync(string remoteUniqueId);
+    Task InviteGroupAsync(string[] remoteUniqueIds);
+    Task InviteAllAsync();
+    Task AcceptInviteAsync(string roomId);
+    Task StartLocalMediaAsync(bool startVideo = true, bool startAudio = true);
+    Task StartLocalScreenMediaAsync(bool startAudio = false);
+    Task StartPeerConnectionAsync(string iceServerUrl = "stun:stun.l.google.com:19302");
+    Task StartCallAsync();
+    Task StartScreenShareAsync();
+    Task RemoteStartCallAsync();
+    Task RemoteStartScreenShareAsync();
+    Task SwitchVideoToScreenShareAsync();
+    Task SwitchScreenShareToVideoAsync();
+    Task SetAudioAsync(bool mute);
+    Task SetVideoAsync(bool stopVideo);
+    Task SetBackgroundImageAsync(string url);
+    Task SetReactionAsync(string reaction, int x = 0, int y = 0, int duration = 5000);
+    Task SetBackgroundColorAsync(string color);
+    Task SetBrightnessAsync(decimal brightness = 1.0m);
+    Task SetContrastAsync(decimal contrast = 1.0m);
+    Task SetBlurAsync(int blur = 0);
+    Task SetFPSAsync(int fps = 24);
+    Task SetGrayScaleAsync(bool grayScale = false);
+    Task ToggleAudioAsync();
+    Task ToggleVideoAsync();
+    Task SendChatMessageAsync(string message);
+    Task TransferFileAsync(byte[] data, string fileName, string mimeType);
+    Task StartRecordingAsync();
+    Task StopRecordingAsync();
+    Task EndCallAsync();               
+}
 ```
 
 ## Angular Client
