@@ -109,7 +109,29 @@
             <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetBackgroundImageAsync">Set Background Image</button>
         </div>
         <div class="col-lg-4 col-md-4 col-sm-12">
-            <button style="width: 90%;height:50px;" disabled="@(!_setBackgroundImage)" @onclick="SetReactionAsync">Set Reaction</button>
+            <button style="width: 90%;height:50px;" disabled="@(!_setBackground)" @onclick="SetReactionAsync">Set Reaction</button>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px; margin-left: 5px;">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetBackgroundColorAsync">Set Background Color</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetBrightnessAsync">Set Brightness</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetContrastAsync">Set Contrast</button>
+        </div>
+    </div>
+    <div class="row" style="margin-top:10px; margin-left: 5px;">
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetBlurAsync">Set Blur</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetFPSAsync">Set FPS</button>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-12">
+            <button style="width: 90%;height:50px;" disabled="@(!_localMediaStarted)" @onclick="SetGrayScaleAsync">Set Gray Scale</button>
         </div>
     </div>
 </div>
@@ -149,8 +171,9 @@
 
     private bool _isScreenShare = false;
 
-    private bool _setBackgroundImage = false;
+    private bool _setBackground = false;
     private bool _localMediaStarted = false;
+    private bool _setGrayScale = false;
 
     private async Task StartLocalMediaAsync()
     {
@@ -181,13 +204,13 @@
         {
             _showError = false;
             await VideoChatService.SetBackgroundImageAsync($"{NavManager.BaseUri}lights.jpg");
-            _setBackgroundImage = true;
+            _setBackground = true;
         }
         catch (Exception ex)
         {
             _errorText = ex.Message;
             _showError = true;
-            _setBackgroundImage = false;
+            _setBackground = false;
         }
     }
 
@@ -202,6 +225,107 @@
         {
             _errorText = ex.Message;
             _showError = true;
+        }
+    }
+
+    private async Task SetBackgroundColorAsync()
+    {
+        try
+        {
+            _showError = false;
+            await VideoChatService.SetBackgroundColorAsync("#008000");
+            _setBackground = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _setBackground = false;
+        }
+    }
+
+    private async Task SetBrightnessAsync()
+    {
+        try
+        {
+            _showError = false;
+            // Minimum value is 0.0, maximum value is 2.0, default value is 1.0
+            await VideoChatService.SetBrightnessAsync(1.5m);
+            _setBackground = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _setBackground = false;
+        }
+    }
+
+    private async Task SetContrastAsync()
+    {
+        try
+        {
+            _showError = false;
+            // Minimum value is 0.0, maximum value is 2.0, default value is 1.0
+            await VideoChatService.SetContrastAsync(1.5m);
+            _setBackground = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _setBackground = false;
+        }
+    }
+
+    private async Task SetBlurAsync()
+    {
+        try
+        {
+            _showError = false;
+            // Minimum value is 0, maximum value is 20, default value is 0.
+            await VideoChatService.SetBlurAsync(10);
+            _setBackground = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _setBackground = false;
+        }
+    }
+
+    private async Task SetFPSAsync()
+    {
+        try
+        {
+            _showError = false;
+            // Minimum value is 1, maximum value is 30, default value is 24.
+            await VideoChatService.SetFPSAsync(30);
+            _setBackground = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _setBackground = false;
+        }
+    }
+
+    private async Task SetGrayScaleAsync()
+    {
+        try
+        {
+            _showError = false;
+            await VideoChatService.SetGrayScaleAsync(!_setGrayScale);
+            _setGrayScale = !_setGrayScale;
+            _setBackground = true;
+        }
+        catch (Exception ex)
+        {
+            _errorText = ex.Message;
+            _showError = true;
+            _setBackground = false;
         }
     }
 

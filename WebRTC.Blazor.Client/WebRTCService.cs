@@ -152,6 +152,43 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("startLocalMedia", startVideo, startAudio);
         }
 
+        public async Task SetBackgroundColorAsync(string color)
+        {
+            _module = await _moduleTask.Value;
+            await _module.InvokeVoidAsync("setBgColor", color);
+        }
+
+        public async Task SetBrightnessAsync(decimal brightness = 1.0m)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("setBrightness", brightness);
+        }
+
+        public async Task SetContrastAsync(decimal contrast = 1.0m)
+        {
+            _module = await _moduleTask.Value;
+            await _module.InvokeVoidAsync("setContrast", contrast);
+        }
+
+        public async Task SetBlurAsync(int blur = 0)
+        {
+            _module = await _moduleTask.Value;
+            await _module.InvokeVoidAsync("setBlur", blur);
+        }
+
+        public async Task SetFPSAsync(int fps = 24)
+        {
+            _module = await _moduleTask.Value;
+            await _module.InvokeVoidAsync("setFPS", fps);
+        }
+
+        public async Task SetGrayScaleAsync(bool grayScale = false)
+        {
+            _module = await _moduleTask.Value;
+            await _module.InvokeVoidAsync("setGrayScale", grayScale);
+        }
+
         public async Task StartLocalScreenMediaAsync(bool startAudio = false)
         {
             _module = await _moduleTask.Value;

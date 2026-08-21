@@ -36,6 +36,12 @@ namespace WebRTC.Blazor.Client
         Task SetVideoAsync(bool stopVideo);
         Task SetBackgroundImageAsync(string url);
         Task SetReactionAsync(string reaction, int x = 0, int y = 0, int duration = 5000);
+        Task SetBackgroundColorAsync(string color);
+        Task SetBrightnessAsync(decimal brightness = 1.0m);
+        Task SetContrastAsync(decimal contrast = 1.0m);
+        Task SetBlurAsync(int blur = 0);
+        Task SetFPSAsync(int fps = 24);
+        Task SetGrayScaleAsync(bool grayScale = false);
         Task ToggleAudioAsync();
         Task ToggleVideoAsync();
         Task SendChatMessageAsync(string message);

@@ -38,7 +38,8 @@ export async function setReaction(emoji, x = 0, y = 0, duration = 5000) {
     await bgModifier.addReaction(emoji, x, y, duration)
 }
 
-export async function changeBgColor(color) {
+export async function setBgColor(color) {
+    console.log("Setting background color: ", color);
     var newStream = await bgModifier.setBackgroundColor(color).setStream(localStream).makePreview();
     localVideo.srcObject = newStream;
 }
@@ -55,7 +56,7 @@ export async function setBlur(value) {
     localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setBlur(value).setStream(localStream).makePreview();
 }
 
-export async function setFPSRange(value) {
+export async function setFPS(value) {
     localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setFps(value).setStream(localStream).makePreview();
 }
 
