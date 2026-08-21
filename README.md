@@ -93,6 +93,7 @@ public interface IWebRTCService
     Task SetReactionAsync(string reaction, int x = 0, int y = 0, int duration = 5000);
     // Background color - Accepts any valid CSS color value (e.g., "red", "#FF0000", "rgb(255, 0, 0)", etc.).
     Task SetBackgroundColorAsync(string color);
+    // Brightness - Minimum value is 0.0, maximum value is 2.0, default value is 1.0, step of 0.1.
     Task SetBrightnessAsync(decimal brightness = 1.0m);
     // Contrast - Minimum value is 0.0, maximum value is 2.0, default value is 1.0, step of 0.1.
     Task SetContrastAsync(decimal contrast = 1.0m);
