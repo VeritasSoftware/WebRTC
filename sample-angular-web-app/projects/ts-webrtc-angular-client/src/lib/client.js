@@ -1,3 +1,7 @@
+import WebrtcBgModifier from "./WebrtcBgModifier/index.module.js";
+
+const bgModifier = new WebrtcBgModifier({});
+
 let localStream;
 let remoteStream;
 let localScreenStream;
@@ -21,6 +25,46 @@ let mediaRecorderLocal;
 let mediaRecorderRemote;
 let recordedBlobs = [];
 let recordedBlobsRemote = [];
+let bgUrl = null;
+
+export async function setBgImage(url) {
+    console.log("Setting background image: ", url);
+    bgUrl = url;
+
+    var newStream = await bgModifier.setBackgroundImage(url).setBlur(0).setStream(localStream).makePreview();
+    localVideo.srcObject = newStream;
+}
+
+export async function setReaction(emoji, x = 0, y = 0, duration = 5000) {
+    console.log("Adding reaction: ", emoji, " at (", x, ",", y, ") for duration: ", duration);
+    await bgModifier.addReaction(emoji, x, y, duration)
+}
+
+export async function setBgColor(color) {
+    console.log("Setting background color: ", color);
+    var newStream = await bgModifier.setBackgroundColor(color).setStream(localStream).makePreview();
+    localVideo.srcObject = newStream;
+}
+
+export async function setBrightness(value = 1.0) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setBrightness(value).setStream(localStream).makePreview();
+}
+
+export async function setContrast(value = 1.0) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setContrast(value).setStream(localStream).makePreview();
+}
+
+export async function setBlur(value = 0) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setBlur(value).setStream(localStream).makePreview();
+}
+
+export async function setFPS(value = 24) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setFps(value).setStream(localStream).makePreview();
+}
+
+export async function setGrayScale(isGrayScale = false) {
+    localVideo.srcObject = await bgModifier.setBackgroundImage(bgUrl).setGrayScale(isGrayScale).setStream(localStream).makePreview();
+}
 
 function handleDataAvailable(event) {
     console.log("handleDataAvailable called. event: ", event);

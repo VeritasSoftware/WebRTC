@@ -95,3 +95,37 @@
         </div>
     </div>
 }
+
+<div class="row" style="margin-top:10px; margin-left: 5px;">
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:50px;" (click)="startLocalMediaAsync()">Start Local Media</button>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:75px;" [disabled]="!_localMediaStarted" (click)="setBgAsync(0)">Set Background Image</button>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:50px;" [disabled]="!_setBackground" (click)="setReactionAsync()">Set Reaction</button>
+    </div>
+</div>
+<div class="row" style="margin-top:10px; margin-left: 5px;">
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:75px;" [disabled]="!_localMediaStarted" (click)="setBgAsync(1)">Set Background Color</button>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:50px;" [disabled]="!_localMediaStarted" (click)="setBgAsync(2)">Set Brightness</button>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:50px;" [disabled]="!_localMediaStarted" (click)="setBgAsync(3)">Set Contrast</button>
+    </div>
+</div>
+<div class="row" style="margin-top:10px; margin-left: 5px;">
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:50px;" [disabled]="!_localMediaStarted" (click)="setBgAsync(4)">Set Blur</button>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:50px;" [disabled]="!_localMediaStarted" (click)="setBgAsync(5)">Set FPS</button>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-12">
+        <button style="width: 90%;height:50px;" [disabled]="!_localMediaStarted" (click)="setBgAsync(6)">Set Gray Scale</button>
+    </div>
+</div>

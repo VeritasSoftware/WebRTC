@@ -47,7 +47,7 @@ namespace WebRTC.Blazor.Client
         Task SetBlurAsync(int blur = 0);
         // FPS - Minimum value is 1, maximum value is 30, default value is 24, step of 1.
         Task SetFPSAsync(int fps = 24);
-        Task SetGrayScaleAsync(bool grayScale = false);
+        Task SetGrayScaleAsync(bool grayScale = true);
         Task ToggleAudioAsync();
         Task ToggleVideoAsync();
         Task SendChatMessageAsync(string message);

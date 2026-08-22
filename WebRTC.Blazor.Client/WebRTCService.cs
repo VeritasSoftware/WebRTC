@@ -152,6 +152,13 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("startLocalMedia", startVideo, startAudio);
         }
 
+        public async Task SetBackgroundImageAsync(string url)
+        {
+            _module = await _moduleTask.Value;
+
+            await _module.InvokeVoidAsync("setBgImage", url);
+        }
+
         public async Task SetBackgroundColorAsync(string color)
         {
             _module = await _moduleTask.Value;
@@ -183,10 +190,16 @@ namespace WebRTC.Blazor.Client
             await _module.InvokeVoidAsync("setFPS", fps);
         }
 
-        public async Task SetGrayScaleAsync(bool grayScale = false)
+        public async Task SetGrayScaleAsync(bool grayScale = true)
         {
             _module = await _moduleTask.Value;
             await _module.InvokeVoidAsync("setGrayScale", grayScale);
+        }
+
+        public async Task SetReactionAsync(string reaction, int x = 0, int y = 0, int duration = 5000)
+        {
+            _module = await _moduleTask.Value;
+            await _module.InvokeVoidAsync("setReaction", reaction, x, y, duration);
         }
 
         public async Task StartLocalScreenMediaAsync(bool startAudio = false)
@@ -327,19 +340,6 @@ namespace WebRTC.Blazor.Client
             _module = await _moduleTask.Value;
 
             await _module.InvokeVoidAsync("sendMessage", message);
-        }
-
-        public async Task SetBackgroundImageAsync(string url)
-        {
-            _module = await _moduleTask.Value;
-
-            await _module.InvokeVoidAsync("setBgImage", url);
-        }
-
-        public async Task SetReactionAsync(string reaction, int x = 0, int y = 0, int duration = 5000)
-        {
-            _module = await _moduleTask.Value;
-            await _module.InvokeVoidAsync("setReaction", reaction, x, y, duration);
-        }
+        }        
     }
 }

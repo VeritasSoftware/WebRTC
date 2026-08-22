@@ -4,7 +4,9 @@ import { setVideos, setHubUrl, invite, inviteAll, acceptInvite,
             toggleVideo, startCall, endCall, startHubConnection, toggleAudio, setVideo, setAudio, 
             startLocalMedia, transferFile, setRoomId, startLocalScreenMedia, startScreenShare,
             switchVideoToScreenShare, switchScreenShareToVideo, startPeerConnection,
-            sendMessage, startRecording, stopRecording, setLocalUniqueId, inviteGroup} from './client';
+            sendMessage, startRecording, stopRecording, setLocalUniqueId, inviteGroup,
+            setBgImage, setReaction, setBgColor, setBrightness, setContrast, setBlur,
+            setFPS, setGrayScale} from './client';
 import { FileTransferResult, StreamType, VideoSessionRecordingResult } from "./models";
 
 [Injectable({
@@ -154,6 +156,38 @@ export class WebRTCService implements IWebRTCService {
             resolve();
           });
     }
+
+    async setBackgroundImageAsync(url: string): Promise<void> {
+        await setBgImage(url);
+    }
+
+    async setBackgroundColorAsync(color: string): Promise<void> {
+        await setBgColor(color);
+    }
+
+    async setBrightnessAsync(value: number = 1.0): Promise<void> {
+        await setBrightness(value);
+    }
+
+    async setContrastAsync(value: number = 1.0): Promise<void> {
+        await setContrast(value);
+    }
+
+    async setBlurAsync(value: number = 0): Promise<void> {
+        await setBlur(value);
+    }
+
+    async setFPSAsync(value: number = 24): Promise<void> {
+        await setFPS(value);
+    }
+
+    async setGrayScaleAsync(grayScale: boolean = true): Promise<void> {
+        await setGrayScale(grayScale);
+    }
+
+    async setReactionAsync(emoji: string, x: number = 0, y: number = 0, duration: number = 5000): Promise<void> {
+        await setReaction(emoji, x, y, duration);
+    }    
 
     async toggleAudioAsync(): Promise<void> {
         await new Promise<void>(async (resolve) => {

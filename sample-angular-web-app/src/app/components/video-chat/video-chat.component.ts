@@ -29,6 +29,9 @@ export class VideoChatComponent {
 
   public _isRecordingStarted: boolean = false;
 
+  public _localMediaStarted: boolean = false;
+  public _setBackground: boolean = false;
+
   constructor(private videoChatService:WebRTCService, private cdr: ChangeDetectorRef) { }
   
   @Input() myUserType: UserType = UserType.Local;
@@ -104,6 +107,85 @@ export class VideoChatComponent {
       console.log("Component: Starting hub connection.");
       await this.videoChatService.startHubConnectionAsync();
     })(); 
+  }
+
+  async startLocalMediaAsync(): Promise<void>
+  {
+      try
+      {
+          this._showError = false;
+
+          this._callStarted = false;
+          this._isScreenShare = false;
+
+          this._localMediaStarted = false;
+
+          await this.videoChatService.startLocalMediaAsync();
+
+          this._localMediaStarted = true;
+      }
+      catch (ex: any)
+      {
+          this._errorMessage = ex.message;
+          this._showError = true;
+          this._localMediaStarted = false;
+      }
+  }
+
+  async setBgAsync(bg: Bg): Promise<void> {
+    try
+    {
+      this._showError = false;
+      switch(bg)
+      {
+        case Bg.BackgroundImage:
+          await this.videoChatService.setBackgroundImageAsync(this.getFullImageUrl("lights.jpg"));
+          break;
+        case Bg.BackgroundColor:
+          await this.videoChatService.setBackgroundColorAsync("#008000");
+          break;
+        case Bg.Brightness:
+          await this.videoChatService.setBrightnessAsync(1.5);
+          break;
+        case Bg.Contrast:
+          await this.videoChatService.setContrastAsync(1.5);
+          break;
+        case Bg.Blur:
+          await this.videoChatService.setBlurAsync(10);
+          break;
+        case Bg.FPS:
+          await this.videoChatService.setFPSAsync(30);
+          break;
+        case Bg.GrayScale:
+          await this.videoChatService.setGrayScaleAsync(true);
+          break
+      }
+      this._setBackground = true;
+    }
+    catch (ex: any)
+    {
+        this._errorMessage = ex.message;
+        this._showError = true;
+        this._setBackground = false;
+    }    
+  }
+
+  async setReactionAsync(): Promise<void>
+  {
+      try
+      {
+          this._showError = false;
+          await this.videoChatService.setReactionAsync("👍️", 400, 300, 10000);
+      }
+      catch (ex: any)
+      {
+          this._errorMessage = ex.esmsage;
+          this._showError = true;
+      }
+  }
+  
+  getFullImageUrl(fileName: string): string {
+    return `${window.location.origin}/assets/images/${fileName}`;
   }
 
   async inviteAll(): Promise<void> {
@@ -295,3 +377,13 @@ export enum UserType
     Local,
     Remote
 } 
+
+export enum Bg {
+    BackgroundImage = 0,
+    BackgroundColor = 1,
+    Brightness = 2,
+    Contrast = 3,
+    Blur = 4,
+    FPS = 5,
+    GrayScale = 6
+}
