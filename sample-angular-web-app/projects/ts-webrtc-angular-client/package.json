@@ -1,12 +1,13 @@
 {
   "name": "ts-webrtc-angular-client",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "peerDependencies": {
     "@angular/common": "^19.2.0",
-    "@angular/core": "^19.2.0"
+    "@angular/core": "^19.2.0",
+    "webrtc-bg-modifier": "^1.0.31"
   },
   "dependencies": {
-    "tslib": "^2.3.0"
+    "tslib": "^2.3.0"    
   },
   "sideEffects": false,
   "type": "module"

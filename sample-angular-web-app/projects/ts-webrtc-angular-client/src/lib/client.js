@@ -1,4 +1,4 @@
-import WebrtcBgModifier from "./WebrtcBgModifier/index.module.js";
+import WebrtcBgModifier from 'webrtc-bg-modifier';
 
 const bgModifier = new WebrtcBgModifier({});
 
